@@ -1,0 +1,72 @@
+<div class="panel panel-default">
+
+		<div class="modal-header">
+		            <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="cancel()"><span >×</span></button>
+		            <h3 class="modal-title">Members</h3>
+		            <div id="message" class="note note-success note-bordered" ng-show="isDone" >
+		            		<h3>Now {{branch}}'s account  is  updated! <span class="close" ng-click="cancel()"></span></h3>
+		            		
+		            </div>
+		 </div>
+		 
+		<div class="panel-body">
+		<div class="table-responsive">
+			<table class="table table-bordered table-striped bs-events-table" ng-show="add">
+			
+				<thead>
+					
+					<tr>
+						<th>Client Code</th>
+						<th><input readonly ng-model="client" type="text"></th>
+					</tr>
+					
+					<tr>
+						<th>Transection Type</th>
+						<th>
+							<select ng-model="type">
+								<option  value="1">Deposite</option>
+								<option  value="0">Withdraw</option>
+							</select>
+						</th>
+					</tr>
+					<tr>
+						<th> Amount</th>
+						<th><input ng-model="amount" type="text"></th>
+					</tr>
+
+
+					<tr>
+						<th></th>
+						<th> <span ng-click="save()"> Save</span></th>
+					</tr>
+				</thead>
+
+			</table>
+		    <table class="table table-bordered table-striped bs-events-table" >
+		      <thead>
+		        <tr >
+		          <th>Name</th>
+		          <th>Amount</th>
+		          <th>Action</th>
+		        </tr>
+		      </thead>
+		      <tbody>
+		        <tr ng-repeat="member in members">
+		          <td>{{member.fname}} {{member.mname}} {{member.lname}}</td>
+		          <td>100</td>
+		          <td><span ng-click="addBranch(member.id,member.username)" >Edit</span> <span>Delete</span></td>
+		        </tr>
+		        
+		      </tbody>
+		      <tfoot></tfoot>
+		    </table>
+		   
+		  </div>
+		  
+		</div>
+</div>
+
+			
+
+			
+

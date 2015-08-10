@@ -1,0 +1,96 @@
+<div class="panel panel-default">
+
+		<div class="modal-header">
+		            <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="cancel()"><span >×</span></button>
+		            <h3 class="modal-title">Stock</h3>
+		            <div id="message" class="note note-success note-bordered" ng-show="isDone" >
+		            		<h3>Now {{branch}} is added to brach! <span class="close" ng-click="cancel()"></span></h3>
+		            		
+		            </div>
+		 </div>
+		 
+		<div class="panel-body">
+		<div class="table-responsive">
+			<table class="table table-bordered table-striped bs-events-table" ng-show="add">
+				<thead>
+					<tr>
+						<th>Branch</th>
+						<th>
+							<select ng-model="branchId">
+								<option ng-repeat="branch in branches" value="{{branch.id}}">{{branch.name}}</option>
+							</select>
+						</th>
+					</tr>
+					<tr>
+						<th>Product</th>
+						<th>
+							<select ng-model="productTypeId">
+								<option ng-repeat="product in products"  value="{{product.id}}">{{product.name}}</option>
+								
+							</select>
+						</th>
+					</tr>
+					<tr>
+						<th>Lot size</th>
+						<th>
+							<input type="text" ng-model="lot" />
+						</th>
+					</tr>
+					<tr>
+						<th>Min. Quantity</th>
+						<th>
+							<input type="text" ng-model="minQuantity" />
+						</th>
+					</tr>
+					<tr>
+						<th>Online Quantity</th>
+						<th>
+							<input type="text" ng-model="onlineQuantity" />
+						</th>
+					</tr>
+					<tr>
+						<th>Delivery Charge</th>
+						<th>
+							<input type="text" ng-model="deliveryCharge" />
+						</th>
+					</tr>
+					
+					<tr>
+						<th></th>
+						<th> <span ng-click="save()"> Save</span></th>
+					</tr>
+				</thead>
+			</table>
+		    <table class="table table-bordered table-striped bs-events-table" >
+		      <thead>
+		        <tr >
+		          <th>Branch</th>
+		          <th>Location</th>
+		          <th>Product</th>
+		          <th>Quantity</th>
+		          <th>Action</th>
+		        </tr>
+		      </thead>
+		      <tbody>
+		        <tr ng-repeat="stock in stocks">
+		          <td>{{branchName(stock.branchId)}}</td>
+		          <td>{{branchLocation(stock.branchId)}}</td>
+		          <td>{{product(stock.productTypeId)}}</td>
+		          <td>{{stock.onlineQuantity}}</td>
+		          <td><span >Edit</span> <span>Delete</span></td>
+		        </tr>
+		        
+		      </tbody>
+		      <tfoot></tfoot>
+		    </table>
+		   
+		  </div>
+		  	<span ng-click="addBranch()" ng-hide="add">Add Stock</span>
+		  	<span ng-click="addBranch()" ng-show="add">List Stock</span>
+		</div>
+</div>
+
+			
+
+			
+

@@ -1,0 +1,149 @@
+<div class="portlet light bordered">
+	<div class="portlet-title">
+		<div class="caption">
+			<i class="icon-equalizer font-red-sunglo"></i>
+			<span class="caption-subject font-red-sunglo bold uppercase">Unverified Member</span>
+			
+		</div>
+		
+	</div>
+	<div class="portlet-body form">
+		<!-- BEGIN FORM-->
+		<form class="form-horizontal" name="userForm"  novalidate>
+			<div class="form-body">
+				<div class="form-group">
+					<label class="col-md-3 control-label">Name:</label>
+					<div class="col-md-4">
+						<span class="help-block">{{member.fname}} {{member.mname}} {{member.lname}}</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">Address:</label>
+					<div class="col-md-4">
+						<span class="help-block">{{member.address}}</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">Identity:</label>
+					<div class="col-md-4">
+						<span class="help-block">{{member.identity}}</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">Nationality:</label>
+					<div class="col-md-4">
+						<span class="help-block">{{member.nationality}}</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">Date of birth:</label>
+					<div class="col-md-4">
+						<span class="help-block">{{member.dob}}</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">Account No.:</label>
+					<div class="col-md-4">
+						<span class="help-block">{{member.ban}}</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">Email:</label>
+					<div class="col-md-4">
+						<span class="help-block">{{member.email}}</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">Contact Number:</label>
+					<div class="col-md-4">
+						<span class="help-block">{{member.cNumber}}</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">Mobile Number:</label>
+					<div class="col-md-4">
+						<span class="help-block">{{member.mNumber}}</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">Agent:</label>
+					<div class="col-md-4">
+						<span class="help-block">{{member.mNumber}}</span>
+					</div>
+				</div>
+				<div class="form-group">
+				  <label class="col-md-3 control-label">Member Type:</label>
+				  <div class="col-md-4">
+					  <select ng-model="mtype">
+					    <option value="0">0</option>
+					    <option value="1">1</option>
+					    <option value="2">2</option>
+					  </select>
+					</div>
+				</div>
+				 
+				<div class="form-group" show-errors>
+					<label class="col-md-3 control-label">User Name</label>
+					<div class="col-md-4">
+						<div class="input-group">
+							<input ng-model="username"  class="form-control" placeholder="User Name" required>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-md-2 control-label"></label>
+					<div class="col-md-4">
+						<div class="input-group">
+							<span class="label label-danger">{{error}}</span>
+						</div>
+					</div>
+				</div>	
+
+				<div class="form-group">
+					<label class="col-md-3 control-label">Password</label>
+					<div class="col-md-4">
+						<div class="input-group">
+							<input type="password" ng-model="password" class="form-control" placeholder="Password" required >
+						</div>
+					</div>
+				</div>
+					
+				<div class="form-group">
+					<label class="col-md-3 control-label">Conform Password</label>
+					<div class="col-md-4">
+						<div class="input-group">
+							<input type="password" ng-model="passwordConform" class="form-control" placeholder="Password" required >
+						</div>
+					</div>
+				</div>	
+				<div class="form-group">
+					<label class="col-md-2 control-label"></label>
+					<div class="col-md-4">
+						<div class="input-group">
+							<span class="label label-danger">{{warning}}</span>
+						</div>
+					</div>
+				</div>											
+			</div>
+			<div id="message" class="note note-success note-bordered" ng-show="success">
+					<h3>Now {{member.fname}} {{member.mname}} {{member.lname}} is verified member! <span class="close" ng-click="cancel()"></span></h3>
+					
+			</div>
+			<div class="note note-success note-bordered" ng-show="fail">
+					<h3><span class="label label-danger">NOTE:</span>{{member.fname}} {{member.mname}} {{member.lname}}  could not verified! <span class="close" ng-click="cancel()"></span></h3>
+					
+			</div>
+			<div class="form-actions">
+				<div class="row">
+					<div class="col-md-offset-3 col-md-9">
+						
+						<input class="btn green" type="submit" ng-click="send(userForm.$valid)" value="Verify">
+						<button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!-- END FORM-->
+	</div>
+</div>
