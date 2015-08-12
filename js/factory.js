@@ -7,6 +7,7 @@
         var memberTypes = [];
         var members = [];
         var unverifiedMembers = [];
+        var clientStocks = [];
 		
 		// var wsUri = "ws://localhost:9000";  
 	 //    websocket = new WebSocket(wsUri); 
@@ -131,6 +132,29 @@
                 }
             });
         }
+        function updateAccount(account){
+                members.forEach(function(el,i){
+                    if(el.id == account.memberId){
+                        branches.splice(i,1);
+                        if(account.type == 1){
+                            members[i].amount =  +members[i].amount + +account.amount;
+                        }
+                        else{
+                            members[i].amount =  +members[i].amount - +account.amount;
+                        }
+                    }
+                    //console.log(el);
+                });
+        }
+        function getClientStocks(){
+            return clientStocks;
+        };
+        function addClientStock(clientStock){
+            clientStocks.push(clientStock);
+            $rootScope.$broadcast('addClientStock',{
+                clientStocks: clientStocks
+            });
+        };
 		return {
 		    getBranches: getBranches,
 		    addBranch : addBranch,
@@ -147,7 +171,10 @@
             getUser : getUser,
             getUnverifiedMembers : getUnverifiedMembers,
             addUnverifiedMember : addUnverifiedMember,
-            removeUnverifiedMember : removeUnverifiedMember
+            removeUnverifiedMember : removeUnverifiedMember,
+            updateAccount: updateAccount,
+            getClientStocks : getClientStocks,
+            addClientStock : addClientStock,
 		    
 		};
 	}

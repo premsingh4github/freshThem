@@ -46,14 +46,14 @@
 		      <thead>
 		        <tr >
 		          <th>Name</th>
-		          <th>Amount</th>
+		          <th>Amounts</th>
 		          <th>Action</th>
 		        </tr>
 		      </thead>
 		      <tbody>
 		        <tr ng-repeat="member in members">
 		          <td>{{member.fname}} {{member.mname}} {{member.lname}}</td>
-		          <td>100</td>
+		          <td>{{member.amount}}</td>
 		          <td><span ng-click="addBranch(member.id,member.username)" >Edit</span> <span>Delete</span></td>
 		        </tr>
 		        
