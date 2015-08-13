@@ -9,38 +9,43 @@
         var unverifiedMembers = [];
         var clientStocks = [];
 		
-		// var wsUri = "ws://localhost:9000";  
-	 //    websocket = new WebSocket(wsUri); 
-	 //    websocket.onclose   = function(ev){
-	 //        console.log("onclose");
-	 //    }; 
-	 //    websocket.onerror   = function(ev){
-	 //        console.log("onerror");
-	 //    };
-	 //    websocket.onopen = function(ev) {
-	 //    }
-	 //    websocket.onmessage = function(ev) {
-	 //    	debugger;
-	 //    	var msg = JSON.parse(ev.data); 
-	 //    	var type = msg.type; 
-	 //    	var data = msg.data; 
-	 //    	var clientId = msg.clientId; 
-	    	
-
-	 //    	if(type == 'addMember') 
-	 //    	{
-	 //    		debugger;
-	 //    		members.push(data);
-	 //    		$rootScope.$broadcast('addMember',{
-	 //    		    members: members
-	 //    		});	
-	 //    	}
-	 //    	if(type == 'system')
-	 //    	{
+		var wsUri = "ws://localhost:9000";  
+	    websocket = new WebSocket(wsUri); 
+	    websocket.onclose   = function(ev){
+	        console.log("onclose");
+	    }; 
+	    websocket.onerror   = function(ev){
+	        console.log("onerror");
+	    };
+	    websocket.onopen = function(ev) {
+            console.log('socket open');
+	    }
+	    websocket.onmessage = function(ev) {
+	    	debugger;
+	    	var msg = JSON.parse(ev.data); 
+            console.log(msg);
+	    	if(msg.type == 'addMember') 
+	    	{
+	    		debugger;
+                console.log(members,"before");
+	    		members.push(msg.data);
+	    		$rootScope.$broadcast('addMember',{
+	    		    members: members
+	    		});	
+                unverifiedMembers.forEach(function(ls,i){
+                    if(ls.id == msg.data.id){
+                        unverifiedMembers.splice(i,1);
+                        addMember(ls);                       
+                    }
+                });
+                console.log(members,"after");
+	    	}
+	    	// if(type == 'system')
+	    	// {
 	    		
-	 //    	}
+	    	// }
 	    	
-	 //    };
+	    };
 		
 		function getBranches(){
 			return branches;
@@ -90,14 +95,7 @@
         function getMembers(){
             return members;
         }
-        function addMember(member){
-        	// var msg = {        	
-        	// clientId: 1,
-        	// type: "addMember",
-        	// data : member
-        	// };
-        	
-        	// websocket.send(JSON.stringify(msg));
+        function addMember(member){        	
             members.push(member);
             $rootScope.$broadcast('addMember',{
                 members: members
@@ -129,6 +127,14 @@
             unverifiedMembers.forEach(function(ls,i){
                 if(ls.id == member.id){
                     unverifiedMembers.splice(i,1);
+                    addMember(ls);
+                    var msg = {          
+                    clientId: 1,
+                    type: "addMember",
+                    data : ls
+                    };
+                    
+                    websocket.send(JSON.stringify(msg));
                 }
             });
         }

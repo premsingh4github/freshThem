@@ -249,7 +249,7 @@ MetronicApp.controller('QuickSidebarController', ['$scope','user','$rootScope','
 }]);
 /* Setup Layout Part - Sidebar */
 MetronicApp.controller('SidebarController', ['$scope','$modal','$rootScope','pubsubService', function($scope,$modal,$rootScope,pubsubService) {
- 
+    $scope.user = pubsubService.getUser();
     $scope.$on('$includeContentLoaded', function() {
         Layout.initSidebar(); 
         $scope.branch = function () {
@@ -267,8 +267,7 @@ MetronicApp.controller('SidebarController', ['$scope','$modal','$rootScope','pub
               console.log('Modal dismissed at: ' + new Date());
             });
           };
-        $scope.user = pubsubService.getUser();
-        debugger;
+        
         $scope.isAccountAdmin = function(user){
           
           if(user.mtype === 3){
