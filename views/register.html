@@ -7,7 +7,9 @@
               </div>
               <div class="panel-body">
                   <form name="userForm" novalidate>
+
                   <fieldset>
+                      
                       <div class="form-group" show-errors>
                       
                            <input type="text" placeholder="First Name" class="form-control" name="fname" ng-model="fname" required />
@@ -39,19 +41,21 @@
                       </div>
                       <div class="form-group" show-errors>
                           <input type="text" placeholder="Bank account number" class="form-control" ng-model="ban" name="ban" required/>
-                          <p class="help-block" ng-show="userForm.ban.$invalid && userForm.ban.$dirty || (userForm.ban.$invalid && submitted)">The ban is required</p>
+                          <p class="help-block" ng-show="userForm.ban.$invalid && userForm.ban.$dirty || (userForm.ban.$invalid && submitted)">The bank account number is required</p>
                       </div>
                       <div class="form-group" show-errors>
                           <input type="text" placeholder="email" class="form-control" ng-model="email" name="email" required/>
-                          <p class="help-block" ng-show="userForm.email.$invalid && userForm.email.$dirty || (userForm.email.$invalid && submitted)">The emailis required</p>
+                          <p class="help-block" ng-show="userForm.email.$invalid && userForm.email.$dirty || (userForm.email.$invalid && submitted)">The email is required</p>
                       </div>
                       <div class="form-group" show-errors>
                           <input type="text" placeholder="contact number" class="form-control" ng-model="contactNo" name="contactNo" />
                       </div>
                       <div class="form-group" show-errors>
                           <input type="text" placeholder="Mobile number" class="form-control" ng-model="mobileNo" name="mobileNo" />
-                          
-                      </div>  
+                      </div>
+                      <div class="form-group" show-errors>
+                          <input type="text" placeholder="Agent Code" class="form-control" ng-model="agent" name="agent" />
+                      </div>   
                       <div class="form-group">
                           <div id="message" class="note note-success note-bordered" ng-show="isDone" >
                               <h3>Your registration is waiting for admin approval! <span class="close" ng-click="cancel()"></span></h3>

@@ -9,27 +9,7 @@ var MetronicApp = angular.module("MetronicApp", [
     "oc.lazyLoad",  
     "ngSanitize",
     "ngWebsocket"
-]); 
-// if (window.XMLHttpRequest)
-//                 {
-//                     ajaxObject = new XMLHttpRequest();
-                    
-//                     ajaxObject.open("POST","http://localhost/dealerAPI/public/connectSocket",true);
-//                     ajaxObject.send();
-                    
-//                     ajaxObject.onreadystatechange = function()
-//                     {
-//                         if (ajaxObject.readyState == 4 && ajaxObject.status == 200)
-//                         {
-                           
-                            
-//                         }
-//                     }
-//                 }
-
-//document.getElementById('loading').style.display = "none";
-
-/* Configure ocLazyLoader(refer: https://github.com/ocombe/ocLazyLoad) */
+]);
 MetronicApp.config(['$ocLazyLoadProvider', function($ocLazyLoadProvider) {
     $ocLazyLoadProvider.config({
         // global configs go here
@@ -139,7 +119,6 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
 
    // add authentication methods here
    self.register = function($data) {
-     
      return $http.post(API + 'register',{
        fname:$data.fname,
        mname:$data.mname,
@@ -151,7 +130,8 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
        ban:$data.ban,
        email:$data.email,
        cNumber:$data.contactNo,
-       mNumber:$data.mobileNo
+       mNumber:$data.mobileNo,
+       agent :$data.agent
      });
        
    }
@@ -230,6 +210,24 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
             stockId: data.clientStock.id,
             amount: data.amount
         })
+    }
+    self.addMember = function($data) {
+      debugger;
+      return $http.post(API + 'API/addMember',{
+        fname:$data.fname,
+        mname:$data.mname,
+        lname:$data.lname,
+        address:$data.address,
+        identity:$data.identity,
+        nationality:$data.nationality,
+        dob:$data.dob,
+        ban:$data.ban,
+        email:$data.email,
+        cNumber:$data.contactNo,
+        mNumber:$data.mobileNo,
+        mtype:$data.mtype
+      });
+        
     }
    
  }

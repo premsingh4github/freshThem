@@ -40,10 +40,15 @@
                 });
                 console.log(members,"after");
 	    	}
-	    	// if(type == 'system')
-	    	// {
-	    		
-	    	// }
+            debugger;
+	        if(msg.type == 'addUnverifiedMember')
+	    	{
+                debugger;
+	    		addUnverifiedMember(msg.data);
+	    	}
+            // else{
+            //     console.log(msg.type);
+            // }
 	    	
 	    };
 		
@@ -122,6 +127,7 @@
             $rootScope.$broadcast('addUnverifiedMember',{
                 unverifiedMembers: unverifiedMembers
             });
+    
         }
         function removeUnverifiedMember(member){
             unverifiedMembers.forEach(function(ls,i){
@@ -161,6 +167,15 @@
                 clientStocks: clientStocks
             });
         };
+        function publishUnverifiedMember(member){
+            debugger;
+            var msg = {
+            type: "addUnverifiedMember",
+            data : member
+            };
+            
+            websocket.send(JSON.stringify(msg));
+        }
 		return {
 		    getBranches: getBranches,
 		    addBranch : addBranch,
@@ -181,6 +196,7 @@
             updateAccount: updateAccount,
             getClientStocks : getClientStocks,
             addClientStock : addClientStock,
+            publishUnverifiedMember : publishUnverifiedMember
 		    
 		};
 	}

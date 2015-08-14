@@ -49,7 +49,7 @@ MetronicApp.controller('loginController', ['$scope','user','auth','$state','$roo
 }]);
 
 MetronicApp.controller('RegisterController',register);
-function register($state,$scope,user){
+function register($state,$scope,user,pubsubService){
   $scope.isDone = false;
   $scope.cancel = function(){
     $state.go('login');
@@ -58,9 +58,12 @@ function register($state,$scope,user){
     $scope.submitted = true;
     if($valid){
      user.register($scope).then(function(res) {
-         if(res.status == "200")
-          $scope.isDone = true;
-           console.log(res.statusText);
+         if(res.status == "200"){
+            $scope.isDone = true;
+             console.log(res.statusText);
+             pubsubService.publishUnverifiedMember(res.data.member);
+         }
+          
        });
     }
   }
@@ -148,6 +151,9 @@ MetronicApp.controller('HeaderController', ['$scope','user','$modal','$rootScope
             });
           }
     $scope.unverifiedMembers = pubsubService.getUnverifiedMembers();
+    $rootScope.$on('addUnverifiedMember', function (event, data) {
+      $scope.unverifiedMembers = data;
+    });
     $scope.isUnverifedMember = ($scope.unverifiedMembers.length > 0)? true : false;
          $scope.user = pubsubService.getUser();
           $rootScope.removeMember = function(id){
@@ -485,10 +491,11 @@ MetronicApp.controller('MemberController',['$scope','$modalInstance','user','$ro
   $scope.user = pubsubService.getUser();
   
   $scope.save = function(){
-      user.register($scope.member).then(function(es){
+      user.addMember($scope.member).then(function(es){
         if(es.data.code == 200){
           delete $scope.member;
-          pubsubService.addMember(es.data.member);
+          //pubsubService.addMember(es.data.member);
+          pubsubService.addUnverifiedMember(es.data.member);
           $scope.branch = es.data.member.fname;
           $scope.isDone = true;
           $scope.name = null;
@@ -607,21 +614,16 @@ MetronicApp.controller('WareHouseController',['$scope','$modalInstance','user','
   $scope.addBranch = function(){
     $scope.add = ($scope.add)?false : true ;
   }
-
   $scope.branches = pubsubService.getBranches() ;
   $scope.stocks = pubsubService.getStocks();
   $scope.products = pubsubService.getProducts();
   $scope.branchName = function(branchId){
       var name ;
-    
       $scope.branches.forEach(function(el,i){
         if(el.id == branchId){
-         
           name = el.name;
         }
-        //console.log(el);
       });
-    
     return name;
   }
   $scope.branchLocation = function(branchId){
