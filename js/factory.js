@@ -40,16 +40,20 @@
                 });
                 console.log(members,"after");
 	    	}
+
             debugger;
 	        if(msg.type == 'addUnverifiedMember')
 	    	{
                 debugger;
 	    		addUnverifiedMember(msg.data);
 	    	}
-            // else{
-            //     console.log(msg.type);
-            // }
-	    	
+            if(msg.type == 'updateProduct'){
+                stocks.forEach(function(ls,i){
+                    if(ls.id == msg.data.id){
+                        stocks[i].onlineQuantity = msg.data.onlineQuantity;
+                    }
+                });
+            }
 	    };
 		
 		function getBranches(){
@@ -124,7 +128,7 @@
         }
         function addUnverifiedMember(member){
             unverifiedMembers.push(member);
-            $rootScope.$broadcast('addUnverifiedMember',{
+            $rootScope.$emit('addUnverifiedMember',{
                 unverifiedMembers: unverifiedMembers
             });
     
@@ -168,13 +172,46 @@
             });
         };
         function publishUnverifiedMember(member){
-            debugger;
             var msg = {
             type: "addUnverifiedMember",
             data : member
             };
-            
             websocket.send(JSON.stringify(msg));
+        }
+        function getStockById(id){
+            var stock ;
+            stocks.forEach(function(ls,i){
+                if(id == ls.id){
+                    stock = ls;
+                }
+            });
+            return stock;
+        }
+        function updateStock(clientStock){
+            stocks.forEach(function(ls,i){
+                if(ls.id == clientStock.stockId){
+                    // unverifiedMembers.splice(i,1);
+                    stocks[i].request.forEach(function(re,L){
+                        if(re.id == clientStock.id){
+                            stocks[i].request.splice(L,1);
+                            
+                        }
+                    });
+                }
+            });
+
+        }
+        function updateProduct(stock){
+            stocks.forEach(function(ls,i){
+                if(ls.id == stock.id){
+                    stocks[i].onlineQuantity = stock.onlineQuantity;
+                    var msg = {
+                    type: "updateProduct",
+                    data : stock
+                    };
+                    websocket.send(JSON.stringify(msg));
+                }
+            });
         }
 		return {
 		    getBranches: getBranches,
@@ -196,7 +233,10 @@
             updateAccount: updateAccount,
             getClientStocks : getClientStocks,
             addClientStock : addClientStock,
-            publishUnverifiedMember : publishUnverifiedMember
+            publishUnverifiedMember : publishUnverifiedMember,
+            getStockById : getStockById,
+            updateStock : updateStock,
+            updateProduct : updateProduct,
 		    
 		};
 	}

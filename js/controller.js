@@ -133,8 +133,8 @@ MetronicApp.controller('HomeController',['$state','$rootScope','user','pubsubSer
 
 //$state.go('dashboard');
 }]);
-MetronicApp.controller('dashboardController',['$scope','$state','user','$rootScope','pubsubService','HOME',function($scope,$state,user,$rootScope,pubsubService,HOME){
-    
+MetronicApp.controller('dashboardController',['$scope','$state','user','$rootScope','pubsubService','HOME',"$interval",function($scope,$state,user,$rootScope,pubsubService,HOME,$interval){
+  $scope.unverifiedMembers = pubsubService.getUnverifiedMembers();
 }]);
 MetronicApp.controller('HeaderController', ['$scope','user','$modal','$rootScope','$state','pubsubService','HOME', function($scope,user,$modal,$rootScope,$state,pubsubService,HOME) {
     $scope.$on('$includeContentLoaded', function() {
@@ -151,9 +151,11 @@ MetronicApp.controller('HeaderController', ['$scope','user','$modal','$rootScope
             });
           }
     $scope.unverifiedMembers = pubsubService.getUnverifiedMembers();
-    $rootScope.$on('addUnverifiedMember', function (event, data) {
-      $scope.unverifiedMembers = data;
-    });
+    // $rootScope.$on('addUnverifiedMember', function (event, data) {
+    //   debugger;
+    //   $scope.unverifiedMembers = data;
+    //   debugger;
+    // });
     $scope.isUnverifedMember = ($scope.unverifiedMembers.length > 0)? true : false;
          $scope.user = pubsubService.getUser();
           $rootScope.removeMember = function(id){
@@ -182,10 +184,11 @@ MetronicApp.controller('HeaderController', ['$scope','user','$modal','$rootScope
         Layout.initHeader(); // init header
     });
 }]);
-MetronicApp.controller('VerifyMemberController',['$scope','$modalInstance','member','user','$state','$rootScope','pubsubService','HOME',function($scope, $modalInstance,member,user,$state,$rootScope,pubsubService,HOME){
+MetronicApp.controller('VerifyMemberController',['$scope','$modalInstance','member','user','$state','$rootScope','pubsubService','HOME','pubsubService',function($scope, $modalInstance,member,user,$state,$rootScope,pubsubService,HOME,pubsubService){
   
   $scope.member = member;
-  $scope.mtype = 1;
+  $scope.memberTypes = pubsubService.getMemberTypes();
+  debugger;
   $scope.success = false;
   $scope.fail = false;
   $scope.cancel = function () {
@@ -194,6 +197,7 @@ MetronicApp.controller('VerifyMemberController',['$scope','$modalInstance','memb
     $modalInstance.dismiss('cancel');
   };
   $scope.send = function(isValid){
+    debugger;
       if($scope.success){
           $scope.cancel();
       }
@@ -246,7 +250,8 @@ MetronicApp.controller('VerifyMemberController',['$scope','$modalInstance','memb
 }]);
 /* Setup Layout Part - Quick Sidebar */
 MetronicApp.controller('QuickSidebarController', ['$scope','user','$rootScope','pubsubService', function($scope,$user,$rootScope,pubsubService) {    
-   $scope.members = pubsubService.getMembers();   
+   $scope.members = pubsubService.getMembers();  
+   debugger; 
     $scope.$on('$includeContentLoaded', function() {
         setTimeout(function(){
             QuickSidebar.init(); // init quick sidebar        
@@ -351,9 +356,10 @@ MetronicApp.controller('SidebarController', ['$scope','$modal','$rootScope','pub
              });
            };
            $scope.wareHouse = function () {
-               
+               debugger;
                // $scope.member = $scope.unverifiedMembers[position];
               var modalInstance = $modal.open({
+                //template:"<div>prem</div>"
                 templateUrl: 'views/wareHouse.html',
                 controller:'WareHouseController'
               });
@@ -489,6 +495,8 @@ MetronicApp.controller('MemberController',['$scope','$modalInstance','user','$ro
   $scope.memberTypes = pubsubService.getMemberTypes();
   $scope.members = pubsubService.getMembers();
   $scope.user = pubsubService.getUser();
+  $scope.unverifiedMembers = pubsubService.getUnverifiedMembers();
+  debugger
   
   $scope.save = function(){
       user.addMember($scope.member).then(function(es){
@@ -502,6 +510,7 @@ MetronicApp.controller('MemberController',['$scope','$modalInstance','user','$ro
         }
       });
   }
+
 }]);
 MetronicApp.controller('AccountController',['$scope','$modalInstance','user','$rootScope','pubsubService',function($scope,$modalInstance,user,$rootScope,pubsubService){
   
@@ -608,10 +617,13 @@ MetronicApp.controller('WareHouseController',['$scope','$modalInstance','user','
   $scope.add = false;
    $scope.isDone = false;
    $scope.branch = null;
+   $scope.isShowRequest = false;
   $scope.cancel = function(){
     $modalInstance.dismiss('cancel');
   }
-  $scope.addBranch = function(){
+  $scope.addBranch = function(updateStock){
+    debugger;
+    $scope.updateStock = updateStock;
     $scope.add = ($scope.add)?false : true ;
   }
   $scope.branches = pubsubService.getBranches() ;
@@ -644,15 +656,51 @@ MetronicApp.controller('WareHouseController',['$scope','$modalInstance','user','
       });
     return name;
   }
+  $scope.getMemberById = function(memberId){
+    var name ;
+    pubsubService.getMembers().forEach(function(el,i){
+      if(el.id == memberId){
+        name = el;
+      }
+      
+    });
+      return name;
+  }
+  $scope.getStock =  function(id){
+    return pubsubService.getStockById(id);
+  }
   $scope.save = function(){
-      user.addStock($scope.branchId,$scope.productTypeId,$scope.minQuantity,$scope.onlineQuantity,$scope.deliveryCharge,$scope.lot).then(function(es){
+      user.updateStock($scope).then(function(es){
         
         if(es.data.code == 200){
-          pubsubService.addStock(es.data.stock);
-          $scope.branch = es.data.stock.id;
-          $scope.isDone = true;
+          debugger;
+          // pubsubService.addStock(es.data.stock);
+          // $scope.branch = es.data.stock.id;
+          // $scope.isDone = true;
         }
       });
+  }
+  $scope.hideRequest = function(){
+    $scope.isShowRequest = ($scope.isShowRequest == true)? false : true;
+  }
+  $scope.showRequest = function(request){
+    if(request.length > 0){
+      $scope.requests = request;
+      $scope.isShowRequest = true;
+    }
+  }
+  $scope.approve = function(requestId){
+    user.approveRequest(requestId,1).then(function(rs){
+      pubsubService.updateStock(rs.data.clientStock);
+
+    });
+
+  }
+  $scope.reject = function(requestId){
+    user.approveRequest(requestId,2).then(function(rs){
+      pubsubService.updateStock(rs.data.clientStock);
+    });
+
   }
 }]);
 

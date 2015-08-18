@@ -212,7 +212,6 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
         })
     }
     self.addMember = function($data) {
-      debugger;
       return $http.post(API + 'API/addMember',{
         fname:$data.fname,
         mname:$data.mname,
@@ -229,7 +228,18 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
       });
         
     }
-   
+   self.approveRequest = function(requestId,status){
+      return $http.post(API +"API/approveRequest",{
+        requestId:requestId,
+        status : status
+      });
+   }
+   self.updateStock = function(data){
+     return $http.post(API + "API/updateStock",{
+        stockId : data.updateStock.id,
+        quantity : data.Quantity
+     });
+   }
  }
  MetronicApp.factory('authInterceptor', authInterceptor);
  MetronicApp.service('user', userService);
@@ -279,7 +289,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 }]);
 
 /* Init global settings and run the app */
-MetronicApp.run(["$rootScope", "settings", "$state","user", function($rootScope, settings, $state,user) {
+MetronicApp.run(["$rootScope", "settings", "$state","user" ,function($rootScope, settings, $state,user) {
    
     user.isAuthed().then(function(res){
       if(res.data.code != 200){

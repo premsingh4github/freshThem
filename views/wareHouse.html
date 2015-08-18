@@ -15,48 +15,39 @@
 					<tr>
 						<th>Branch</th>
 						<th>
-							<select ng-model="branchId">
-								<option ng-repeat="branch in branches" value="{{branch.id}}">{{branch.name}}</option>
-							</select>
+							<input readonly value="{{branchName(updateStock.branchId)}}"/>
+						</th>
+					</tr>
+					<tr>
+						<th>Location</th>
+						<th>
+							<input readonly value="{{branchLocation(updateStock.branchId)}}"/>
 						</th>
 					</tr>
 					<tr>
 						<th>Product</th>
 						<th>
-							<select ng-model="productTypeId">
-								<option ng-repeat="product in products"  value="{{product.id}}">{{product.name}}</option>
-								
-							</select>
+							<input readonly value="{{product(updateStock.productTypeId)}}"/>
 						</th>
 					</tr>
 					<tr>
 						<th>Lot size</th>
 						<th>
-							<input type="text" ng-model="lot" />
-						</th>
-					</tr>
-					<tr>
-						<th>Min. Quantity</th>
-						<th>
-							<input type="text" ng-model="minQuantity" />
-						</th>
-					</tr>
-					<tr>
-						<th>Online Quantity</th>
-						<th>
-							<input type="text" ng-model="onlineQuantity" />
-						</th>
-					</tr>
-					<tr>
-						<th>Delivery Charge</th>
-						<th>
-							<input type="text" ng-model="deliveryCharge" />
+							<input readonly value="{{updateStock.lot}}"/>
 						</th>
 					</tr>
 					
 					<tr>
+						<th>Add Quantity</th>
+						<th>
+							<input type="text" ng-model="Quantity" />
+						</th>
+					</tr>
+					
+					
+					<tr>
 						<th></th>
-						<th> <span ng-click="save()"> Save</span></th>
+						<th> <span ng-click="save()"> Add</span></th>
 					</tr>
 				</thead>
 			</table>
@@ -72,22 +63,49 @@
 		        </tr>
 		      </thead>
 		      <tbody>
+
 		        <tr ng-repeat="stock in stocks">
 		          <td>{{branchName(stock.branchId)}}</td>
 		          <td>{{branchLocation(stock.branchId)}}</td>
 		          <td>{{product(stock.productTypeId)}}</td>
 		          <td>{{stock.onlineQuantity/stock.lot}}</td>
-		          <td>{{stock.request.length}}</td>
-		          <td><span >Add</span> <span>Delete</span></td>
+		          <td> &nbsp;&nbsp;&nbsp;<span class="label label-success" ng-click="showRequest(stock.request)">  {{stock.request.length}}</span></td>
+		          <td><span ng-click="addBranch(stock)">Add</span></td>
 		        </tr>
 		        
 		      </tbody>
 		      <tfoot></tfoot>
 		    </table>
+		    <table class="table table-bordered table-striped bs-events-table" ng-show="isShowRequest">
+
+		    	<thead>
+		    		
+		    		<tr>
+		    			<th>Branch</th>
+		    			<th>Product</th>
+		    			<th>Client</th>
+		    			<th>Quantity</th>
+		    			<th>Action</th>
+		    		</tr>
+		    	</thead>
+		    	<tbody>
+		    		<tr ng-repeat="request in requests">
+		    			<td>{{branchName(getStock(request.stockId).branchId)}}</td>
+		    			<td>{{product(getStock(request.stockId).productTypeId)}}</td>
+		    			<td>{{getMemberById(request.memberId).username}}</td>
+		    			<td>{{request.amount}}(lot)</td>
+		    			<td><span ng-click="approve(request.id)" class="btn-success">Approve</span>&nbsp;&nbsp;&nbsp;<span ng-click="reject(request.id)" class="btn-danger">Reject</span></td> 
+		    			
+		    		</tr>
+		    	</tbody>
+		    	<tfoot>
+		    		<tr>
+		    			<th ng-click="hideRequest()">Back</th>
+		    		</tr>
+		    	</tfoot>
+		    </table>
 		   
 		  </div>
-		  	<!-- <span ng-click="addBranch()" ng-hide="add">Add Stock</span>
-		  	<span ng-click="addBranch()" ng-show="add">List Stock</span> -->
 		</div>
 </div>
 

@@ -10,7 +10,7 @@ padding: 2px;
 z-index: -1;
 }
 #login{
-	margin-top: 150px;
+	//margin-top: 150px;
 }
 .page-on-load {
   background: #000;
