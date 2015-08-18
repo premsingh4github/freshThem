@@ -56,13 +56,13 @@
 		      	</tr>
 		      	<tr >
 		      	  	<td>Agent:</td>
-		      	  	<td>{{member.agent}} </td>
+		      	  	<td>{{agent.username}} </td>
 		      	</tr>
 		      	<tr >
 		      	  	<td>Member Type</td>
 		      	  	<td>
-						<select ng-model="mtype" required>
-							<option ng-repeat="memberType in memberTypes" value="{{memberType.id}}">{{memberType.name}}</option>
+						<select ng-model="mtype" class="form-control"   required >
+							<option ng-repeat="memberType in memberTypes | orderBy:'-id'" value="{{memberType.id}}">{{memberType.name}}</option>
 						</select>
 		      	  	 </td>
 		      	</tr>

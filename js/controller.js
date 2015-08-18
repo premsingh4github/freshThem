@@ -62,6 +62,7 @@ function register($state,$scope,user,pubsubService){
             $scope.isDone = true;
              console.log(res.statusText);
              pubsubService.publishUnverifiedMember(res.data.member);
+             
          }
           
        });
@@ -142,20 +143,19 @@ MetronicApp.controller('HeaderController', ['$scope','user','$modal','$rootScope
             user.logout().then(function(res){
                 
                 if(res.data.code == 200){
-                  debugger;
                   delete $rootScope.logined;
                   delete localStorage.jwtToken;
 
                   window.location = HOME;
                 }
             });
-          }
-    $scope.unverifiedMembers = pubsubService.getUnverifiedMembers();
-    // $rootScope.$on('addUnverifiedMember', function (event, data) {
-    //   debugger;
-    //   $scope.unverifiedMembers = data;
-    //   debugger;
-    // });
+          }    
+    $rootScope.$on('addUnverifiedMember', function (event, data) {
+      $scope.$apply(function(){
+        $scope.unverifiedMembers = pubsubService.getUnverifiedMembers();
+        });
+      
+    });
     $scope.isUnverifedMember = ($scope.unverifiedMembers.length > 0)? true : false;
          $scope.user = pubsubService.getUser();
           $rootScope.removeMember = function(id){
@@ -187,8 +187,9 @@ MetronicApp.controller('HeaderController', ['$scope','user','$modal','$rootScope
 MetronicApp.controller('VerifyMemberController',['$scope','$modalInstance','member','user','$state','$rootScope','pubsubService','HOME','pubsubService',function($scope, $modalInstance,member,user,$state,$rootScope,pubsubService,HOME,pubsubService){
   
   $scope.member = member;
+  $scope.agent = pubsubService.getMemberById($scope.member.agentId);
   $scope.memberTypes = pubsubService.getMemberTypes();
-  debugger;
+  $scope.mtype = 1;
   $scope.success = false;
   $scope.fail = false;
   $scope.cancel = function () {
@@ -197,7 +198,6 @@ MetronicApp.controller('VerifyMemberController',['$scope','$modalInstance','memb
     $modalInstance.dismiss('cancel');
   };
   $scope.send = function(isValid){
-    debugger;
       if($scope.success){
           $scope.cancel();
       }
@@ -207,13 +207,9 @@ MetronicApp.controller('VerifyMemberController',['$scope','$modalInstance','memb
                     $scope.warning = "";
                     user.verifyMember($scope.member.id,$scope.username,$scope.password,$scope.mtype).then(function(res){
                      if(res.data.code = 200){
-                      debugger;
-                     
                       pubsubService.addMember(res.data.member);
                       pubsubService.removeUnverifiedMember(res.data.member);
                         $scope.success = true;
-                        
-                    
                       }
                       else{
                         $scope.fail = true;
@@ -250,8 +246,7 @@ MetronicApp.controller('VerifyMemberController',['$scope','$modalInstance','memb
 }]);
 /* Setup Layout Part - Quick Sidebar */
 MetronicApp.controller('QuickSidebarController', ['$scope','user','$rootScope','pubsubService', function($scope,$user,$rootScope,pubsubService) {    
-   $scope.members = pubsubService.getMembers();  
-   debugger; 
+   $scope.members = pubsubService.getMembers();
     $scope.$on('$includeContentLoaded', function() {
         setTimeout(function(){
             QuickSidebar.init(); // init quick sidebar        
@@ -356,8 +351,6 @@ MetronicApp.controller('SidebarController', ['$scope','$modal','$rootScope','pub
              });
            };
            $scope.wareHouse = function () {
-               debugger;
-               // $scope.member = $scope.unverifiedMembers[position];
               var modalInstance = $modal.open({
                 //template:"<div>prem</div>"
                 templateUrl: 'views/wareHouse.html',
@@ -370,6 +363,19 @@ MetronicApp.controller('SidebarController', ['$scope','$modal','$rootScope','pub
                 console.log('Modal dismissed at: ' + new Date());
               });
             };
+            $scope.notice = function () {
+               var modalInstance = $modal.open({
+                 //template:"<div>prem</div>"
+                 templateUrl: 'views/notice.html',
+                 controller:'NoticeController'
+               });
+
+               modalInstance.result.then(function (selectedItem) {
+                 
+               }, function () {
+                 console.log('Modal dismissed at: ' + new Date());
+               });
+             };
 
       });
 
@@ -387,12 +393,9 @@ MetronicApp.controller('BranchController',['$scope','$modalInstance','user','$ro
   }
   $scope.branches = pubsubService.getBranches() ;
   $scope.save = function(){
-    debugger;
       user.addBranch($scope.branchName,$scope.location).then(function(es){
-        debugger;
         if(es.data.code == 200){
           pubsubService.addBranch(es.data.branch);
-          debugger;
           $scope.branch = es.data.branch.name;
           $scope.isDone = true;
         }
@@ -496,7 +499,6 @@ MetronicApp.controller('MemberController',['$scope','$modalInstance','user','$ro
   $scope.members = pubsubService.getMembers();
   $scope.user = pubsubService.getUser();
   $scope.unverifiedMembers = pubsubService.getUnverifiedMembers();
-  debugger
   
   $scope.save = function(){
       user.addMember($scope.member).then(function(es){
@@ -522,10 +524,8 @@ MetronicApp.controller('AccountController',['$scope','$modalInstance','user','$r
     $modalInstance.dismiss('cancel');
   }
   $scope.addBranch = function(memberId,code){
-    debugger;
     $scope.client = code;
     $scope.memberId = memberId;
-    debugger;
     $scope.add = ($scope.add)?false : true ;
   }
   $scope.products = pubsubService.getProducts() ;
@@ -536,7 +536,6 @@ MetronicApp.controller('AccountController',['$scope','$modalInstance','user','$r
   
   $scope.save = function(){
       user.addAccount($scope).then(function(es){
-        debugger;
         if(es.data.code == 200){
 
           //delete $scope.account;
@@ -558,7 +557,6 @@ MetronicApp.controller('ClientStockController',['$scope','$modalInstance','user'
     $modalInstance.dismiss('cancel');
   }
   $scope.addBranch = function(clientStock,location,clientBranchName,clientProduct){
-    //  debugger;
     $scope.clientStock = clientStock;
     $scope.clientBranchName = clientBranchName;
     $scope.clientBranchLocation = location;
@@ -622,7 +620,6 @@ MetronicApp.controller('WareHouseController',['$scope','$modalInstance','user','
     $modalInstance.dismiss('cancel');
   }
   $scope.addBranch = function(updateStock){
-    debugger;
     $scope.updateStock = updateStock;
     $scope.add = ($scope.add)?false : true ;
   }
@@ -673,7 +670,6 @@ MetronicApp.controller('WareHouseController',['$scope','$modalInstance','user','
       user.updateStock($scope).then(function(es){
         
         if(es.data.code == 200){
-          debugger;
           // pubsubService.addStock(es.data.stock);
           // $scope.branch = es.data.stock.id;
           // $scope.isDone = true;
@@ -703,4 +699,25 @@ MetronicApp.controller('WareHouseController',['$scope','$modalInstance','user','
 
   }
 }]);
+MetronicApp.controller('NoticeController',['$scope','$modalInstance','user','$rootScope','pubsubService',function($scope,$modalInstance,user,$rootScope,pubsubService){
+  
+  
+   $scope.isDone = false;
+   $scope.memberTypes = pubsubService.getMemberTypes();
+  $scope.cancel = function(){
+    $modalInstance.dismiss('cancel');
+  }
+ 
+  $scope.save = function(){
+      user.sendNotice($scope.notice).then(function(es){
+        
+        if(es.data.code == 200){
+          pubsubService.addNotice(es.data.notice);
+          $scope.isDone = true;
+        }
+      });
+  }
 
+
+  
+}]);

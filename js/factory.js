@@ -8,6 +8,7 @@
         var members = [];
         var unverifiedMembers = [];
         var clientStocks = [];
+        var notices = [];
 		
 		var wsUri = "ws://localhost:9000";  
 	    websocket = new WebSocket(wsUri); 
@@ -21,12 +22,10 @@
             console.log('socket open');
 	    }
 	    websocket.onmessage = function(ev) {
-	    	debugger;
 	    	var msg = JSON.parse(ev.data); 
             console.log(msg);
 	    	if(msg.type == 'addMember') 
 	    	{
-	    		debugger;
                 console.log(members,"before");
 	    		members.push(msg.data);
 	    		$rootScope.$broadcast('addMember',{
@@ -40,11 +39,8 @@
                 });
                 console.log(members,"after");
 	    	}
-
-            debugger;
 	        if(msg.type == 'addUnverifiedMember')
 	    	{
-                debugger;
 	    		addUnverifiedMember(msg.data);
 	    	}
             if(msg.type == 'updateProduct'){
@@ -104,6 +100,15 @@
         function getMembers(){
             return members;
         }
+        function getMemberById(id){
+            var member ;
+            members.forEach(function(ls,i){
+                if(id == ls.id){
+                    member = ls;
+                }
+            });
+            return member;
+        }
         function addMember(member){        	
             members.push(member);
             $rootScope.$broadcast('addMember',{
@@ -128,7 +133,7 @@
         }
         function addUnverifiedMember(member){
             unverifiedMembers.push(member);
-            $rootScope.$emit('addUnverifiedMember',{
+            $rootScope.$broadcast('addUnverifiedMember',{
                 unverifiedMembers: unverifiedMembers
             });
     
@@ -213,6 +218,12 @@
                 }
             });
         }
+        function getNotices(){
+            return notices;
+        }
+        function addNotice(notice){
+            notice.push(notice);
+        }
 		return {
 		    getBranches: getBranches,
 		    addBranch : addBranch,
@@ -225,6 +236,7 @@
             addMemberType: addMemberType,
             getMembers : getMembers,
             addMember : addMember,
+            getMemberById : getMemberById,
             addUser : addUser,
             getUser : getUser,
             getUnverifiedMembers : getUnverifiedMembers,
@@ -237,6 +249,8 @@
             getStockById : getStockById,
             updateStock : updateStock,
             updateProduct : updateProduct,
+            getNotices :getNotices,
+            addNotice : addNotice,
 		    
 		};
 	}

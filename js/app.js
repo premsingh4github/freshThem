@@ -240,6 +240,13 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
         quantity : data.Quantity
      });
    }
+   self.sendNotice = function(notice){
+      return $http.post(API + 'API/sendNotice',{
+          for: notice.for,
+          subject : notice.subject,
+          body : notice.body
+      });
+   }
  }
  MetronicApp.factory('authInterceptor', authInterceptor);
  MetronicApp.service('user', userService);
@@ -290,7 +297,6 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 
 /* Init global settings and run the app */
 MetronicApp.run(["$rootScope", "settings", "$state","user" ,function($rootScope, settings, $state,user) {
-   
     user.isAuthed().then(function(res){
       if(res.data.code != 200){
           $state.go('login');
@@ -298,8 +304,6 @@ MetronicApp.run(["$rootScope", "settings", "$state","user" ,function($rootScope,
       else{
         $state.go('home');
       }
-      
     });
-    //$
     $rootScope.$state = $state; // state to be accessed from view
 }]);
