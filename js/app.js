@@ -184,9 +184,12 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
    self.getStocks = function(){
      return $http.post(API + 'API/getStocks');
    };
-   self.addProduct = function(name){
+   self.addProduct = function(data){
         return $http.post(API + 'API/creatProduct',{
-            name:name
+            name:data.data.name,
+            lot_size: data.lotSize,
+            commision: data.commision,
+            margin: data.margin
         });
    };
    self.getProducts = function(){
@@ -246,6 +249,9 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
           subject : notice.subject,
           body : notice.body
       });
+   }
+   self.getNotices = function(){
+        return $http.post(API + 'API/getNotices');
    }
  }
  MetronicApp.factory('authInterceptor', authInterceptor);

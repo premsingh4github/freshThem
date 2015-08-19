@@ -12,17 +12,41 @@
 		<div class="panel-body">
 		<div class="table-responsive">
 			<table class="table table-bordered table-striped bs-events-table" ng-show="add">
+			<form name="userForm" novalidate>
 				<thead>
 					<tr>
 						<th>Name</th>
 						<th><input ng-model="name" type="text"></th>
+					</tr>
+					<tr>
+						<th>Lot Size</th>
+						<th><input ng-model="lotSize" type="text"></th>
+					</tr>
+					<tr>
+						<th>Commision</th>
+						<th><input ng-model="commision" type="text"></th>
+					</tr>
+					<tr>
+						<th>Margin</th>
+						<th><input ng-model="commision" type="text"></th>
+					</tr>
+					<tr>
+						<th>Margin</th>
+						<th>
+							<div class="form-group" show-errors>
+									 <input type="text" placeholder="Username" class="form-control" name="name" ng-model="name" required />
+									 <p class="help-block" ng-show="userForm.name.$invalid && userForm.name.$dirty || (userForm.name.$invalid && submitted)">The Username is required</p>
+							</div>
+						</th>
 					</tr>
 					
 					<tr>
 						<th></th>
 						<th> <span ng-click="save()"> Save</span></th>
 					</tr>
+
 				</thead>
+				</form>
 			</table>
 		    <table class="table table-bordered table-striped bs-events-table" >
 		      <thead>

@@ -22,34 +22,41 @@
             console.log('socket open');
 	    }
 	    websocket.onmessage = function(ev) {
+            debugger;
 	    	var msg = JSON.parse(ev.data); 
             console.log(msg);
 	    	if(msg.type == 'addMember') 
 	    	{
-                console.log(members,"before");
-	    		members.push(msg.data);
-	    		$rootScope.$broadcast('addMember',{
-	    		    members: members
-	    		});	
+	    		// members.push(msg.data);
+	    		// $rootScope.$broadcast('addMember',{
+	    		//     members: members
+	    		// });	
                 unverifiedMembers.forEach(function(ls,i){
                     if(ls.id == msg.data.id){
                         unverifiedMembers.splice(i,1);
-                        addMember(ls);                       
+                        addMember(ls); 
+                       $rootScope.$broadcast('addUnverifiedMember',{
+                            unverifiedMembers : unverifiedMembers
+                       });                      
                     }
                 });
-                console.log(members,"after");
 	    	}
-	        if(msg.type == 'addUnverifiedMember')
+	       else if(msg.type == 'addUnverifiedMember')
 	    	{
 	    		addUnverifiedMember(msg.data);
 	    	}
-            if(msg.type == 'updateProduct'){
+          else if(msg.type == 'updateProduct'){
                 stocks.forEach(function(ls,i){
                     if(ls.id == msg.data.id){
                         stocks[i].onlineQuantity = msg.data.onlineQuantity;
                     }
                 });
             }
+           else if(msg.type == 'addNotice'){
+                debugger;
+                addNotice(msg.data);
+             }
+             else{}
 	    };
 		
 		function getBranches(){
@@ -148,7 +155,6 @@
                     type: "addMember",
                     data : ls
                     };
-                    
                     websocket.send(JSON.stringify(msg));
                 }
             });
@@ -222,7 +228,19 @@
             return notices;
         }
         function addNotice(notice){
-            notice.push(notice);
+            debugger;
+            notices.push(notice);
+            $rootScope.$broadcast('publishNotice',{
+                notices: notices
+            });
+        }
+        function broadcastNotice(notice){
+            debugger;
+            var msg = {
+            type: "addNotice",
+            data : notice
+            };
+            websocket.send(JSON.stringify(msg));
         }
 		return {
 		    getBranches: getBranches,
@@ -251,6 +269,7 @@
             updateProduct : updateProduct,
             getNotices :getNotices,
             addNotice : addNotice,
+            broadcastNotice : broadcastNotice,
 		    
 		};
 	}
