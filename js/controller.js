@@ -424,10 +424,16 @@ MetronicApp.controller('BranchController',['$scope','$modalInstance','user','$ro
   $scope.addBranch = function(){
     $scope.add = ($scope.add)?false : true ;
   }
-  $scope.branches = pubsubService.getBranches() ;
+  $scope.branches = pubsubService.getBranches();
+  $rootScope.$on('publishBranch',function(event,data){
+      $scope.$apply(function(){
+        $scope.branches = pubsubService.getBranches();
+      });
+  });
   $scope.save = function(){
-      user.addBranch($scope.branchName,$scope.location).then(function(es){
+      user.addBranch($scope.branchName,$scope.location ,$scope.delivery_charge).then(function(es){
         if(es.data.code == 200){
+          pubsubService.publishBranch(es.data.branch);
           pubsubService.addBranch(es.data.branch);
           $scope.branch = es.data.branch.name;
           $scope.isDone = true;
@@ -449,6 +455,7 @@ MetronicApp.controller('StockController',['$scope','$modalInstance','user','$roo
 
   $scope.branches = pubsubService.getBranches() ;
   $scope.stocks = pubsubService.getStocks();
+  debugger;
   $scope.products = pubsubService.getProducts();
   $scope.branchName = function(branchId){
       var name ;
@@ -476,15 +483,15 @@ MetronicApp.controller('StockController',['$scope','$modalInstance','user','$roo
       var name ;
       $scope.products.forEach(function(el,i){
         if(el.id == Id){
-          name = el.name;
+          name = el;
         }
       });
     return name;
   }
   $scope.save = function(){
-      user.addStock($scope.branchId,$scope.productTypeId,$scope.minQuantity,$scope.onlineQuantity,$scope.deliveryCharge,$scope.lot).then(function(es){
-        
+      user.addStock($scope.branchId,$scope.productTypeId,$scope.minQuantity,$scope.onlineQuantity,$scope.deliveryCharge).then(function(es){
         if(es.data.code == 200){
+          debugger;
           pubsubService.addStock(es.data.stock);
           $scope.branch = es.data.stock.id;
           $scope.isDone = true;
@@ -601,10 +608,10 @@ MetronicApp.controller('ClientStockController',['$scope','$modalInstance','user'
   $scope.cancel = function(){
     $modalInstance.dismiss('cancel');
   }
-  $scope.addBranch = function(clientStock,location,clientBranchName,clientProduct){
+  $scope.addBranch = function(clientStock,clientBranch,clientProduct){
+    debugger;
     $scope.clientStock = clientStock;
-    $scope.clientBranchName = clientBranchName;
-    $scope.clientBranchLocation = location;
+    $scope.clientBranch = clientBranch;
     $scope.clientProduct = clientProduct;
     $scope.rate = 10;
     $scope.amount = 0;
@@ -618,7 +625,7 @@ MetronicApp.controller('ClientStockController',['$scope','$modalInstance','user'
       var name ;
       $scope.branches.forEach(function(el,i){
         if(el.id == branchId){
-          name = el.name;
+          name = el;
         }
       });
     
@@ -637,7 +644,7 @@ MetronicApp.controller('ClientStockController',['$scope','$modalInstance','user'
       var name ;
       $scope.products.forEach(function(el,i){
         if(el.id == Id){
-          name = el.name;
+          name = el;
         }
       });
     return name;
@@ -645,6 +652,7 @@ MetronicApp.controller('ClientStockController',['$scope','$modalInstance','user'
   $scope.save = function(){    
       user.addClientStock($scope).then(function(es){
         if(es.data.code == 200){
+          debugger
           pubsubService.addClientStock(es.data.clientStock);
           $scope.branch = es.data.clientStock.id;
           $scope.isDone = true;
@@ -693,7 +701,7 @@ MetronicApp.controller('WareHouseController',['$scope','$modalInstance','user','
       var name ;
       $scope.products.forEach(function(el,i){
         if(el.id == Id){
-          name = el.name;
+          name = el;
         }
       });
     return name;

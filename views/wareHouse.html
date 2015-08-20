@@ -27,20 +27,13 @@
 					<tr>
 						<th>Product</th>
 						<th>
-							<input readonly value="{{product(updateStock.productTypeId)}}"/>
+							<input readonly value="{{product(updateStock.productTypeId).name}}"/>
 						</th>
 					</tr>
-					<tr>
-						<th>Lot size</th>
-						<th>
-							<input readonly value="{{updateStock.lot}}"/>
-						</th>
-					</tr>
-					
 					<tr>
 						<th>Add Quantity</th>
 						<th>
-							<input type="text" ng-model="Quantity" />
+							<input type="text" ng-model="Quantity" />(lot)
 						</th>
 					</tr>
 					
@@ -67,8 +60,8 @@
 		        <tr ng-repeat="stock in stocks">
 		          <td>{{branchName(stock.branchId)}}</td>
 		          <td>{{branchLocation(stock.branchId)}}</td>
-		          <td>{{product(stock.productTypeId)}}</td>
-		          <td>{{stock.onlineQuantity/stock.lot}}</td>
+		          <td>{{product(stock.productTypeId).name}}</td>
+		          <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}</td>
 		          <td> &nbsp;&nbsp;&nbsp;<span class="label label-success" ng-click="showRequest(stock.request)">  {{stock.request.length}}</span></td>
 		          <td><span ng-click="addBranch(stock)">Add</span></td>
 		        </tr>
@@ -91,7 +84,7 @@
 		    	<tbody>
 		    		<tr ng-repeat="request in requests">
 		    			<td>{{branchName(getStock(request.stockId).branchId)}}</td>
-		    			<td>{{product(getStock(request.stockId).productTypeId)}}</td>
+		    			<td>{{product(getStock(request.stockId).productTypeId).name}}</td>
 		    			<td>{{getMemberById(request.memberId).username}}</td>
 		    			<td>{{request.amount}}(lot)</td>
 		    			<td><span ng-click="approve(request.id)" class="btn-success">Approve</span>&nbsp;&nbsp;&nbsp;<span ng-click="reject(request.id)" class="btn-danger">Reject</span></td> 

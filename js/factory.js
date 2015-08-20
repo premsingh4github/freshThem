@@ -22,15 +22,9 @@
             console.log('socket open');
 	    }
 	    websocket.onmessage = function(ev) {
-            debugger;
 	    	var msg = JSON.parse(ev.data); 
-            console.log(msg);
 	    	if(msg.type == 'addMember') 
 	    	{
-	    		// members.push(msg.data);
-	    		// $rootScope.$broadcast('addMember',{
-	    		//     members: members
-	    		// });	
                 unverifiedMembers.forEach(function(ls,i){
                     if(ls.id == msg.data.id){
                         unverifiedMembers.splice(i,1);
@@ -56,10 +50,15 @@
                 addNotice(msg.data);
              }
             else if(msg.type == 'addProductType'){
-                debugger;
                 addProduct(msg.data);
             }
-             else{}
+            else if(msg.type == 'addBranch'){
+                addBranch(msg.data);
+            }
+            else if(msg.type == 'addClientStock'){
+
+            }
+            else{}
 	    };
 		
 		function getBranches(){
@@ -68,7 +67,7 @@
 		
 		var addBranch = function(branch){
 	        branches.push(branch);
-	        $rootScope.$broadcast('addBranch',{
+	        $rootScope.$broadcast('publishBranch',{
 	            branches: branches
 	        });
     	}
@@ -76,10 +75,20 @@
     		branches.forEach(function(el,i){
     			if(el.name == branchName){
     				branches.splice(i,1);
+                    $rootScope.$broadcast('publishBranch',{
+                        branches: branches
+                    });
     			}
     			//console.log(el);
     		});
     	}
+        function publishBranch(branch){
+            var msg = {
+                type : 'addBranch',
+                data : branch 
+            };
+            websocket.send(JSON.stringify(msg));
+        }
     	function getStocks(){
     		return stocks;
     	}
@@ -193,6 +202,13 @@
                 clientStocks: clientStocks
             });
         };
+        function publishClientStock(clientStock){
+                var msg = {
+                    type : 'addClientStock',
+                    data : clientStock
+                }
+                websocket.send(JSON.stringify(msg));
+        }
         function publishUnverifiedMember(member){
             var msg = {
             type: "addUnverifiedMember",
@@ -255,6 +271,7 @@
 		    getBranches: getBranches,
 		    addBranch : addBranch,
 		    removeBranch: removeBranch,
+            publishBranch : publishBranch,
 		    getStocks :getStocks,
 		    addStock : addStock,
 		    getProducts: getProducts,
@@ -273,6 +290,7 @@
             updateAccount: updateAccount,
             getClientStocks : getClientStocks,
             addClientStock : addClientStock,
+            publishClientStock : publishClientStock,
             publishUnverifiedMember : publishUnverifiedMember,
             getStockById : getStockById,
             updateStock : updateStock,
@@ -280,6 +298,7 @@
             getNotices :getNotices,
             addNotice : addNotice,
             broadcastNotice : broadcastNotice,
+
 		    
 		};
 	}

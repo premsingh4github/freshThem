@@ -31,30 +31,17 @@
 						</th>
 					</tr>
 					<tr>
-						<th>Lot size</th>
-						<th>
-							<input type="text" ng-model="lot" />
-						</th>
-					</tr>
-					<tr>
 						<th>Min. Quantity</th>
 						<th>
-							<input type="text" ng-model="minQuantity" />
+							<input type="text" ng-model="minQuantity" />(lot)
 						</th>
 					</tr>
 					<tr>
 						<th>Online Quantity</th>
 						<th>
-							<input type="text" ng-model="onlineQuantity" />
+							<input type="text" ng-model="onlineQuantity" />(lot)
 						</th>
 					</tr>
-					<tr>
-						<th>Delivery Charge</th>
-						<th>
-							<input type="text" ng-model="deliveryCharge" />
-						</th>
-					</tr>
-					
 					<tr>
 						<th></th>
 						<th> <span ng-click="save()"> Save</span></th>
@@ -75,8 +62,8 @@
 		        <tr ng-repeat="stock in stocks">
 		          <td>{{branchName(stock.branchId)}}</td>
 		          <td>{{branchLocation(stock.branchId)}}</td>
-		          <td>{{product(stock.productTypeId)}}</td>
-		           <td>{{stock.onlineQuantity/stock.lot}}</td>
+		          <td>{{product(stock.productTypeId).name}}</td>
+		           <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
 		          <td><span >Edit</span> <span>Delete</span></td>
 		        </tr>
 		        

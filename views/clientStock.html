@@ -4,11 +4,11 @@
 		            <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="cancel()"><span >×</span></button>
 		            <h3 class="modal-title">Stock</h3>(Avialable amount:{{user.amount}})
 		            <div id="message" class="note note-success note-bordered" ng-show="isDone" >
-		            		<h3>Your request for {{clientProduct}} is waiting for approval! <span class="close" ng-click="cancel()"></span></h3>
+		            		<h3>Your request for {{clientProduct.name}} is waiting for approval! <span class="close" ng-click="cancel()"></span></h3>
 		            		
 		            </div>
 		            <div id="message" class="note note-warning note-bordered" ng-show="isError" >
-		            		<h3>Your request for {{clientProduct}} fail due to insufficient stock!<span class="close" ng-click="cancel()"></span></h3>
+		            		<h3>Your request for {{clientProduct.name}} fail due to insufficient stock!<span class="close" ng-click="cancel()"></span></h3>
 		            		
 		            </div>
 		 </div>
@@ -20,32 +20,44 @@
 					<tr>
 						<th>Branch</th>
 						<th>
-							<input type="text" readonly value="{{clientBranchName}}"   />
+							<input type="text" readonly value="{{clientBranch.name}}"   />
 						</th>
 					</tr>
 					<tr>
 						<th>Location</th>
 						<th>
-							<input type="text" readonly value="{{clientBranchLocation}}"   />
+							<input type="text" readonly value="{{clientBranch.location}}"   />
 						</th>
 					</tr>
 					<tr>
 						<th>Product</th>
 						<th>
-							<input type="text" readonly value="{{clientProduct}}"   />
+							<input type="text" readonly value="{{clientProduct.name}}"   />
 						</th>
 					</tr>
 					
 					<tr>
 						<th>Avialable Quantity</th>
 						<th>
-							<input type="text" readonly value="{{clientStock.onlineQuantity/clientStock.lot}}" />
+							<input type="text" readonly value="{{clientStock.onlineQuantity/clientProduct.lot_size}}(lot)" />
 						</th>
 					</tr>
 					<tr>
 						<th>Delivery Charge</th>
 						<th>
-							<input type="text" readonly value="{{clientStock.deliveryCharge}}" />
+							<input type="text" readonly value="{{clientBranch.delivery_charge}}" />
+						</th>
+					</tr>
+					<tr>
+						<th>Commision</th>
+						<th>
+							<input type="text" readonly value="{{clientProduct.commision}}/lot" />
+						</th>
+					</tr>
+					<tr>
+						<th>Margin</th>
+						<th>
+							<input type="text" readonly value="{{clientProduct.margin}}/lot" />
 						</th>
 					</tr>
 					<tr>
@@ -79,11 +91,11 @@
 		      </thead>
 		      <tbody>
 		        <tr ng-repeat="stock in stocks">
-		          <td><span ng-click="addBranch(stock,branchName(stock.branchId),branchLocation(stock.branchId),product(stock.productTypeId))" >{{branchName(stock.branchId)}}</span></td>
+		          <td><span ng-click="addBranch(stock,branchName(stock.branchId),branchLocation(stock.branchId),product(stock.productTypeId))" >{{branchName(stock.branchId).name}}</span></td>
 		          <td>{{branchLocation(stock.branchId)}}</td>
-		          <td>{{product(stock.productTypeId)}}</td>
-		          <td>{{stock.onlineQuantity/stock.lot}}</td>
-		          <td><span ng-click="addBranch(stock,branchName(stock.branchId),branchLocation(stock.branchId),product(stock.productTypeId))" >Buy</span></td>
+		          <td>{{product(stock.productTypeId).name}}</td>
+		          <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
+		          <td><span ng-click="addBranch(stock,branchName(stock.branchId),product(stock.productTypeId))" >Buy</span></td>
 		        </tr>		        
 		      </tbody>
 		      <tfoot></tfoot>

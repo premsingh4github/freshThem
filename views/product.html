@@ -1,14 +1,11 @@
 <div class="panel panel-default">
-
 		<div class="modal-header">
 		            <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="cancel()"><span >×</span></button>
 		            <h3 class="modal-title">Product Type</h3>
 		            <div id="message" class="note note-success note-bordered" ng-show="isDone" >
 		            		<h3>Now {{branch}} is added to Product Type! <span class="close" ng-click="cancel()"></span></h3>
-		            		
 		            </div>
 		 </div>
-		 
 		<div class="panel-body">
 		<div class="table-responsive">
 			<table class="table table-bordered table-striped bs-events-table" ng-show="add">
@@ -22,7 +19,7 @@
 					</tr>
 					<tr>
 						<th>Lot Size</th>
-						<th><input ng-model="lotSize" type="text"></th>
+						<th><input ng-model="lotSize" type="text">(gram)</th>
 					</tr>
 					<tr>
 						<th>Commision</th>
@@ -31,6 +28,10 @@
 					<tr>
 						<th>Margin</th>
 						<th><input ng-model="margin" type="text"></th>
+					</tr>
+					<tr>
+						<th>Holding Cost</th>
+						<th><input ng-model="holding_cost" type="text"></th>
 					</tr>
 					<tr>
 						<th></th>

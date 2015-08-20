@@ -161,24 +161,24 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
    self.logout = function(){
         return $http.post(API + 'API/logout');
    }
-   self.addBranch = function(branchName,location){
+   self.addBranch = function(branchName,location,delivery_charge){
 
         return $http.post(API + 'API/createBranch',{
             branchName : branchName,
-            branchLocation : location
+            branchLocation : location,
+            delivery_charge : delivery_charge
         });
    }
    self.getBranch = function(){
     return $http.post(API + 'API/getBranch');
    }
-   self.addStock = function(branchId,productTypeId,minQuantity,onlineQuantity,deliveryCharge,lot){
+   self.addStock = function(branchId,productTypeId,minQuantity,onlineQuantity,deliveryCharge){
         return $http.post(API + 'API/createStock',{
             branchId : branchId,
             productTypeId : productTypeId,
             minQuantity : minQuantity,
             onlineQuantity : onlineQuantity,
-            deliveryCharge : deliveryCharge,
-            lot : lot
+            deliveryCharge : deliveryCharge
         });
    }
    self.getStocks = function(){
@@ -190,7 +190,8 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
             name:data.name,
             lot_size: data.lotSize,
             commision: data.commision,
-            margin: data.margin
+            margin: data.margin,
+            holding_cost : data.holding_cost
         });
    };
    self.getProducts = function(){
