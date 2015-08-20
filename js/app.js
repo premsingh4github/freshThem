@@ -185,8 +185,9 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
      return $http.post(API + 'API/getStocks');
    };
    self.addProduct = function(data){
+    debugger;
         return $http.post(API + 'API/creatProduct',{
-            name:data.data.name,
+            name:data.name,
             lot_size: data.lotSize,
             commision: data.commision,
             margin: data.margin

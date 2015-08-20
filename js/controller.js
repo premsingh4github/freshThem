@@ -504,16 +504,28 @@ MetronicApp.controller('ProductController',['$scope','$modalInstance','user','$r
     $scope.add = ($scope.add)?false : true ;
   }
   $scope.products = pubsubService.getProducts() ;
-  $scope.save = function(){
-    
-      user.addProduct($scope).then(function(es){
-        if(es.data.code == 200){
-          pubsubService.addProduct(es.data.product);
-          $scope.branch = es.data.product.name;
-          $scope.isDone = true;
-          $scope.name = null;
-        }
+  $rootScope.$on('addProductType', function (event, data) {
+    $scope.$apply(function(){
+      $scope.products = pubsubService.getProducts() ;
       });
+  });
+  $scope.save = function(){
+    debugger;
+    if($scope.userForm.$valid){
+        user.addProduct($scope).then(function(es){
+          if(es.data.code == 200){
+            pubsubService.publishProduct(es.data.product);
+            pubsubService.addProduct(es.data.product);
+            $scope.branch = es.data.product.name;
+            $scope.isDone = true;
+            $scope.name = null;
+          }
+      });
+    }
+    else{
+      console.log("invalid form");
+    }
+      
   }
 }]);
 MetronicApp.controller('MemberController',['$scope','$modalInstance','user','$rootScope','pubsubService',function($scope,$modalInstance,user,$rootScope,pubsubService){

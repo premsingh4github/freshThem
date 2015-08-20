@@ -16,7 +16,9 @@
 				<thead>
 					<tr>
 						<th>Name</th>
-						<th><input ng-model="name" type="text"></th>
+						<th>
+							<input ng-model="name" type="text" required >
+						</th>
 					</tr>
 					<tr>
 						<th>Lot Size</th>
@@ -28,21 +30,11 @@
 					</tr>
 					<tr>
 						<th>Margin</th>
-						<th><input ng-model="commision" type="text"></th>
+						<th><input ng-model="margin" type="text"></th>
 					</tr>
-					<tr>
-						<th>Margin</th>
-						<th>
-							<div class="form-group" show-errors>
-									 <input type="text" placeholder="Username" class="form-control" name="name" ng-model="name" required />
-									 <p class="help-block" ng-show="userForm.name.$invalid && userForm.name.$dirty || (userForm.name.$invalid && submitted)">The Username is required</p>
-							</div>
-						</th>
-					</tr>
-					
 					<tr>
 						<th></th>
-						<th> <span ng-click="save()"> Save</span></th>
+						<th> <span type="submit" ng-click="save()"> Save</span></th>
 					</tr>
 
 				</thead>

@@ -53,9 +53,12 @@
                 });
             }
            else if(msg.type == 'addNotice'){
-                debugger;
                 addNotice(msg.data);
              }
+            else if(msg.type == 'addProductType'){
+                debugger;
+                addProduct(msg.data);
+            }
              else{}
 	    };
 		
@@ -91,10 +94,18 @@
     	}
     	function addProduct(product){
     		products.push(product);
-    		$rootScope.$broadcast('addProduct',{
+    		$rootScope.$broadcast('addProductType',{
     		    products: products
     		});
     	}
+        function publishProduct(productType){
+            var msg = {
+            type: "addProductType",
+            data : productType
+            };
+            websocket.send(JSON.stringify(msg));
+
+        }
         function getMemberTypes(){
             return memberTypes;
         }
@@ -228,14 +239,12 @@
             return notices;
         }
         function addNotice(notice){
-            debugger;
             notices.push(notice);
             $rootScope.$broadcast('publishNotice',{
                 notices: notices
             });
         }
         function broadcastNotice(notice){
-            debugger;
             var msg = {
             type: "addNotice",
             data : notice
@@ -250,6 +259,7 @@
 		    addStock : addStock,
 		    getProducts: getProducts,
 		    addProduct : addProduct,
+            publishProduct : publishProduct,
             getMemberTypes : getMemberTypes,
             addMemberType: addMemberType,
             getMembers : getMembers,
