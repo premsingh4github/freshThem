@@ -740,6 +740,7 @@ MetronicApp.controller('WareHouseController',['$scope','$modalInstance','user','
   }
   $scope.approve = function(requestId){
     user.approveRequest(requestId,1).then(function(rs){
+      debugger;
       pubsubService.updateStock(rs.data.clientStock);
     });
   }

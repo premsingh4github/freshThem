@@ -67,9 +67,27 @@
 						</th>
 					</tr>
 					<tr>
-						<th>Total Cost</th>
+						<th>Delivery Date</th>
 						<th>
-							<input type="text" value="{{clientStock.deliveryCharge +(amount * rate)}}" readonly    />
+							<!-- <input type="text" ng-model="delivery"  class="angular-datepicker-input"  />lot -->
+							<div class="datepicker"
+							      date-format="MM d, y"
+							      button-prev='<i class="fa fa-arrow-circle-left"></i>'
+							      button-next='<i class="fa fa-arrow-circle-right"></i>'>
+							      <input ng-model="date2" type="text" class="angular-datepicker-input"/>
+							    </div>
+						</th>
+					</tr>
+					<tr>
+						<th>Cost</th>
+						<th>
+							<input type="text" value="{{amount*(clientProduct.margin + clientProduct.commision)+(clientBranch.delivery_charge * (amount * clientProduct.lot_size)/10)}}" readonly    />
+						</th>
+					</tr>
+					<tr>
+						<th> Remaning Cost</th>
+						<th>
+							<input type="text" value="{{ ((clientProduct.lot_size * amount)/10 *  30000) - (amount* clientProduct.margin) }}" readonly    />
 						</th>
 					</tr>
 					

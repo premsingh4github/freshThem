@@ -182,7 +182,6 @@
         function updateAccount(account){
                 members.forEach(function(el,i){
                     if(el.id == account.memberId){
-                        branches.splice(i,1);
                         if(account.type == 1){
                             members[i].amount =  +members[i].amount + +account.amount;
                         }
@@ -197,6 +196,17 @@
             return clientStocks;
         };
         function addClientStock(clientStock){
+            members.forEach(function(el,i){
+                if(el.id == clientStock.memberId){
+                    if(clientStock.status == 2){
+                        members[i].amount =  +members[i].amount + +clientStock.cost;
+                    }
+                    else if(clientStock.status == 0){
+                        members[i].amount =  +members[i].amount - +clientStock.cost;
+                    }
+                }
+                //console.log(el);
+            });
             clientStocks.push(clientStock);
             $rootScope.$broadcast('addClientStock',{
                 clientStocks: clientStocks

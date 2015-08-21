@@ -8,7 +8,8 @@ var MetronicApp = angular.module("MetronicApp", [
     "ui.bootstrap", 
     "oc.lazyLoad",  
     "ngSanitize",
-    "ngWebsocket"
+    "ngWebsocket",
+    '720kb.datepicker'
 ]);
 MetronicApp.config(['$ocLazyLoadProvider', function($ocLazyLoadProvider) {
     $ocLazyLoadProvider.config({

@@ -61,7 +61,7 @@
 		          <td>{{branchName(stock.branchId)}}</td>
 		          <td>{{branchLocation(stock.branchId)}}</td>
 		          <td>{{product(stock.productTypeId).name}}</td>
-		          <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}</td>
+		          <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
 		          <td> &nbsp;&nbsp;&nbsp;<span class="label label-success" ng-click="showRequest(stock.request)">  {{stock.request.length}}</span></td>
 		          <td><span ng-click="addBranch(stock)">Add</span></td>
 		        </tr>
@@ -86,7 +86,7 @@
 		    			<td>{{branchName(getStock(request.stockId).branchId)}}</td>
 		    			<td>{{product(getStock(request.stockId).productTypeId).name}}</td>
 		    			<td>{{getMemberById(request.memberId).username}}</td>
-		    			<td>{{request.amount}}(lot)</td>
+		    			<td>{{request.amount/product(getStock(request.stockId).productTypeId).lot_size}}(lot)</td>
 		    			<td><span ng-click="approve(request.id)" class="btn-success">Approve</span>&nbsp;&nbsp;&nbsp;<span ng-click="reject(request.id)" class="btn-danger">Reject</span></td> 
 		    			
 		    		</tr>
