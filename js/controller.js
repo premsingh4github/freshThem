@@ -145,6 +145,90 @@ MetronicApp.controller('HomeController',['$state','$rootScope','user','pubsubSer
 }]);
 MetronicApp.controller('dashboardController',['$scope','$state','user','$rootScope','pubsubService','HOME',"$interval",function($scope,$state,user,$rootScope,pubsubService,HOME,$interval){
   $scope.unverifiedMembers = pubsubService.getUnverifiedMembers();
+  $scope.add = false;
+   $scope.isDone = false;
+   $scope.branch = null;
+   $scope.isShowRequest = false;
+  $scope.cancel = function(){
+    $modalInstance.dismiss('cancel');
+  }
+  $scope.addBranch = function(updateStock){
+    $scope.updateStock = updateStock;
+    $scope.add = ($scope.add)?false : true ;
+  }
+  $scope.branches = pubsubService.getBranches() ;
+  $scope.stocks = pubsubService.getStocks();
+  $scope.products = pubsubService.getProducts();
+  $scope.branchName = function(branchId){
+      var name ;
+      $scope.branches.forEach(function(el,i){
+        if(el.id == branchId){
+          name = el.name;
+        }
+      });
+    return name;
+  }
+  $scope.branchLocation = function(branchId){
+      var name ;
+      $scope.branches.forEach(function(el,i){
+        if(el.id == branchId){
+          name = el.location;
+        }
+      });
+    return name;
+  }
+  $scope.product = function(Id){
+      var name ;
+      $scope.products.forEach(function(el,i){
+        if(el.id == Id){
+          name = el;
+        }
+      });
+    return name;
+  }
+  $scope.getMemberById = function(memberId){
+    var name ;
+    pubsubService.getMembers().forEach(function(el,i){
+      if(el.id == memberId){
+        name = el;
+      }
+      
+    });
+      return name;
+  }
+  $scope.getStock =  function(id){
+    return pubsubService.getStockById(id);
+  }
+  $scope.save = function(){
+      user.updateStock($scope).then(function(es){
+        
+        if(es.data.code == 200){
+          // pubsubService.addStock(es.data.stock);
+          // $scope.branch = es.data.stock.id;
+          // $scope.isDone = true;
+        }
+      });
+  }
+  $scope.hideRequest = function(){
+    $scope.isShowRequest = ($scope.isShowRequest == true)? false : true;
+  }
+  $scope.showRequest = function(request){
+    if(request.length > 0){
+      $scope.requests = request;
+      $scope.isShowRequest = true;
+    }
+  }
+  $scope.approve = function(requestId){
+    user.approveRequest(requestId,1).then(function(rs){
+      debugger;
+      pubsubService.updateStock(rs.data.clientStock);
+    });
+  }
+  $scope.reject = function(requestId){
+    user.approveRequest(requestId,2).then(function(rs){
+      pubsubService.updateStock(rs.data.clientStock);
+    });
+  }
 }]);
 MetronicApp.controller('HeaderController', ['$scope','user','$modal','$rootScope','$state','pubsubService','HOME', function($scope,user,$modal,$rootScope,$state,pubsubService,HOME) {
     $scope.$on('$includeContentLoaded', function() {
@@ -649,7 +733,7 @@ MetronicApp.controller('ClientStockController',['$scope','$modalInstance','user'
       });
     return name;
   }
-  $scope.save = function(){    
+  $scope.save = function(){
       user.addClientStock($scope).then(function(es){
         if(es.data.code == 200){
           debugger

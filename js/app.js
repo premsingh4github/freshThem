@@ -214,7 +214,8 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
     self.addClientStock = function(data){
         return $http.post(API + 'API/addClientStock',{
             stockId: data.clientStock.id,
-            amount: data.amount
+            amount: data.amount,
+            delivery_date : data.delivery_date
         })
     }
     self.addMember = function($data) {

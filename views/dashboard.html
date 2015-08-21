@@ -13,9 +13,9 @@
 
 		<!-- BEGIN CONTENT -->
 		<div class="page-content-wrapper">
-			<div class="page-content">
+			<div class="page-content" >
 				
-				<div class="portlet-body">
+				<div class="portlet-body" >
 					<div class="table-container">
 						
 						<div  class="dataTables_wrapper dataTables_extended_wrapper no-footer">
@@ -34,7 +34,7 @@
 							 <tbody>
 							<tr role="row" class="odd">
 								<td>
-									<table class="table table-bordered table-striped bs-events-table" >
+									<table class="table table-bordered table-striped bs-events-table"  >
 									  <thead>
 									    <tr>
 									      <th>Branch</th>
@@ -44,6 +44,18 @@
 									      <th>Action</th>
 									    </tr>
 									  </thead>
+									  <tbody>
+
+									    <tr ng-repeat="stock in stocks">
+									      <td>{{branchName(stock.branchId)}}</td>
+									      <td>{{branchLocation(stock.branchId)}}</td>
+									      <td>{{product(stock.productTypeId).name}}</td>
+									      <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
+									      <td> &nbsp;&nbsp;&nbsp;<span class="label label-success" ng-click="showRequest(stock.request)">  {{stock.request.length}}</span></td>
+									      <td><span ng-click="addBranch(stock)">Add</span></td>
+									    </tr>
+									    
+									  </tbody>
 									  <tfoot></tfoot>
 									</table>
 								</td>
