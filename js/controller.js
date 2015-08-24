@@ -145,6 +145,8 @@ MetronicApp.controller('HomeController',['$state','$rootScope','user','pubsubSer
 }]);
 MetronicApp.controller('dashboardController',['$scope','$state','user','$rootScope','pubsubService','HOME',"$interval",function($scope,$state,user,$rootScope,pubsubService,HOME,$interval){
   $scope.unverifiedMembers = pubsubService.getUnverifiedMembers();
+  $scope.user = pubsubService.getUser();
+  $scope.stocks = pubsubService.getStocks();
   $scope.add = false;
    $scope.isDone = false;
    $scope.branch = null;
@@ -163,7 +165,7 @@ MetronicApp.controller('dashboardController',['$scope','$state','user','$rootSco
       var name ;
       $scope.branches.forEach(function(el,i){
         if(el.id == branchId){
-          name = el.name;
+          name = el;
         }
       });
     return name;
@@ -767,7 +769,7 @@ MetronicApp.controller('WareHouseController',['$scope','$modalInstance','user','
       var name ;
       $scope.branches.forEach(function(el,i){
         if(el.id == branchId){
-          name = el.name;
+          name = el;
         }
       });
     return name;

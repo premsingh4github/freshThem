@@ -15,7 +15,7 @@
 					<tr>
 						<th>Branch</th>
 						<th>
-							<input readonly value="{{branchName(updateStock.branchId)}}"/>
+							<input readonly value="{{branchName(updateStock.branchId).name}}"/>
 						</th>
 					</tr>
 					<tr>
@@ -58,7 +58,7 @@
 		      <tbody>
 
 		        <tr ng-repeat="stock in stocks">
-		          <td>{{branchName(stock.branchId)}}</td>
+		          <td>{{branchName(stock.branchId).name}}</td>
 		          <td>{{branchLocation(stock.branchId)}}</td>
 		          <td>{{product(stock.productTypeId).name}}</td>
 		          <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
@@ -83,11 +83,11 @@
 		    	</thead>
 		    	<tbody>
 		    		<tr ng-repeat="request in requests">
-		    			<td>{{branchName(getStock(request.stockId).branchId)}}</td>
+		    			<td>{{branchName(getStock(request.stockId).branchId).name}}</td>
 		    			<td>{{product(getStock(request.stockId).productTypeId).name}}</td>
 		    			<td>{{getMemberById(request.memberId).username}}</td>
 		    			<td>{{request.amount/product(getStock(request.stockId).productTypeId).lot_size}}(lot)</td>
-		    			<td><span ng-click="approve(request.id)" class="btn-success">Approve</span>&nbsp;&nbsp;&nbsp;<span ng-click="reject(request.id)" class="btn-danger">Reject</span></td> 
+		    			<td><span ng-click="approve(request.id)" class="btn-success" confirm="Are you sure want to approve?">Approve</span>&nbsp;&nbsp;&nbsp;<span ng-click="reject(request.id)" class="btn-danger" confirm="Are you sure want ot reject?">Reject</span></td> 
 		    			
 		    		</tr>
 		    	</tbody>

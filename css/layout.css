@@ -2205,7 +2205,8 @@ Page content
 .page-content {
   margin-top: 0px;
   padding: 0px;
-  background-color: #fff;
+  //background-color: #fff;
+  background-color: #F1F3FA;
 }
 .page-container-bg-solid .page-content {
   background: #F1F3FA;
