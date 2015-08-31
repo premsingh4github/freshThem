@@ -7,7 +7,7 @@
 	<!-- BEGIN CONTAINER -->
 	<div class="page-container">
 		<!-- BEGIN SIDEBAR -->
-		<div data-ng-include="'tpl/sidebar.html'" data-ng-controller="SidebarController" class="page-sidebar-wrapper">			
+		<div data-ng-include="'tpl/sidebar.html'" data-ng-controller="SidebarController" class="page-sidebar-wrapper">
 		</div>
 
 		<!-- END SIDEBAR -->
@@ -264,30 +264,24 @@
 					</div>
 					<div class="col-md-4 col-sm-4" ng-show="user.mtype == 6">
 						<div class="portlet light ">
-							<div class="portlet-title">
+							<div class="portlet-title ">
 								<div class="caption">
-									<span class="caption-subject font-purple-intense bold uppercase">Offline Request</span>
+								<!-- caption-subject font-green-haze bold uppercase /caption-subject font-purple-intense bold uppercase -->
+									<span ng-class="offlineClass" ng-click="changeRequest('0')">Offline Request</span>
 								</div>
+								<div class="caption right">
+									<span ng-class="onlineClass"  ng-click="changeRequest('1')">Online Request</span>
+								</div>
+
 							</div>
 							<div class="portlet-body">
-								<div class="row">
+								<div ng-hide="request" class="row">
 									<div class="table-scrollable table-scrollable-borderless">
 										<table class="table table-hover table-light">
-											<!-- <thead>
-												<tr class="uppercase">
-													<th >
-														Description
-													</th>
-													<th>
-														Amount(Rs)
-													</th>
-												</tr>
-												
-											</thead> -->
 											<tbody>
 												<tr>
 													<td>
-														<a class="primary-link">Type</a>
+														<a class="primary-link bold font-green-haze">Type</a>
 													</td>
 													<td>
 														<select name="">
@@ -298,7 +292,7 @@
 												</tr>
 												<tr>
 													<td>
-														<a class="primary-link">Branch</a>
+														<a class="primary-link bold font-green-haze">Branch</a>
 													</td>
 													<td>
 														<select name="">
@@ -308,7 +302,7 @@
 												</tr>
 												<tr>
 													<td>
-														<a class="primary-link">Product</a>
+														<a class="primary-link bold font-green-haze">Product</a>
 													</td>
 													<td>
 														<select name="">
@@ -318,7 +312,7 @@
 												</tr>
 												<tr>
 													<td>
-														<a class="primary-link">Starting Price</a>
+														<a class="primary-link bold font-green-haze">Starting Price</a>
 													</td>
 													<td>
 														<input type="number" name='startPrice'>
@@ -326,7 +320,7 @@
 												</tr>
 												<tr>
 													<td>
-														<a class="primary-link">Last Price</a>
+														<a class="primary-link bold font-green-haze">Last Price</a>
 													</td>
 													<td>
 														<input type="number" name='lastPrice'>
@@ -334,7 +328,7 @@
 												</tr>
 												<tr>
 													<td>
-														<a class="primary-link">Quantity</a>
+														<a class="primary-link bold font-green-haze">Quantity</a>
 													</td>
 													<td>
 														<input type="number" name='quantity'>(lot)
@@ -352,10 +346,92 @@
 										</table>
 									</div>
 								</div>
+								<div ng-show="request" class="row">
+									<div class="table-scrollable table-scrollable-borderless">
+										<table class="table table-hover table-light">
+											<tbody>
+											<tr>
+												<th><a class="primary-link bold font-green-haze">Delivery Date</a></th>
+												<th>
+													<!-- <input type="text" ng-model="delivery"  class="angular-datepicker-input"  />lot -->
+													<div class="datepicker"
+													      date-format="y-d-MM"
+													      button-prev='<i class="fa fa-arrow-circle-left"></i>'
+													      button-next='<i class="fa fa-arrow-circle-right"></i>'>
+													      <input ng-model="delivery_date" type="text" class="angular-datepicker-input"/>
+													    </div>
+												</th>
+											</tr>
+												<tr>
+													<td>
+														<a class="primary-link bold font-green-haze">Location</a>
+													</td>
+													<td>
+													
+														<select ng-model="clientRequestStock" ng-change="changeClientBranch()">
+															<option value="">Select</option>
+															<option ng-repeat="stock in stocks" value="{{stock.id}}">{{branchName(stock.branchId).location}}</option>
+															
+														</select>
+													</td>
+												</tr>
+												
+												<tr>
+													<td>
+														<a class="primary-link bold font-green-haze">Product</a>
+													</td>
+													<td>
+														<select name="" ng-model="clientProduct" ng-change="changeClientProduct()" >
+															<option value="">select</option>
+															<option ng-repeat="product in products" value="{{product.id}}">{{product.name}}</option>
+														</select>
+													</td>
+												</tr>
+												
+												<tr>
+													<th><a class="primary-link bold font-green-haze">Delivery Charge</a></th>
+													<th>
+														<input type="text" value="{{delivery_charge}}" />
+													</th>
+												</tr>
+												<tr>
+													<th><a class="primary-link bold font-green-haze">Commision</a></th>
+													<th>
+														<input type="text" value="{{commision}}/lot" />
+													</th>
+												</tr>
+												<tr>
+													<th><a class="primary-link bold font-green-haze">Margin</a></th>
+													<th>
+														<input type="text" value="{{margin}}/lot" />
+													</th>
+												</tr>
+												<tr>
+													<td>
+														<a class="primary-link bold font-green-haze">Quantity</a>
+													</td>
+													<td>
+														<input type="number" name='quantity'>(lot)
+													</td>
+												</tr>
+
+												<tr>
+													<td>
+														
+													</td>
+													<td>
+														<input type="submit" value="Request">
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+				
 				
 
 			</div>	

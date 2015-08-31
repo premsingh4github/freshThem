@@ -83,7 +83,7 @@ Bootstrap Datepicker
 
 /* change z-index when opened in modal */
 .modal-open .datepicker {
-  z-index: 10055 !important;
+  //z-index: 10055 !important;
 }
 
 .datepicker table td {

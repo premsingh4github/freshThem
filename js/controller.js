@@ -151,6 +151,16 @@ MetronicApp.controller('dashboardController',['$scope','$state','user','$rootSco
    $scope.isDone = false;
    $scope.branch = null;
    $scope.isShowRequest = false;
+   $scope.tabs = [
+      { title:'Dynamic Title 1', content:'Dynamic content 1' },
+      { title:'Dynamic Title 2', content:'Dynamic content 2', disabled: true }
+    ];
+
+    $scope.alertMe = function() {
+      setTimeout(function() {
+        $window.alert('You\'ve selected the alert tab!');
+      });
+    };
   $scope.cancel = function(){
     $modalInstance.dismiss('cancel');
   }
@@ -159,6 +169,7 @@ MetronicApp.controller('dashboardController',['$scope','$state','user','$rootSco
     $scope.add = ($scope.add)?false : true ;
   }
   $scope.branches = pubsubService.getBranches() ;
+  debugger;
   $scope.stocks = pubsubService.getStocks();
   $scope.products = pubsubService.getProducts();
   $scope.branchName = function(branchId){
@@ -231,6 +242,45 @@ MetronicApp.controller('dashboardController',['$scope','$state','user','$rootSco
       pubsubService.updateStock(rs.data.clientStock);
     });
   }
+  $scope.offlineClass = [ "caption-subject", 'font-purple-intense', 'bold', 'uppercase'];
+  $scope.onlineClass = [ 'caption-subject', 'font-green-haze', 'bold', 'uppercase'];
+  $scope.request = 1;
+  $scope.changeRequest = function(request){
+    if(request == '1'){
+      $scope.request = 1;
+      $scope.onlineClass = [ 'caption-subject', 'font-green-haze', 'bold', 'uppercase'];
+      $scope.offlineClass = [ 'caption-subject', 'font-purple-intense', 'bold', 'uppercase']; 
+    }
+    else{
+      $scope.request = 0;
+      $scope.offlineClass = [ 'caption-subject', 'font-green-haze', 'bold', 'uppercase'];
+      $scope.onlineClass = [ 'caption-subject', 'font-purple-intense', 'bold', 'uppercase'];
+    }  
+  };
+  $scope.delivery_charge = 0;
+ $scope.changeClientBranch = function(){
+  debugger;
+  if($scope.clientRequestStock > 0){
+    $scope.delivery_charge = $scope.branchName($scope.getStock($scope.clientRequestStock).branchId).delivery_charge;
+  }
+  else{
+     $scope.delivery_charge = 0;
+  }
+ 
+ }
+ $scope.commision = $scope.margin = 0;
+ $scope.changeClientProduct = function(){
+    if($scope.clientProduct > 0){
+      $product = $scope.product($scope.clientProduct);
+      $scope.commision = $product.commision;
+      $scope.margin = $product.margin;
+    }
+    else{
+      $scope.commision = $scope.margin = 0;
+    }
+    
+    debugger;
+ }
 }]);
 MetronicApp.controller('HeaderController', ['$scope','user','$modal','$rootScope','$state','pubsubService','HOME', function($scope,user,$modal,$rootScope,$state,pubsubService,HOME) {
     $scope.$on('$includeContentLoaded', function() {
