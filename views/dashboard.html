@@ -109,7 +109,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-8 col-sm-8" ng-show="user.mtype == 6">
+					<div class="col-md-4 col-sm-4" ng-show="user.mtype == 6">
 						<div class="portlet light ">
 							<div class="portlet-title">
 								<div class="caption">
@@ -123,22 +123,22 @@
 										<table class="table table-hover table-light">
 											<thead>
 												<tr class="uppercase">
-													<th>Branch</th>
+													<!-- <th>Branch</th> -->
 											          <th>Location</th>
 											          <th>Product</th>
 											          <th>Price</th>
 											          <th>Quantity</th>
-											          <th>Action</th>
+											          <!-- <th>Action</th> -->
 												</tr>
 											</thead>
 											<tbody>
 												<tr ng-repeat="stock in stocks">
-												  <td><span ng-click="addBranch(stock,branchName(stock.branchId),branchLocation(stock.branchId),product(stock.productTypeId))" >{{branchName(stock.branchId).name}}</span></td>
+												  <!-- <td><span ng-click="addBranch(stock,branchName(stock.branchId),branchLocation(stock.branchId),product(stock.productTypeId))" >{{branchName(stock.branchId).name}}</span></td> -->
 												  <td>{{branchLocation(stock.branchId)}}</td>
 												  <td>{{product(stock.productTypeId).name}}</td>
 												  <td><span class="bold font-green-haze">48000</span></td>
 												  <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
-												  <td><span ng-click="addBranch(stock,branchName(stock.branchId),product(stock.productTypeId))" >Buy</span></td>
+												  <!-- <td><span ng-click="addBranch(stock,branchName(stock.branchId),product(stock.productTypeId))" >Buy</span></td> -->
 												</tr>
 											</tbody>
 										</table>
@@ -148,6 +148,44 @@
 						</div>
 					</div>
 					<div class="col-md-4 col-sm-4" ng-show="user.mtype == 6">
+						<div class="portlet light ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-cursor font-purple-intense hide"></i>
+									<span class="caption-subject font-purple-intense bold uppercase">Offline Stock</span>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div class="row">
+									<div class="table-scrollable table-scrollable-borderless">
+										<table class="table table-hover table-light">
+											<thead>
+												<tr class="uppercase">
+													<!-- <th>Branch</th> -->
+											          <th>Location</th>
+											          <th>Product</th>
+											          <th>Price</th>
+											          <th>Quantity</th>
+											          <!-- <th>Action</th> -->
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="stock in stocks">
+												  <!-- <td><span ng-click="addBranch(stock,branchName(stock.branchId),branchLocation(stock.branchId),product(stock.productTypeId))" >{{branchName(stock.branchId).name}}</span></td> -->
+												  <td>{{branchLocation(stock.branchId)}}</td>
+												  <td>{{product(stock.productTypeId).name}}</td>
+												  <td><span class="bold font-green-haze">48000</span></td>
+												  <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
+												  <!-- <td><span ng-click="addBranch(stock,branchName(stock.branchId),product(stock.productTypeId))" >Buy</span></td> -->
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-3" ng-show="user.mtype == 6">
 						<div class="portlet light ">
 							<div class="portlet-title">
 								<div class="caption">
@@ -277,7 +315,7 @@
 							<div class="portlet-body">
 								<div ng-hide="request" class="row">
 									<div class="table-scrollable table-scrollable-borderless">
-										<table class="table table-hover table-light">
+										<table class="table table-hover ">
 											<tbody>
 												<tr>
 													<td>
@@ -334,12 +372,13 @@
 														<input type="number" name='quantity'>(lot)
 													</td>
 												</tr>
+												
 												<tr>
 													<td>
 														
 													</td>
 													<td>
-														<input type="submit" value="Request">
+														<input type="submit" value="Request" confirm=" Are you sure want to request ?">
 													</td>
 												</tr>
 											</tbody>
@@ -348,7 +387,7 @@
 								</div>
 								<div ng-show="request" class="row">
 									<div class="table-scrollable table-scrollable-borderless">
-										<table class="table table-hover table-light">
+										<table class="table table-hover ">
 											<tbody>
 											<tr>
 												<th><a class="primary-link bold font-green-haze">Delivery Date</a></th>
@@ -391,7 +430,7 @@
 												<tr>
 													<th><a class="primary-link bold font-green-haze">Delivery Charge</a></th>
 													<th>
-														<input type="text" value="{{delivery_charge}}" />
+														<input type="text" ng-model="delivery_charge" value="{{delivery_charge}}" />
 													</th>
 												</tr>
 												<tr>
@@ -411,8 +450,22 @@
 														<a class="primary-link bold font-green-haze">Quantity</a>
 													</td>
 													<td>
-														<input type="number" name='quantity'>(lot)
+														<input type="number" name='amount' ng-model="amount">(lot)
 													</td>
+												</tr>
+												<tr>
+													<td>
+														<a class="primary-link bold font-green-haze">Cost</a>
+													</td>
+													<th>
+														<input type="text" value="{{amount*(margin + commision)+(delivery_charge * (amount * lot_size)/10)}}"     />
+													</th>
+												</tr>
+												<tr>
+													<th><a class="primary-link bold font-green-haze">Remaning Cost</a></th>
+													<th>
+														<input type="text" value="{{ ((lot_size * amount)/10 *  30000) - (amount* margin) }}" readonly    />
+													</th>
 												</tr>
 
 												<tr>
@@ -420,7 +473,7 @@
 														
 													</td>
 													<td>
-														<input type="submit" value="Request">
+														<input type="submit" value="Request" confirm=" Are you sure want to request ?">
 													</td>
 												</tr>
 											</tbody>
@@ -431,15 +484,12 @@
 						</div>
 					</div>
 				</div>
-				
-				
-
 			</div>	
 		</div>
 		<!-- END CONTENT -->
-		
+		this is test
 		<!-- BEGIN QUICK SIDEBAR -->
-		<a href="javascript:;" class="page-quick-sidebar-toggler"><i class="icon-close"></i></a>
+		<a href="javascript:;" class="page-quick-sidebar-toggler">this<i class="icon-close"></i></a>
 		<div data-ng-include="'tpl/quick-sidebar.html'" data-ng-controller="QuickSidebarController" class="page-quick-sidebar-wrapper"></div>
 		<!-- END QUICK SIDEBAR -->
 	</div>

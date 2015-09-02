@@ -268,18 +268,18 @@ MetronicApp.controller('dashboardController',['$scope','$state','user','$rootSco
   }
  
  }
- $scope.commision = $scope.margin = 0;
+ $scope.commision = $scope.margin = $scope.lot_size = 0;
+ $scope.amount = 0;
  $scope.changeClientProduct = function(){
     if($scope.clientProduct > 0){
       $product = $scope.product($scope.clientProduct);
       $scope.commision = $product.commision;
       $scope.margin = $product.margin;
+      $scope.lot_size = $product.lot_size;
     }
     else{
-      $scope.commision = $scope.margin = 0;
+     $scope.commision = $scope.margin = $scope.lot_size = 0;
     }
-    
-    debugger;
  }
 }]);
 MetronicApp.controller('HeaderController', ['$scope','user','$modal','$rootScope','$state','pubsubService','HOME', function($scope,user,$modal,$rootScope,$state,pubsubService,HOME) {
@@ -415,6 +415,7 @@ MetronicApp.controller('VerifyMemberController',['$scope','$modalInstance','memb
 }]);
 /* Setup Layout Part - Quick Sidebar */
 MetronicApp.controller('QuickSidebarController', ['$scope','user','$rootScope','pubsubService', function($scope,$user,$rootScope,pubsubService) {    
+   
    $scope.members = pubsubService.getMembers();
     $scope.$on('$includeContentLoaded', function() {
         setTimeout(function(){

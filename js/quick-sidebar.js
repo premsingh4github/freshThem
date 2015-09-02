@@ -8,7 +8,7 @@ var QuickSidebar = function () {
     // Handles quick sidebar toggler
     var handleQuickSidebarToggler = function () {
         // quick sidebar toggler
-        $('.top-menu .dropdown-quick-sidebar-toggler a, .page-quick-sidebar-toggler').click(function (e) {
+        $('.top-menu .dropdown-quick-sidebar-toggler a, .page-quick-sidebar-toggler').unbind('click').click(function (e) {
             $('body').toggleClass('page-quick-sidebar-open'); 
         });
     };
