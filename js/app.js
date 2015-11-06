@@ -187,7 +187,6 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
      return $http.post(API + 'API/getStocks');
    };
    self.addProduct = function(data){
-    debugger;
         return $http.post(API + 'API/creatProduct',{
             name:data.name,
             lot_size: data.lotSize,
@@ -262,6 +261,7 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
  MetronicApp.factory('authInterceptor', authInterceptor);
  MetronicApp.service('user', userService);
  MetronicApp.service('auth', authService);
+ //MetronicApp.constant('API', 'http://fwwmc.com.my/API/public/');
  MetronicApp.constant('API', 'http://localhost/dealerAPI/public/');
  MetronicApp.constant('HOME','http://localhost/freshThem');
  MetronicApp.config(function($httpProvider) {

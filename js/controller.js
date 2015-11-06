@@ -169,7 +169,7 @@ MetronicApp.controller('dashboardController',['$scope','$state','user','$rootSco
     $scope.add = ($scope.add)?false : true ;
   }
   $scope.branches = pubsubService.getBranches() ;
-  debugger;
+  
   $scope.stocks = pubsubService.getStocks();
   $scope.products = pubsubService.getProducts();
   $scope.branchName = function(branchId){
