@@ -399,7 +399,12 @@
 									<div class="table-scrollable table-scrollable-borderless">
 										<table class="table table-hover table-light">
 											<thead>
-												<tr class="uppercase">
+												<tr>
+													<th >Ask</th>
+													<th >Bid</th>
+												</tr>
+
+												<!-- <tr class="uppercase">
 													<th>Branch</th>
 											          <th>Location</th>
 											          <th>Product</th>
@@ -407,18 +412,51 @@
 											          <th>Quantity</th>
 											          <th>Type</th>
 											          <th>Status</th>
-												</tr>
+												</tr> -->
 											</thead>
+
 											<tbody>
-												<tr ng-repeat="stock in stocks">
-												  <td><span ng-click="addBranch(stock,branchName(stock.branchId),branchLocation(stock.branchId),product(stock.productTypeId))" >{{branchName(stock.branchId).name}}</span></td>
-												  <td>{{branchLocation(stock.branchId)}}</td>
-												  <td>{{product(stock.productTypeId).name}}</td>
-												  <td><span class="bold font-green-haze">48000</span></td>
-												  <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
-												  <td>Buy</td>
-												  <td><span ng-click="addBranch(stock,branchName(stock.branchId),product(stock.productTypeId))" >Pending</span></td>
+												<tr>
+													<td>
+														<table class="table table-hover table-light" >
+															<thead>
+																<tr class="uppercase">
+															          <th>Lot</th>
+															          <th>Price</th>
+															          <th>Action</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td>3</td>
+																	<td>300</td>
+																	<td>Buy</td>
+
+																</tr>
+															</tbody>
+														</table>
+													</td>
+													<td>
+														<table class="table table-hover table-light">
+															<thead>
+																<tr class="uppercase">
+															          <th>Lot</th>
+															          <th>Price</th>
+															          <th>Action</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td>3</td>
+																	<td>500</td>
+																	<td>Sell</td>
+
+																</tr>
+															</tbody>
+														</table>
+													</td>
 												</tr>
+												
 											</tbody>
 										</table>
 									</div>
@@ -428,7 +466,7 @@
 					</div>
 					
 				</div>
-					<div class="col-md-4 col-sm-4" ng-show="user.mtype == 6">
+					<!-- <div class="col-md-4 col-sm-4" ng-show="user.mtype == 6">
 						<div class="portlet light ">
 							<div class="portlet-title">
 								<div class="caption">
@@ -442,22 +480,18 @@
 										<table class="table table-hover table-light">
 											<thead>
 												<tr class="uppercase">
-													<!-- <th>Branch</th> -->
 											          <th>Location</th>
 											          <th>Product</th>
 											          <th>Price</th>
 											          <th>Quantity</th>
-											          <!-- <th>Action</th> -->
 												</tr>
 											</thead>
 											<tbody>
 												<tr ng-repeat="stock in stocks">
-												  <!-- <td><span ng-click="addBranch(stock,branchName(stock.branchId),branchLocation(stock.branchId),product(stock.productTypeId))" >{{branchName(stock.branchId).name}}</span></td> -->
 												  <td>{{branchLocation(stock.branchId)}}</td>
 												  <td>{{product(stock.productTypeId).name}}</td>
 												  <td><span class="bold font-green-haze">48000</span></td>
 												  <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
-												  <!-- <td><span ng-click="addBranch(stock,branchName(stock.branchId),product(stock.productTypeId))" >Buy</span></td> -->
 												</tr>
 											</tbody>
 										</table>
@@ -465,8 +499,8 @@
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="col-md-4 col-sm-4" ng-show="user.mtype == 6">
+					</div> -->
+					<!-- <div class="col-md-4 col-sm-4" ng-show="user.mtype == 6">
 						<div class="portlet light ">
 							<div class="portlet-title">
 								<div class="caption">
@@ -480,22 +514,18 @@
 										<table class="table table-hover table-light">
 											<thead>
 												<tr class="uppercase">
-													<!-- <th>Branch</th> -->
 											          <th>Location</th>
 											          <th>Product</th>
 											          <th>Price</th>
 											          <th>Quantity</th>
-											          <!-- <th>Action</th> -->
 												</tr>
 											</thead>
 											<tbody>
 												<tr ng-repeat="stock in stocks">
-												  <!-- <td><span ng-click="addBranch(stock,branchName(stock.branchId),branchLocation(stock.branchId),product(stock.productTypeId))" >{{branchName(stock.branchId).name}}</span></td> -->
 												  <td>{{branchLocation(stock.branchId)}}</td>
 												  <td>{{product(stock.productTypeId).name}}</td>
 												  <td><span class="bold font-green-haze">48000</span></td>
 												  <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
-												  <!-- <td><span ng-click="addBranch(stock,branchName(stock.branchId),product(stock.productTypeId))" >Buy</span></td> -->
 												</tr>
 											</tbody>
 										</table>
@@ -503,12 +533,12 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					
 					
 
 				</div>
-				<div class="row">
+				<!-- <div class="row">
 					<div class="col-md-8 col-sm-8" ng-show="user.mtype == 6">
 						<div class="portlet light ">
 							<div class="portlet-title">
@@ -549,12 +579,10 @@
 							</div>
 						</div>
 					</div>
-					
-				</div>
+				</div> -->
 			</div>	
 		</div>
 		<!-- END CONTENT -->
-		this is test
 		<!-- BEGIN QUICK SIDEBAR -->
 		<a href="javascript:;" class="page-quick-sidebar-toggler">this<i class="icon-close"></i></a>
 		<div data-ng-include="'tpl/quick-sidebar.html'" data-ng-controller="QuickSidebarController" class="page-quick-sidebar-wrapper"></div>
