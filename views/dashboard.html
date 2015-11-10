@@ -17,24 +17,202 @@
 
 			<div class="page-content" >
 				<div class="row">	
-					
-					<div class="col-md-6 col-sm-6" ng-show="user.mtype < 3">
+				
+					<!-- start of admin content -->
+					<div class="col-md-8 col-sm-8" ng-show="user.mtype == 1">
 						<div class="portlet light ">
-							<div class="portlet-title">
-								<div class="caption">
-									<i class="icon-cursor font-purple-intense hide"></i>
-									<span class="caption-subject font-purple-intense bold uppercase">Warehouse</span>
+							<div class="portlet-title ">
+								<div class=" caption">
+								<!-- caption-subject font-green-haze bold uppercase /caption-subject font-purple-intense bold uppercase -->
+									<span ng-class="offlineClass" ng-click="changeRequest('0')">Market Watch</span>
 								</div>
-								
+								<div class="caption right">
+									<span ng-class="onlineClass"  ng-click="changeRequest('1')">Order Matching Engine</span>
+								</div>
+
 							</div>
 							<div class="portlet-body">
-								<div class="row">
-									
-									
+								<div ng-hide="request" class="row">
+									<div class="table-scrollable table-scrollable-borderless">
+										<table class="table table-hover table-light">
+											<thead>
+												<tr class="uppercase">
+													<th>Product</th>
+											          <th>Ask Price</th>
+											          <th>Quantity</th>
+											          <th>Location</th>
+											          <th>High</th>
+											          <th>Low</th>
+											          <th>LTP</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="stock in stocks">
+												  <td>{{product(stock.productTypeId).name}}</td>
+												  <td><span class="bold font-green-haze">48000</span></td>
+												  <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
+												  <td><span ng-click="addBranch(stock,branchName(stock.branchId),branchLocation(stock.branchId),product(stock.productTypeId))" >{{branchName(stock.branchId).name}}</span></td>
+												  <td>620</td>
+												  
+												  
+												  
+												  <td>605</td>
+												  <td><span >606</span></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div ng-show="request" class="row">
+									<div class="table-scrollable table-scrollable-borderless">
+										<table class="table table-hover table-light">
+											<thead>
+												<tr>
+													<th >Ask</th>
+													<th >Bid</th>
+												</tr>
+
+												<!-- <tr class="uppercase">
+													<th>Branch</th>
+											          <th>Location</th>
+											          <th>Product</th>
+											          <th>Price</th>
+											          <th>Quantity</th>
+											          <th>Type</th>
+											          <th>Status</th>
+												</tr> -->
+											</thead>
+
+											<tbody>
+												<tr>
+													<td>
+														<table class="table table-hover table-light" >
+															<thead>
+																<tr class="uppercase">
+															          <th>Lot</th>
+															          <th>Price</th>
+															          <th>Action</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td>3</td>
+																	<td>300</td>
+																	<td>Buy</td>
+
+																</tr>
+															</tbody>
+														</table>
+													</td>
+													<td>
+														<table class="table table-hover table-light">
+															<thead>
+																<tr class="uppercase">
+															          <th>Lot</th>
+															          <th>Price</th>
+															          <th>Action</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td>3</td>
+																	<td>500</td>
+																	<td>Sell</td>
+
+																</tr>
+															</tbody>
+														</table>
+													</td>
+												</tr>
+												
+											</tbody>
+										</table>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+					<!-- start of for trade board -->
+					<div class="col-md-4 col-sm-4" ng-show="user.mtype == 1">
+						<div class="portlet light ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-cursor font-purple-intense hide"></i>
+									<span class="caption-subject font-purple-intense bold uppercase">Trade Board</span>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div class="row">
+									<div class="table-scrollable table-scrollable-borderless">
+										<table class="table table-hover table-light" >
+											<thead>
+												<tr class="uppercase">
+											          <th>Lot</th>
+											          <th>Price</th>
+											          <th colspan="2">Action</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>3</td>
+													<td>300</td>
+													<td>A</td>
+													<td>R</td>
+
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- end of trade board -->
+					<div class="col-md-12 col-sm-12" ng-show="user.mtype == 1">
+						<div class="portlet light ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-cursor font-purple-intense hide"></i>
+									<span class="caption-subject font-purple-intense bold uppercase">Open Position</span>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div class="row">
+									<div class="table-scrollable table-scrollable-borderless">
+										<table class="table table-hover table-light">
+											<thead>
+												<tr class="uppercase">
+													<th>Ticket</th>
+											          <th>Time</th>
+											          <th>Product</th>
+											          <th>Type</th>
+											          <th>Price</th>
+											          <th>Quantity</th>
+											          <th>Margin</th>
+											          <th>Commision</th>
+											          <th>Holding</th>
+											          <th>Status</th>
+												</tr>
+											</thead>
+											<tbody>
+												<!-- <tr ng-repeat="stock in stocks">
+												  <td><span ng-click="addBranch(stock,branchName(stock.branchId),branchLocation(stock.branchId),product(stock.productTypeId))" >{{branchName(stock.branchId).name}}</span></td>
+												  <td>{{branchLocation(stock.branchId)}}</td>
+												  <td>{{product(stock.productTypeId).name}}</td>
+												  <td><span class="bold font-green-haze">48000</span></td>
+												  <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
+												  <td>Buy</td>
+												  <td><span ng-click="addBranch(stock,branchName(stock.branchId),product(stock.productTypeId))" >Pending</span></td>
+												</tr> -->
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- end of admin content -->
+
 					<!--  -->
 					<div class="col-sm-8 col-md-8 " ng-show="user.mtype == 6">
 						<div class="alert alert-success" role="alert">
@@ -60,13 +238,13 @@
 											</thead>
 											<tbody>
 												<tr ng-repeat="stock in stocks">
+													<td>{{product(stock.productTypeId).name}}</td>
+													<td><span class="bold font-green-haze">48000</span></td>
 												  <td><span ng-click="addBranch(stock,branchName(stock.branchId),branchLocation(stock.branchId),product(stock.productTypeId))" >{{branchName(stock.branchId).name}}</span></td>
-												  <td>{{branchLocation(stock.branchId)}}</td>
-												  <td>{{product(stock.productTypeId).name}}</td>
-												  <td><span class="bold font-green-haze">48000</span></td>
 												  <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
-												  <td>Buy</td>
-												  <td><span ng-click="addBranch(stock,branchName(stock.branchId),product(stock.productTypeId))" >Pending</span></td>
+												  <td>620</td>
+												  <td>600</td>
+												  <td><span >605</span></td>
 												</tr>
 											</tbody>
 										</table>
@@ -466,120 +644,8 @@
 					</div>
 					
 				</div>
-					<!-- <div class="col-md-4 col-sm-4" ng-show="user.mtype == 6">
-						<div class="portlet light ">
-							<div class="portlet-title">
-								<div class="caption">
-									<i class="icon-cursor font-purple-intense hide"></i>
-									<span class="caption-subject font-purple-intense bold uppercase">Stocks</span>
-								</div>
-							</div>
-							<div class="portlet-body">
-								<div class="row">
-									<div class="table-scrollable table-scrollable-borderless">
-										<table class="table table-hover table-light">
-											<thead>
-												<tr class="uppercase">
-											          <th>Location</th>
-											          <th>Product</th>
-											          <th>Price</th>
-											          <th>Quantity</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr ng-repeat="stock in stocks">
-												  <td>{{branchLocation(stock.branchId)}}</td>
-												  <td>{{product(stock.productTypeId).name}}</td>
-												  <td><span class="bold font-green-haze">48000</span></td>
-												  <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div> -->
-					<!-- <div class="col-md-4 col-sm-4" ng-show="user.mtype == 6">
-						<div class="portlet light ">
-							<div class="portlet-title">
-								<div class="caption">
-									<i class="icon-cursor font-purple-intense hide"></i>
-									<span class="caption-subject font-purple-intense bold uppercase">Offline Stock</span>
-								</div>
-							</div>
-							<div class="portlet-body">
-								<div class="row">
-									<div class="table-scrollable table-scrollable-borderless">
-										<table class="table table-hover table-light">
-											<thead>
-												<tr class="uppercase">
-											          <th>Location</th>
-											          <th>Product</th>
-											          <th>Price</th>
-											          <th>Quantity</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr ng-repeat="stock in stocks">
-												  <td>{{branchLocation(stock.branchId)}}</td>
-												  <td>{{product(stock.productTypeId).name}}</td>
-												  <td><span class="bold font-green-haze">48000</span></td>
-												  <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div> -->
-					
-					
 
 				</div>
-				<!-- <div class="row">
-					<div class="col-md-8 col-sm-8" ng-show="user.mtype == 6">
-						<div class="portlet light ">
-							<div class="portlet-title">
-								<div class="caption">
-									<i class="icon-cursor font-purple-intense hide"></i>
-									<span class="caption-subject font-purple-intense bold uppercase">Buy/sell</span>
-								</div>
-							</div>
-							<div class="portlet-body">
-								<div class="row">
-									<div class="table-scrollable table-scrollable-borderless">
-										<table class="table table-hover table-light">
-											<thead>
-												<tr class="uppercase">
-													<th>Branch</th>
-											          <th>Location</th>
-											          <th>Product</th>
-											          <th>Price</th>
-											          <th>Quantity</th>
-											          <th>Type</th>
-											          <th>Status</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr ng-repeat="stock in stocks">
-												  <td><span ng-click="addBranch(stock,branchName(stock.branchId),branchLocation(stock.branchId),product(stock.productTypeId))" >{{branchName(stock.branchId).name}}</span></td>
-												  <td>{{branchLocation(stock.branchId)}}</td>
-												  <td>{{product(stock.productTypeId).name}}</td>
-												  <td><span class="bold font-green-haze">48000</span></td>
-												  <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
-												  <td>Buy</td>
-												  <td><span ng-click="addBranch(stock,branchName(stock.branchId),product(stock.productTypeId))" >Pending</span></td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div> -->
 			</div>	
 		</div>
 		<!-- END CONTENT -->
