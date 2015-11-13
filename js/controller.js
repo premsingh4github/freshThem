@@ -15,8 +15,33 @@ MetronicApp.controller('loginController', ['$scope','user','auth','$state','$roo
    $scope.login = function() {
      $scope.submitted = true;
      if ($scope.userForm.$valid) {      
-       user.login($scope.name, $scope.password)
-       .then(handleRequest, handleRequest);
+       // user.login($scope.name, $scope.password)
+       // .then(handleRequest, handleRequest);
+       user.login($scope.name,$scope.password).then(function(res){
+            if(res.data.code == 200){
+            debugger;
+            var token = res.data ? res.data.token : null;
+           if(token) { 
+              $state.go('home');
+              }
+          }
+           else if(res.data.code == 500){
+            $scope.error = "Invalid Credential"
+
+          }
+          else{
+            $scope.error =  res;
+            //$scope.error = res.statusText;
+          }
+       },function(res){
+        debugger;
+        if(res.status == '401'){
+          $scope.error = "Invalid Credential" ;
+        }
+        else{
+          $scope.error = res.statusText;
+        }
+       });
        $scope.token = localStorage.jwtToken;
      } else {
       //$scope.error = ""
@@ -24,17 +49,23 @@ MetronicApp.controller('loginController', ['$scope','user','auth','$state','$roo
      
    };
    function handleRequest(res) {
-    
-    if(res.data.code == 200){
-      var token = res.data ? res.data.token : null;
-     if(token) { 
-        $state.go('home');
-        }
-    }
-    else if(res.data.code == 500){
-      $scope.error = "Invalid Credential"
+      debugger;
+      
+      if(res.data.code == 200){
+        debugger;
+        var token = res.data ? res.data.token : null;
+       if(token) { 
+          $state.go('home');
+          }
+      }
+      else if(res.data.code == 500){
+        $scope.error = "Invalid Credential"
 
-    }
+      }
+      else{
+        $scope.error =  res;
+        //$scope.error = res.statusText;
+      }
      
    
    }
@@ -376,6 +407,7 @@ MetronicApp.controller('VerifyMemberController',['$scope','$modalInstance','memb
                     $scope.warning = "";
                     user.verifyMember($scope.member.id,$scope.username,$scope.password,$scope.mtype).then(function(res){
                      if(res.data.code = 200){
+                      debugger;
                       pubsubService.addMember(res.data.member);
                       pubsubService.removeUnverifiedMember(res.data.member);
                         $scope.success = true;
@@ -385,6 +417,10 @@ MetronicApp.controller('VerifyMemberController',['$scope','$modalInstance','memb
                         document.getElementById('message').innerHTML = "fail";
                       }
                       
+                    },function(res){
+                      debugger;
+                      $scope.fail = true;
+                      $scope.error = res.data.message;
                     });
                 }
                 else{
@@ -394,7 +430,7 @@ MetronicApp.controller('VerifyMemberController',['$scope','$modalInstance','memb
         }
     else{
           if($scope.username == undefined){
-            $scope.error = "Invalid Username!";
+            $scope.error = "Invalid Client Code!";
           }
           else{
             $scope.error = "";

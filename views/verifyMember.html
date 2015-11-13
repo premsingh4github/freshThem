@@ -67,9 +67,9 @@
 		      	  	 </td>
 		      	</tr>
 		      	<tr >
-		      	  	<td>Username:</td>
+		      	  	<td>Client Code:</td>
 		      	  	<td>
-		      	  		<input ng-model="username"  class="form-control" placeholder="User Name" required>
+		      	  		<input ng-model="username"  class="form-control" placeholder="Client Code" required>
 						<span class="label label-danger">{{error}}</span>
 		      	  	</td>
 		      	</tr>
@@ -97,12 +97,12 @@
 		      			<h3>Now {{member.fname}} {{member.mname}} {{member.lname}} is verified member! <span class="close" ng-click="cancel()"></span></h3>
 		      			
 		      	</div>
-		      	<div class="note note-success note-bordered" ng-show="fail">
-		      			<h3><span class="label label-danger">NOTE:</span>{{member.fname}} {{member.mname}} {{member.lname}}  could not verified! <span class="close" ng-click="cancel()"></span></h3>
+		      	<div  class="note note-danger note-bordered" ng-show="fail">
+		      			<h3><span class="label label-danger">NOTE:</span>{{member.fname}} {{member.mname}} {{member.lname}}  could not verified! {{error}} <span class="close" ng-click="cancel()"></span></h3>
 		      	</div>
 		      	<tr >
 		      	  	<td>
-		      	  		<input class="btn green" type="submit" ng-click="send(userForm.$valid)" value="Verify">
+		      	  		<input confirm="Are you sure you want to varify?" class="btn green" type="submit" ng-click="send(userForm.$valid)" value="Verify">
 		      			<button type="button" class="btn default" ng-click="cancel()">Cancel</button>
 		      		</td>
 		      	</tr>
