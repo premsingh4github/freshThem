@@ -37,7 +37,7 @@
 
 					<tr>
 						<th></th>
-						<th> <span ng-click="save()"> Save</span></th>
+						<th> <span ng-click="save()"> <button class="btn btn-success">Save</button></span></th>
 					</tr>
 				</thead>
 
@@ -54,7 +54,7 @@
 		        <tr ng-repeat="member in members">
 		          <td>{{member.fname}} {{member.mname}} {{member.lname}}</td>
 		          <td>{{member.amount}}</td>
-		          <td><span ng-click="addBranch(member.id,member.username)" >Edit</span> <span>Delete</span></td>
+		          <td><span ng-click="addBranch(member.id,member.username)" ><button class="btn btn-warning">Edit</button></span> <span><button class="btn btn-danger">Delete</button></span></td>
 		        </tr>
 		        
 		      </tbody>

@@ -40,7 +40,7 @@
 					
 					<tr>
 						<th></th>
-						<th> <span ng-click="save()"> Add</span></th>
+						<th> <span ng-click="save()"> <button class="btn btn-success">Add</button></span></th>
 					</tr>
 				</thead>
 			</table>
@@ -62,8 +62,8 @@
 		          <td>{{branchLocation(stock.branchId)}}</td>
 		          <td>{{product(stock.productTypeId).name}}</td>
 		          <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
-		          <td> &nbsp;&nbsp;&nbsp;<span class="label label-success" ng-click="showRequest(stock.request)">  {{stock.request.length}}</span></td>
-		          <td><span ng-click="addBranch(stock)">Add</span></td>
+		          <td> &nbsp;&nbsp;&nbsp;<span  ng-click="showRequest(stock.request)"><button class="btn btn-success">{{stock.request.length}}</button>  </span></td>
+		          <td><span ng-click="addBranch(stock)"><button class="btn btn-success">Add</button></span></td>
 		        </tr>
 		        
 		      </tbody>
@@ -87,13 +87,13 @@
 		    			<td>{{product(getStock(request.stockId).productTypeId).name}}</td>
 		    			<td>{{getMemberById(request.memberId).username}}</td>
 		    			<td>{{request.amount/product(getStock(request.stockId).productTypeId).lot_size}}(lot)</td>
-		    			<td><span ng-click="approve(request.id)" class="btn-success" confirm="Are you sure want to approve?">Approve</span>&nbsp;&nbsp;&nbsp;<span ng-click="reject(request.id)" class="btn-danger" confirm="Are you sure want ot reject?">Reject</span></td> 
+		    			<td><span ng-click="approve(request.id)"  confirm="Are you sure want to approve?"><button class="btn btn-success">Approve</button></span>&nbsp;&nbsp;&nbsp;<span ng-click="reject(request.id)"  confirm="Are you sure want ot reject?"><button class="btn btn-danger">Reject</button></span></td> 
 		    			
 		    		</tr>
 		    	</tbody>
 		    	<tfoot>
 		    		<tr>
-		    			<th ng-click="hideRequest()">Back</th>
+		    			<th ng-click="hideRequest()"><button class="btn btn-success">Back</button></th>
 		    		</tr>
 		    	</tfoot>
 		    </table>

@@ -27,7 +27,7 @@
 					</tr>
 					<tr>
 						<th></th>
-						<th> <span ng-click="save()"> Save</span></th>
+						<th> <span ng-click="save()"><button class="btn btn-success"> Save</button></span></th>
 					</tr>
 				</thead>
 			</table>
@@ -41,7 +41,7 @@
 		      <tbody>
 		        <tr ng-repeat="branch in branches">
 		          <td>{{branch.name}}</td>
-		          <td><span >Edit</span> <span>Delete</span></td>
+		          <td><span ><button class="btn btn-warning">Edit</button></span> <span><button class="btn btn-danger">Delete</button></span></td>
 		        </tr>
 		        
 		      </tbody>
@@ -49,8 +49,8 @@
 		    </table>
 		   
 		  </div>
-		  	<span ng-click="addBranch()" ng-hide="add">Add Branch</span>
-		  	<span ng-click="addBranch()" ng-show="add">List Branch</span>
+		  	<span ng-click="addBranch()" ng-hide="add"><button class="btn btn-success">Add Branch</button> </span>
+		  	<span ng-click="addBranch()" ng-show="add"><button class="btn btn-success">List Branch</button></span>
 		</div>
 </div>
 

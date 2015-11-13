@@ -44,7 +44,7 @@
 					</tr>
 					<tr>
 						<th></th>
-						<th> <span ng-click="save()"> Save</span></th>
+						<th> <span ng-click="save()"><button class="btn btn-success">Save</button> </span></th>
 					</tr>
 				</thead>
 			</table>
@@ -64,7 +64,7 @@
 		          <td>{{branchLocation(stock.branchId)}}</td>
 		          <td>{{product(stock.productTypeId).name}}</td>
 		           <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
-		          <td><span >Edit</span> <span>Delete</span></td>
+		          <td><span ><button class="btn btn-warning">Edit</button></span> <span><button class="btn btn-danger">Delete</button></span></td>
 		        </tr>
 		        
 		      </tbody>
@@ -72,8 +72,8 @@
 		    </table>
 		   
 		  </div>
-		  	<span ng-click="addBranch()" ng-hide="add">Add Stock</span>
-		  	<span ng-click="addBranch()" ng-show="add">List Stock</span>
+		  	<span ng-click="addBranch()" ng-hide="add"><button class="btn btn-success">Add Stock</button></span>
+		  	<span ng-click="addBranch()" ng-show="add"><button class="btn btn-success">List Stock</button></span>
 		</div>
 </div>
 

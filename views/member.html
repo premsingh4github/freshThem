@@ -69,7 +69,7 @@
 
 					<tr>
 						<th></th>
-						<th> <span ng-click="save()"> Save</span></th>
+						<th> <span ng-click="save()"><button class="btn btn-success">Save</button> </span></th>
 					</tr>
 				</thead>
 
@@ -84,7 +84,7 @@
 		      <tbody>
 		        <tr ng-repeat="member in members">
 		          <td>{{member.fname}} {{member.mname}} {{member.lname}}</td>
-		          <td><span >Edit</span> <span>Delete</span></td>
+		          <td><span ><button class="btn btn-warning">Edit</button></span> <span><button class="btn btn-danger">Delete</button></span></td>
 		        </tr>
 		        
 		      </tbody>
@@ -92,8 +92,8 @@
 		    </table>
 		   
 		  </div>
-		  	<span ng-click="addBranch()" ng-hide="add">Add Member</span>
-		  	<span ng-click="addBranch()" ng-show="add">List Members</span>
+		  	<span ng-click="addBranch()" ng-hide="add"><button class="btn btn-success">Add Member</button></span>
+		  	<span ng-click="addBranch()" ng-show="add"><button class="btn btn-success">List Members</button></span>
 		</div>
 </div>
 
