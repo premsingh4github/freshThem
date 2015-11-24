@@ -9,15 +9,19 @@
 							<div class="panel-body">
 									<form name="userForm" novalidate>
 									<fieldset>
-											<div class="form-group" show-errors>
+										<!-- <div class="form-group" ng-class="{ 'has-error' : userForm.fname.$invalid && !userForm.fname.$pristine || (submitted && userForm.fname.$invalid)}">
+								           <input type="text" name="fname" class="form-control" ng-model="member.fname" required>
+								           <p ng-show="userForm.fname.$invalid && !userForm.fname.$pristine|| (submitted && userForm.fname.$invalid)" class="help-block">First Name is required.</p>
+								       </div> -->
+											<div class="form-group" ng-class="{ 'has-error' : userForm.name.$invalid && !userForm.name.$pristine || (submitted && userForm.name.$invalid)}" show-errors>
 													 <input type="text" placeholder="Username" class="form-control" name="name" ng-model="name" required />
 													 <p class="help-block" ng-show="userForm.name.$invalid && userForm.name.$dirty || (userForm.name.$invalid && submitted)">The Username is required</p>
 											</div>
-											<div class="form-group" show-errors>
+											<div class="form-group" ng-class="{ 'has-error' : userForm.password.$invalid && !userForm.password.$pristine || (submitted && userForm.password.$invalid)}" show-errors>
 													<input class="form-control" placeholder="Password" name="password" ng-model="password" type="password" value="" required>
 													<p class="help-block" ng-show="userForm.password.$dirty && userForm.password.$invalid || (userForm.password.$invalid && submitted)">The password is required</p>
 											</div>
-											<div class="form-group" show-errors>
+											<div class="form-group has-error" show-errors>
 													
 													<p class="help-block">{{error}}</p>
 											</div>                      

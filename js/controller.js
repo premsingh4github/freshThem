@@ -52,6 +52,12 @@ MetronicApp.controller('loginController', ['$scope','user','auth','$state','$roo
 
 MetronicApp.controller('RegisterController',register);
 function register($state,$scope,user,pubsubService){
+     
+    user.getBranch().then(function(res){
+      $scope.branches = res.data.branches;
+    },function(res){
+
+    });
   $scope.isDone = false;
   $scope.cancel = function(){
     $state.go('login');

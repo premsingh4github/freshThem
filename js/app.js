@@ -173,7 +173,7 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
         });
    }
    self.getBranch = function(){
-    return $http.post(API + 'API/getBranch');
+    return $http.post(API + 'getBranch');
    }
    self.addStock = function(branchId,productTypeId,minQuantity,onlineQuantity,deliveryCharge){
         return $http.post(API + 'API/createStock',{
