@@ -24,16 +24,18 @@ MetronicApp.controller('loginController', ['$scope','user','auth','$state','$roo
      
    };
    function handleRequest(res) {
-    
     if(res.data.code == 200){
       var token = res.data ? res.data.token : null;
      if(token) { 
         $state.go('home');
         }
     }
-    else if(res.data.code == 500){
-      $scope.error = "Invalid Credential"
+    else if(res.status == 401){
+      $scope.error = "Invalid Credential";
 
+    }
+    else{
+      $scope.error = "Server Error";
     }
      
    
@@ -242,19 +244,20 @@ MetronicApp.controller('dashboardController',['$scope','$state','user','$rootSco
       pubsubService.updateStock(rs.data.clientStock);
     });
   }
-  $scope.offlineClass = [ "caption-subject", 'font-purple-intense', 'bold', 'uppercase'];
-  $scope.onlineClass = [ 'caption-subject', 'font-green-haze', 'bold', 'uppercase'];
+  $scope.offlineClass =  [ 'btn'];
+  $scope.onlineClass = [ 'btn', 'btn-success'];
   $scope.request = 1;
   $scope.changeRequest = function(request){
     if(request == '1'){
       $scope.request = 1;
-      $scope.onlineClass = [ 'caption-subject', 'font-green-haze', 'bold', 'uppercase'];
-      $scope.offlineClass = [ 'caption-subject', 'font-purple-intense', 'bold', 'uppercase']; 
+      //$scope.onlineClass = [ 'caption-subject', 'font-green-haze', 'bold', 'uppercase'];
+      $scope.onlineClass = [ 'btn', 'btn-success'];
+      $scope.offlineClass = [ 'btn']; 
     }
     else{
       $scope.request = 0;
-      $scope.offlineClass = [ 'caption-subject', 'font-green-haze', 'bold', 'uppercase'];
-      $scope.onlineClass = [ 'caption-subject', 'font-purple-intense', 'bold', 'uppercase'];
+      $scope.offlineClass = [ 'btn', 'btn-success'];
+      $scope.onlineClass = [ 'btn'];
     }  
   };
   $scope.delivery_charge = 0;
@@ -294,6 +297,8 @@ MetronicApp.controller('HeaderController', ['$scope','user','$modal','$rootScope
                 }
             });
           }
+    $scope.switchStatus = true;
+    
     $scope.unverifiedMembers = pubsubService.getUnverifiedMembers();    
     $rootScope.$on('addUnverifiedMember', function (event, data) {
       $scope.$apply(function(){
@@ -370,6 +375,7 @@ MetronicApp.controller('VerifyMemberController',['$scope','$modalInstance','memb
       if($scope.success){
           $scope.cancel();
       }
+      debugger;
         if(isValid){
                 if($scope.passwordConform === $scope.password){                   
                     $scope.error = "";
@@ -680,6 +686,8 @@ MetronicApp.controller('MemberController',['$scope','$modalInstance','user','$ro
   $scope.add = false;
    $scope.isDone = false;
    $scope.branch = null;
+   $scope.submitted = false;
+   $scope.branches = pubsubService.getBranches();
   $scope.cancel = function(){
     $modalInstance.dismiss('cancel');
   }
@@ -689,20 +697,28 @@ MetronicApp.controller('MemberController',['$scope','$modalInstance','user','$ro
   $scope.products = pubsubService.getProducts() ;
   $scope.memberTypes = pubsubService.getMemberTypes();
   $scope.members = pubsubService.getMembers();
-  $scope.user = pubsubService.getUser();
   $scope.unverifiedMembers = pubsubService.getUnverifiedMembers();
   
-  $scope.save = function(){
+  $scope.save = function(valid){
+    debugger;
+    if(valid){
       user.addMember($scope.member).then(function(es){
         if(es.data.code == 200){
           delete $scope.member;
+          $scope.addBranch();
           pubsubService.publishUnverifiedMember(es.data.member);
           pubsubService.addUnverifiedMember(es.data.member);
           $scope.branch = es.data.member.fname;
           $scope.isDone = true;
           $scope.name = null;
+          $scope.submitted = false;
         }
       });
+    }
+    else{
+      $scope.submitted = true;
+    }
+      
   }
 
 }]);

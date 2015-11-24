@@ -61,33 +61,22 @@
 		      	<tr >
 		      	  	<td>Member Type</td>
 		      	  	<td>
-						<select ng-model="mtype" class="form-control"   required >
+						<!-- <select ng-model="mtype" class="form-control"   required >
 							<option ng-repeat="memberType in memberTypes | orderBy:'-id'" value="{{memberType.id}}">{{memberType.name}}</option>
+						</select> -->
+						<select ng-model="member.mtype" class="form-control" readonly>
+							<option ng-repeat="memberType in memberTypes" value="{{memberType.id}}" ng-selected=" member.mtype == memberType.id">{{memberType.name}}</option>
 						</select>
 		      	  	 </td>
 		      	</tr>
 		      	<tr >
 		      	  	<td>Client Code:</td>
-		      	  	<td>
-		      	  		<input ng-model="username"  class="form-control" placeholder="Client Code" required>
-						<span class="label label-danger">{{error}}</span>
-		      	  	</td>
+		      	  	<td>{{member.username}} </td>
 		      	</tr>
-		      	<tr >
-		      	  	<td>Password:</td>
-		      	  	<td>
-		      	  		<input type="password" ng-model="password" class="form-control" placeholder="Password" required >
-		      	  	</td>
-		      	</tr>
-		      	<tr >
-		      	  	<td>Conform Password:</td>
-		      	  	<td>
-		      	  		<input type="password" ng-model="passwordConform" class="form-control" placeholder="Password" required >
-		      	  		<span class="label label-danger">{{warning}}</span>
-		      	  	</td>
-		      	</tr>
+		      	
 		      	<tr>
-		      		
+		      		<td colspan="2"> </td>
+		      	  	<td> </td>
 		      	</tr>
 
 		        
@@ -101,8 +90,8 @@
 		      			<h3><span class="label label-danger">NOTE:</span>{{member.fname}} {{member.mname}} {{member.lname}}  could not verified! {{serverError}} <span class="close" ng-click="cancel()"></span></h3>
 		      	</div>
 		      	<tr >
-		      	  	<td>
-		      	  		<input confirm="Are you sure you want to varify?" class="btn green" type="submit" ng-click="send(userForm.$valid)" value="Verify">
+		      	  	<td colspan="2">
+		      	  		<input confirm="Are you sure you want to varify?" class="btn green" type="submit" ng-click="send(1)" value="Verify">
 		      			<button type="button" class="btn default" ng-click="cancel()">Cancel</button>
 		      		</td>
 		      	</tr>

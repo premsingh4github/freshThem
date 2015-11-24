@@ -8,9 +8,10 @@ var MetronicApp = angular.module("MetronicApp", [
     "ui.bootstrap", 
     "oc.lazyLoad",  
     "ngSanitize",
-    "ngWebsocket",
     '720kb.datepicker',
-    "angular-confirm"
+    "angular-confirm",
+    "toggle-switch",
+    "ngMessages"
 ]);
 MetronicApp.config(['$ocLazyLoadProvider', function($ocLazyLoadProvider) {
     $ocLazyLoadProvider.config({
@@ -219,6 +220,7 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
         })
     }
     self.addMember = function($data) {
+      debugger;
       return $http.post(API + 'API/addMember',{
         fname:$data.fname,
         mname:$data.mname,
@@ -231,7 +233,8 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
         email:$data.email,
         cNumber:$data.contactNo,
         mNumber:$data.mobileNo,
-        mtype:$data.mtype
+        mtype:$data.mtype,
+        branchId : $data.branch
       });
         
     }
@@ -256,6 +259,16 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
    }
    self.getNotices = function(){
         return $http.post(API + 'API/getNotices');
+   }
+   self.switch = function($status){
+    debugger;
+       $http.post(API + 'API/systemSwitch',{
+        status : $status
+      }).then(function(res){
+        debugger;
+      },function(res){
+        debugger;
+      });
    }
  }
  MetronicApp.factory('authInterceptor', authInterceptor);
@@ -308,6 +321,8 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 
 /* Init global settings and run the app */
 MetronicApp.run(["$rootScope", "settings", "$state","user" ,function($rootScope, settings, $state,user) {
+    //ng-init="switchStatus = true"
+   
     user.isAuthed().then(function(res){
       if(res.data.code != 200){
           $state.go('login');

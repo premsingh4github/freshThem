@@ -10,80 +10,141 @@
 		 </div>
 		 
 		<div class="panel-body">
-		<div class="table-responsive">
-			<table class="table table-bordered table-striped bs-events-table" ng-show="add">
-			
+		<div>
+			<form class="table  table-striped bs-events-table" name="userForm" ng-submit="submitForm(userForm.$valid)" novalidate ng-show="add">
+
+			       <h3 class="modal-title">Add Member</h3>
+			       <div class="form-group" ng-class="{ 'has-error' : userForm.memberType.$invalid && !userForm.memberType.$pristine || (submitted && userForm.memberType.$invalid)}">
+			           <label>Member Type*</label>
+			           <select class="form-control has-error" name="memberType" ng-model="member.mtype" required>
+			           		<option value="">Select</option>
+							<option ng-repeat="memberType in memberTypes" value="{{memberType.id}}">{{memberType.name}}</option>
+						</select>
+			           <p ng-show="userForm.memberType.$invalid && !userForm.memberType.$pristine|| (submitted && userForm.memberType.$invalid)" class="help-block">Member type is required.</p>
+			       </div>
+			       <div class="form-group" ng-class="{ 'has-error' : userForm.branch.$invalid && !userForm.branch.$pristine || (submitted && userForm.branch.$invalid)}">
+			           <label>Branch*</label>
+			           <select class="form-control has-error" name="branch" ng-model="member.branch" required>
+			           		<option value="">Select</option>
+							<option ng-repeat="branche in branches" value="{{branche.id}}">{{branche.name}}</option>
+						</select>
+			           <p ng-show="userForm.branch.$invalid && !userForm.branch.$pristine|| (submitted && userForm.branch.$invalid)" class="help-block">Branch is required.</p>
+			       </div>
+			       <!-- NAME -->
+			       <div class="form-group" ng-class="{ 'has-error' : userForm.fname.$invalid && !userForm.fname.$pristine || (submitted && userForm.fname.$invalid)}">
+			           <label>First Name*</label>
+			           <input type="text" name="fname" class="form-control" ng-model="member.fname" required>
+			           <p ng-show="userForm.fname.$invalid && !userForm.fname.$pristine|| (submitted && userForm.fname.$invalid)" class="help-block">First Name is required.</p>
+			       </div>
+			       <div class="form-group" >
+			           <label>Middle Name</label>
+			           <input type="text" name="mname" class="form-control" ng-model="member.mname">
+			       </div>
+			       <div class="form-group" >
+			           <label>Last Name</label>
+			           <input type="text" name="lname" class="form-control" ng-model="member.lname">
+			           
+			       </div>
+			      <div class="form-group" ng-class="{ 'has-error' : userForm.address.$invalid && !userForm.address.$pristine|| (submitted && userForm.identity.$invalid)}">
+			      	<label>Address*</label>
+					<TEXTAREA name="address" class="form-control" ng-model="member.address" required></TEXTAREA>
+			      	<p ng-show="userForm.address.$invalid && !userForm.address.$pristine || (submitted && userForm.address.$invalid)" class="help-block">Address is required.</p>
+			      </div>
+			      <div class="form-group" ng-class="{ 'has-error' : userForm.identity.$invalid && !userForm.identity.$pristine || (submitted && userForm.identity.$invalid)}">
+			      	<label>Identity No.*</label>
+					<input name="identity" class="form-control" ng-model="member.identity" type="number" min='10' required>
+			      	<p ng-show=" userForm.identity.$invalid && !userForm.identity.$pristine || (submitted && userForm.identity.$invalid)" class="help-block">Identity No. is required.<br>
+			      		Please give your valid citizenship No.</p>
+			      </div>
+			      <div class="form-group" ng-class="{ 'has-error' : userForm.nationality.$invalid && !userForm.nationality.$pristine || (submitted && userForm.nationality.$invalid)}">
+			      	<label>Nationality*</label>
+					<input name="nationality" class="form-control" ng-model="member.nationality" type="text" required>
+			      	<p ng-show="userForm.nationality.$invalid && !userForm.nationality.$pristine || (submitted && userForm.nationality.$invalid)" class="help-block">Nationality is required.</p>
+			      	
+			      </div>
+			      <div class="form-group" ng-class="{ 'has-error' : userForm.dob.$invalid && !userForm.dob.$pristine || (submitted && userForm.dob.$invalid)}">
+			      	<label>Date of birth*</label>
+					<div class="datepicker"
+				      date-format="y-d-MM"
+				      button-prev='<i class="fa fa-arrow-circle-left"></i>'
+				      button-next='<i class="fa fa-arrow-circle-right"></i>'>
+				      <input name="dob" ng-model="member.dob" type="text" required class="form-control angular-datepicker-input"/>
+				    </div>
+			      	<p ng-show="userForm.dob.$invalid && !userForm.dob.$pristine || (submitted && userForm.dob.$invalid)" class="help-block">Date of birth is required.</p>
+			      </div>
+
+			      <div class="form-group" ng-class="{ 'has-error' : userForm.ban.$invalid && !userForm.ban.$pristine || (submitted && userForm.ban.$invalid)}">
+			      	<label>Bank account number*</label>
+					<input name="ban" class="form-control" ng-model="member.ban" type="text" required>
+			      	<p ng-show="userForm.ban.$invalid && !userForm.ban.$pristine || (submitted && userForm.ban.$invalid)" class="help-block">Bank account number is required.</p>
+			      </div>
+			      <div class="form-group" ng-class="{ 'has-error' : userForm.email.$invalid && !userForm.email.$pristine || (submitted && userForm.email.$invalid)}">
+			      	<label>Email*</label>
+					<input name="email" class="form-control" ng-model="member.email" type="email" required>
+			      	<p ng-show="userForm.email.$invalid && !userForm.email.$pristine || (submitted && userForm.email.$invalid)" class="help-block">Email is required.</p>
+			      </div>
+			      <div class="form-group" ng-class="{ 'has-error' : userForm.mobileNo.$invalid && !userForm.mobileNo.$pristine || (submitted && userForm.mobileNo.$invalid)}">
+			      	<label>Mobile Number</label>
+					<input name="mobileNo" class="form-control" ng-model="member.mobileNo" type="number" min="9000000000" >
+			      	<p ng-show="userForm.mobileNo.$invalid && !userForm.mobileNo.$pristine || (submitted && userForm.mobileNo.$invalid)" class="help-block">Plz give  valid mobile no. </p>
+			      </div>
+			      <div class="form-group" ng-class="{ 'has-error' : userForm.contactNo.$invalid && !userForm.contactNo.$pristine || (submitted && userForm.contactNo.$invalid) }">
+			      	<label>Contact Number*</label>
+					<input name="contactNo" class="form-control" ng-model="member.contactNo" type="number" min="9000000000" required>
+			      	<p ng-show="userForm.contactNo.$invalid && !userForm.contactNo.$pristine || (submitted && userForm.contactNo.$invalid)" class="help-block">Plz give  valid contact no.  </p>
+			      </div>
+			       <button ng-click="save(userForm.$valid)" type="submit" class="btn btn-primary">Submit</button>
+			       
+			   </form>
+			<!-- <table class="table table-bordered table-striped bs-events-table" ng-show="add">
+
+				<form name="userForm" data-toggle="validator" novalidate>
 				<thead>
-					<tr>
-						<th> Member Type</th>
-						<th>
-							<select ng-model="member.mtype">
-								<option ng-repeat="memberType in memberTypes" value="{{memberType.id}}">{{memberType.name}}</option>
-							</select>
-						</th>
-					</tr>
-					<tr>
-						<th> First Name</th>
-						<th><input ng-model="member.fname" type="text"></th>
-					</tr>
-					<tr>
-						<th> Middle Name</th>
-						<th><input ng-model="member.mname" type="text"></th>
-					</tr>
-					<tr>
-						<th> Last Name</th>
-						<th><input ng-model="member.lname" type="text"></th>
-					</tr>
-					<tr>
-						<th> Address</th>
-						<th><TEXTAREA ng-model="member.address"></TEXTAREA></th>
-					</tr>
-					<tr>
-						<th> Identity</th>
-						<th><input ng-model="member.identity" type="text"></th>
-					</tr>
+					
 					<tr>
 						<th> Nationality</th>
-						<th><input ng-model="member.nationality" type="text"></th>
+						<th><input class="form-control" ng-model="member.nationality" type="text"></th>
 					</tr>
 					<tr>
 						<th> Date of birth</th>
-						<th><input ng-model="member.dob" type="text"></th>
+						<th><input class="form-control" ng-model="member.dob" type="text"></th>
 					</tr>
 					<tr>
 						<th>Bank account number</th>
-						<th><input ng-model="member.ban" type="text"></th>
+						<th><input class="form-control" ng-model="member.ban" type="text"></th>
 					</tr>
 					<tr>
 						<th> Email</th>
-						<th><input ng-model="member.email" type="email"></th>
+						<th><input class="form-control" ng-model="member.email" type="email"></th>
 					</tr>
 					<tr>
 						<th> Contact Number</th>
-						<th><input ng-model="member.contactNo" type="text"></th>
+						<th><input class="form-control" ng-model="member.contactNo" type="text"></th>
 					</tr>
 					<tr>
 						<th> Mobile Number</th>
-						<th><input ng-model="member.mobileNo" type="text"></th>
+						<th><input class="form-control" ng-model="member.mobileNo" type="text"></th>
 					</tr>
 
 					<tr>
 						<th></th>
-						<th> <span ng-click="save()"><button class="btn btn-success">Save</button> </span></th>
+						<th> <span  ng-click="save()"><button type="submit" class="btn btn-success">Save</button> </span></th>
 					</tr>
 				</thead>
-
-			</table>
+				</form>
+			</table> -->
 		    <table class="table table-bordered table-striped bs-events-table" >
 		      <thead>
 		        <tr >
 		          <th>Name</th>
+		          <th>Code</th>
 		          <th>Action</th>
 		        </tr>
 		      </thead>
 		      <tbody>
 		        <tr ng-repeat="member in members">
 		          <td>{{member.fname}} {{member.mname}} {{member.lname}}</td>
+		          <td>{{member.username}}</td>
 		          <td><span ><button class="btn btn-warning">Edit</button></span> <span><button class="btn btn-danger">Delete</button></span></td>
 		        </tr>
 		        

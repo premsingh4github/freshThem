@@ -1,4 +1,4 @@
-	MetronicApp.factory('pubsubService',['$rootScope','$websocket',pubsubService]);
+	MetronicApp.factory('pubsubService',['$rootScope',pubsubService]);
 	function pubsubService($rootScope,$websocket){
 		var user;
 		var branches= [];
