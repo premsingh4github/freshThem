@@ -63,6 +63,7 @@ function register($state,$scope,user,pubsubService){
     $state.go('login');
   }
   $scope.register = function($valid){
+    debugger;
     $scope.submitted = true;
     if($valid){
      user.register($scope).then(function(res) {

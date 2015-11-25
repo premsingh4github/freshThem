@@ -122,6 +122,7 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
 
    // add authentication methods here
    self.register = function($data) {
+
      return $http.post(API + 'register',{
        fname:$data.fname,
        mname:$data.mname,
@@ -134,7 +135,8 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
        email:$data.email,
        cNumber:$data.contactNo,
        mNumber:$data.mobileNo,
-       agent :$data.agent
+       agent :$data.agent,
+       branchId : $data.branch
      });
        
    }

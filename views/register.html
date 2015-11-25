@@ -47,22 +47,34 @@
                           <p class="help-block" ng-show="userForm.nationality.$invalid && userForm.nationality.$dirty || (userForm.nationality.$invalid && submitted)">The nationality is required</p>
                       </div>
                       <div class="form-group" show-errors>
-                          <input type="text" placeholder="Date of birth" class="form-control" ng-model="dob" name="dob" required/>
+                          <!-- <input type="text" placeholder="Date of birth" class="form-control" ng-model="dob" name="dob" required/> -->
+                          <div class=" datepicker"
+                            date-format="y-d-MM"
+                            button-prev='<i class="fa fa-arrow-circle-left"></i>'
+                            button-next='<i class="fa fa-arrow-circle-right"></i>'>
+                            <input name="dob" placeholder="Date of birth" ng-model="dob" type="text" required class="form-control angular-datepicker-input"/>
+                          </div>
+                          
+                          
                           <p class="help-block" ng-show="userForm.dob.$invalid && userForm.dob.$dirty|| (userForm.dob.$invalid && submitted)">The dob is required</p>
+                         
+                          <br>
+                          <br>
                       </div>
+
                       <div class="form-group" show-errors>
                           <input type="text" placeholder="Bank account number" class="form-control" ng-model="ban" name="ban" required/>
                           <p class="help-block" ng-show="userForm.ban.$invalid && userForm.ban.$dirty || (userForm.ban.$invalid && submitted)">The bank account number is required</p>
                       </div>
                       <div class="form-group" show-errors>
-                          <input type="text" placeholder="email" class="form-control" ng-model="email" name="email" required/>
-                          <p class="help-block" ng-show="userForm.email.$invalid && userForm.email.$dirty || (userForm.email.$invalid && submitted)">The email is required</p>
+                          <input type="email" placeholder="email" class="form-control" ng-model="email" name="email" required/>
+                          <p class="help-block" ng-show="userForm.email.$invalid && userForm.email.$dirty || (userForm.email.$invalid && submitted)">Plz give valid email!.</p>
                       </div>
                       <div class="form-group" show-errors>
-                          <input type="text" placeholder="contact number" class="form-control" ng-model="contactNo" name="contactNo" />
+                          <input type="number" placeholder="contact number" class="form-control" ng-model="contactNo" name="contactNo" min="9000000000"  />
                       </div>
                       <div class="form-group" show-errors>
-                          <input type="text" placeholder="Mobile number" class="form-control" ng-model="mobileNo" name="mobileNo" />
+                          <input type="number" placeholder="Mobile number" class="form-control" ng-model="mobileNo"  name="mobileNo" min="9000000000"  />
                       </div>
                       <div class="form-group" show-errors>
                           <input type="text" placeholder="Agent Code" class="form-control" ng-model="agent" name="agent" />
