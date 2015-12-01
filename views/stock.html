@@ -4,14 +4,53 @@
 		            <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="cancel()"><span >×</span></button>
 		            <h3 class="modal-title">Stocks</h3>
 		            <div id="message" class="note note-success note-bordered" ng-show="isDone" >
-		            		<h3> One new stock is added!<span class="close" ng-click="cancel()"></span></h3>
+		            		<h3> {{message}}<span class="close" ng-click="cancel()"></span></h3>
 		            		
 		            </div>
 		 </div>
 		 
 		<div class="panel-body">
-		<div class="table-responsive">
-			<table class="table table-bordered table-striped bs-events-table" ng-show="add">
+		<div >
+			<form class="table  table-striped bs-events-table" name="productForm" novalidate ng-show="add">
+
+			       <h3 class="modal-title">Add Stock Product</h3>
+			       <div class="form-group" ng-class="{ 'has-error' : productForm.branchId.$invalid && !productForm.branchId.$pristine || (submitted && productForm.branchId.$invalid)}">
+			           <label>Branch*</label>
+			           <select class="form-control has-error" name="branchId" ng-model="stockProduct.branchId" required>
+			           		<option value="">Select</option>
+							<option ng-repeat="branch in branches" value="{{branch.id}}">{{branch.name}}</option>
+						</select>
+			           <p ng-show="productForm.branchId.$invalid && !productForm.branchId.$pristine|| (submitted && productForm.branchId.$invalid)" class="help-block">Branch is required.</p>
+			       </div>
+			       <div class="form-group" ng-class="{ 'has-error' : productForm.productTypeId.$invalid && !productForm.productTypeId.$pristine || (submitted && productForm.productTypeId.$invalid)}">
+			           <label>Product*</label>
+			           <select class="form-control has-error" name="productTypeId" ng-model="stockProduct.productTypeId" required>
+			           		<option value="">Select</option>
+							<option ng-repeat="product in products"  value="{{product.id}}">{{product.name}}</option>
+						</select>
+			           <p ng-show="productForm.productTypeId.$invalid && !productForm.productTypeId.$pristine|| (submitted && productForm.productTypeId.$invalid)" class="help-block">Product is required.</p>
+			       </div>
+
+			       <div class="form-group" ng-class="{ 'has-error' : productForm.stockTypeId.$invalid && !productForm.stockTypeId.$pristine || (submitted && productForm.stockTypeId.$invalid)}">
+			           <label>Stock Type*</label>
+			           <select class="form-control has-error" name="stockTypeId" ng-model="stockProduct.stockTypeId" ng-options="stockType.id as stockType.name for stockType in stockTypes " required>
+			           		<option value="">Select</option>
+							<!-- <option value="1">Wholesale</option>
+							<option value="2">Retail</option> -->
+						</select>
+			           <p ng-show="productForm.stockTypeId.$invalid && !productForm.stockTypeId.$pristine|| (submitted && productForm.stockTypeId.$invalid)" class="help-block">Product is required.</p>
+			       </div>
+			       
+			       <div class="form-group" ng-class="{ 'has-error' : productForm.onlineQuantity.$invalid && !productForm.onlineQuantity.$pristine || (submitted && productForm.onlineQuantity.$invalid)}">
+			           <label>Quantity</label>
+			           <input type="number" placeholder="Quantity(g.m)" class="form-control" ng-model="stockProduct.onlineQuantity" name="onlineQuantity" required/>
+			           <p ng-show="productForm.onlineQuantity.$invalid && !productForm.onlineQuantity.$pristine|| (submitted && productForm.onlineQuantity.$invalid)" class="help-block"> Quantity is required.</p>
+			          
+			       </div>
+			      
+			       <button confirm="Are you sure want to add product to stock?" ng-click="save(productForm.$valid)" type="submit" class="btn btn-primary">Add</button>
+			</form>
+			<!-- <table class="table table-bordered table-striped bs-events-table" ng-show="add">
 				<thead>
 					<tr>
 						<th>Branch</th>
@@ -47,24 +86,27 @@
 						<th> <span ng-click="save()"><button class="btn btn-success">Save</button> </span></th>
 					</tr>
 				</thead>
-			</table>
+			</table> -->
 		    <table class="table table-bordered table-striped bs-events-table" >
 		      <thead>
 		        <tr >
 		          <th>Branch</th>
-		          <th>Location</th>
+		          <th>Type</th>
 		          <th>Product</th>
 		          <th>Quantity</th>
-		          <th>Action</th>
+		          <!-- <th>Action</th> -->
 		        </tr>
 		      </thead>
 		      <tbody>
 		        <tr ng-repeat="stock in stocks">
 		          <td>{{branchName(stock.branchId)}}</td>
-		          <td>{{branchLocation(stock.branchId)}}</td>
+		          <td>{{getStockTypeById(stock.stockTypeId).name}}</td>
 		          <td>{{product(stock.productTypeId).name}}</td>
-		           <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
-		          <td><span ><button class="btn btn-warning">Edit</button></span> <span><button class="btn btn-danger">Delete</button></span></td>
+		           <td>{{stock.quantity/product(stock.productTypeId).lot_size}}(lot)</td>
+		         <!--  <td>
+		          	<span ><button class="btn btn-warning">Edit</button></span>
+		           	<span><button class="btn btn-danger">Delete</button></span>
+		       	  </td> -->
 		        </tr>
 		        
 		      </tbody>

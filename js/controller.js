@@ -63,7 +63,6 @@ function register($state,$scope,user,pubsubService){
     $state.go('login');
   }
   $scope.register = function($valid){
-    debugger;
     $scope.submitted = true;
     if($valid){
      user.register($scope).then(function(res) {
@@ -105,13 +104,7 @@ MetronicApp.controller('HomeController',['$state','$rootScope','user','pubsubSer
                    pubsubService.addBranch(ls);
                  });
                  // branches are loaded
-                 user.getStocks().then(function(es){
-                   if(es.data.code == 200){
-                    
-                     es.data.stocks.forEach(function(ls,i){
-                       pubsubService.addStock(ls);
-                     });
-                     // stocks are loaded
+                 
                      user.getProducts().then(function(es){
                        if(es.data.code == 200){
                         
@@ -131,8 +124,7 @@ MetronicApp.controller('HomeController',['$state','$rootScope','user','pubsubSer
                          })
                        }
                      });
-                   }
-                 });
+                  
                 
                }
              });
@@ -595,10 +587,26 @@ MetronicApp.controller('BranchController',['$scope','$modalInstance','user','$ro
   }
 }]);
 MetronicApp.controller('StockController',['$scope','$modalInstance','user','$rootScope','pubsubService',function($scope,$modalInstance,user,$rootScope,pubsubService){
-  
+  user.getStocks().then(function(res){
+    $scope.stockTypes = res.data.stockTypes;
+    $scope.stocks = res.data.stocks;
+  });
+  $scope.getStockTypeById = function(id){
+    var stockType;
+    $scope.stockTypes.forEach(function(ls,i){
+      if(id == ls.id){
+        stockType = ls;
+      }
+    });
+    return stockType;
+  }
+
   $scope.add = false;
    $scope.isDone = false;
    $scope.branch = null;
+   $scope.submitted = false;
+   $scope.stockProduct = {};
+   $scope.stockProduct.minQuantity = 0;
   $scope.cancel = function(){
     $modalInstance.dismiss('cancel');
   }
@@ -607,8 +615,6 @@ MetronicApp.controller('StockController',['$scope','$modalInstance','user','$roo
   }
 
   $scope.branches = pubsubService.getBranches() ;
-  $scope.stocks = pubsubService.getStocks();
-  debugger;
   $scope.products = pubsubService.getProducts();
   $scope.branchName = function(branchId){
       var name ;
@@ -641,15 +647,34 @@ MetronicApp.controller('StockController',['$scope','$modalInstance','user','$roo
       });
     return name;
   }
-  $scope.save = function(){
-      user.addStock($scope.branchId,$scope.productTypeId,$scope.minQuantity,$scope.onlineQuantity,$scope.deliveryCharge).then(function(es){
+  $scope.save = function(isValid){
+    if(isValid){
+      user.addStock($scope.stockProduct).then(function(es){
         if(es.data.code == 200){
-          debugger;
-          pubsubService.addStock(es.data.stock);
-          $scope.branch = es.data.stock.id;
-          $scope.isDone = true;
+          if(es.data.status == 'created'){
+            
+            $scope.stocks.push(es.data.stock);
+            $scope.isDone = true;
+            $scope.message = "One new stock is added!";
+          }
+          else{
+            $scope.isDone = true;
+            $scope.message = "Product is added to stock!"
+            $scope.stocks.forEach(function(ls,i){
+              if(ls.id == es.data.stock.id){
+                $scope.stocks[i].quantity +=  es.data.stockProduct.quantity;
+              }
+            });
+            
+          }
+          
         }
       });
+    }
+    else{
+      $scope.submitted = true;
+    }
+      
   }
 }]);
 MetronicApp.controller('ProductController',['$scope','$modalInstance','user','$rootScope','pubsubService',function($scope,$modalInstance,user,$rootScope,pubsubService){
@@ -772,7 +797,6 @@ MetronicApp.controller('ClientStockController',['$scope','$modalInstance','user'
     $modalInstance.dismiss('cancel');
   }
   $scope.addBranch = function(clientStock,clientBranch,clientProduct){
-    debugger;
     $scope.clientStock = clientStock;
     $scope.clientBranch = clientBranch;
     $scope.clientProduct = clientProduct;

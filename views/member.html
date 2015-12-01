@@ -93,7 +93,7 @@
 					<input name="contactNo" class="form-control" ng-model="member.contactNo" type="number" min="9000000000" required>
 			      	<p ng-show="userForm.contactNo.$invalid && !userForm.contactNo.$pristine || (submitted && userForm.contactNo.$invalid)" class="help-block">Plz give  valid contact no.  </p>
 			      </div>
-			       <button ng-click="save(userForm.$valid)" type="submit" class="btn btn-primary">Submit</button>
+			       <button confirm="Are you sure you want to register new member?" ng-click="save(userForm.$valid)" type="submit" class="btn btn-primary">Submit</button>
 			       
 			   </form>
 			<!-- <table class="table table-bordered table-striped bs-events-table" ng-show="add">

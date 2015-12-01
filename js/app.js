@@ -177,13 +177,12 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
    self.getBranch = function(){
     return $http.post(API + 'getBranch');
    }
-   self.addStock = function(branchId,productTypeId,minQuantity,onlineQuantity,deliveryCharge){
+   self.addStock = function(stockProduct){
         return $http.post(API + 'API/createStock',{
-            branchId : branchId,
-            productTypeId : productTypeId,
-            minQuantity : minQuantity,
-            onlineQuantity : onlineQuantity,
-            deliveryCharge : deliveryCharge
+            branchId : stockProduct.branchId,
+            productTypeId : stockProduct.productTypeId,
+            stockTypeId : stockProduct.stockTypeId,
+            onlineQuantity : stockProduct.onlineQuantity,
         });
    }
    self.getStocks = function(){
@@ -222,7 +221,6 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
         })
     }
     self.addMember = function($data) {
-      debugger;
       return $http.post(API + 'API/addMember',{
         fname:$data.fname,
         mname:$data.mname,
@@ -245,6 +243,9 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
         requestId:requestId,
         status : status
       });
+   }
+   self.getStockTypes = function(){
+    return $http.post(API + "API/getStockTypes");
    }
    self.updateStock = function(data){
      return $http.post(API + "API/updateStock",{
