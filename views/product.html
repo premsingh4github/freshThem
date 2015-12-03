@@ -3,44 +3,103 @@
 		            <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="cancel()"><span >×</span></button>
 		            <h3 class="modal-title">Product Type</h3>
 		            <div id="message" class="note note-success note-bordered" ng-show="isDone" >
-		            		<h3>Now {{branch}} is added to Product Type! <span class="close" ng-click="cancel()"></span></h3>
+		            		<h3>{{message}} <span class="close" ng-click="cancel()"></span></h3>
 		            </div>
 		 </div>
 		<div class="panel-body">
-		<div class="table-responsive">
-			<table class="table table-bordered table-striped bs-events-table" ng-show="add">
-			<form name="userForm" novalidate>
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>
-							<input ng-model="name" type="text" required >
-						</th>
-					</tr>
-					<tr>
-						<th>Lot Size</th>
-						<th><input ng-model="lotSize" type="text">(gram)</th>
-					</tr>
-					<tr>
-						<th>Commision</th>
-						<th><input ng-model="commision" type="text"></th>
-					</tr>
-					<tr>
-						<th>Margin</th>
-						<th><input ng-model="margin" type="text"></th>
-					</tr>
-					<tr>
-						<th>Holding Cost</th>
-						<th><input ng-model="holding_cost" type="text"></th>
-					</tr>
-					<tr>
-						<th></th>
-						<th> <span type="submit" ng-click="save()"><button class="btn btn-success" > Save</button></span></th>
-					</tr>
-
-				</thead>
+		<div >
+			 
+			<!-- start of add product type form -->
+			<form class="table  table-striped bs-events-table" name="productForm" novalidate ng-show="add">
+			
+			       <h3 class="modal-title">Add Product Type</h3>
+			       <div class="form-group" ng-class="{ 'has-error' : productForm.name.$invalid && !productForm.name.$pristine || (submitted && productForm.name.$invalid)}">
+			           <label>Name</label>
+			           <input type="text" placeholder="Name" class="form-control" ng-model="stockProduct.name" name="name" required/>
+			           <p ng-show="productForm.name.$invalid && !productForm.name.$pristine|| (submitted && productForm.name.$invalid)" class="help-block"> Name is required.</p>
+			       </div>
+			       <div class="form-group" ng-class="{ 'has-error' : productForm.lotSize.$invalid && !productForm.lotSize.$pristine || (submitted && productForm.lotSize.$invalid)}">
+			           <label>Lot Size</label>
+			           <input type="number" placeholder="Lot Size(g.m)" class="form-control" ng-model="stockProduct.lotSize" name="lotSize" required/>
+			           <p ng-show="productForm.lotSize.$invalid && !productForm.lotSize.$pristine|| (submitted && productForm.lotSize.$invalid)" class="help-block"> Lot Size is required.</p>
+			       </div>
+			       <div class="form-group" ng-class="{ 'has-error' : productForm.commision.$invalid && !productForm.commision.$pristine || (submitted && productForm.commision.$invalid)}">
+			           <label>Commision</label>
+			           <input type="number" placeholder="Commision" class="form-control" ng-model="stockProduct.commision" name="commision" required/>
+			           <p ng-show="productForm.commision.$invalid && !productForm.commision.$pristine|| (submitted && productForm.commision.$invalid)" class="help-block"> Commision is required.</p>
+			          
+			       </div>
+			       <div class="form-group" ng-class="{ 'has-error' : productForm.margin.$invalid && !productForm.margin.$pristine || (submitted && productForm.margin.$invalid)}">
+			           <label>Margin</label>
+			           <input type="number" placeholder="Margin" class="form-control" ng-model="stockProduct.margin" name="margin" required/>
+			           <p ng-show="productForm.margin.$invalid && !productForm.margin.$pristine|| (submitted && productForm.margin.$invalid)" class="help-block"> Margin is required.</p>
+			          
+			       </div>
+			       <div class="form-group" ng-class="{ 'has-error' : productForm.holding_cost.$invalid && !productForm.holding_cost.$pristine || (submitted && productForm.holding_cost.$invalid)}">
+			           <label>Holding Cost</label>
+			           <input type="number" placeholder="Holding Cost" class="form-control" ng-model="stockProduct.holding_cost" name="holding_cost" required/>
+			           <p ng-show="productForm.holding_cost.$invalid && !productForm.holding_cost.$pristine|| (submitted && productForm.holding_cost.$invalid)" class="help-block"> Holding Cost is required.</p>
+			          
+			       </div>
+			       <div class="form-group" ng-class="{ 'has-error' : productForm.productType.$invalid && !productForm.productType.$pristine || (submitted && productForm.productType.$invalid)}">
+			           <label>Product Type*</label>
+			           <select class="form-control has-error" name="productType" ng-model="stockProduct.productType"  required>
+			           		<option value="">Select</option>
+							<option value="0">Wholesale</option>
+							<option value="1">Retail</option> 
+						</select>
+			           <p ng-show="productForm.productType.$invalid && !productForm.productType.$pristine|| (submitted && productForm.productType.$invalid)" class="help-block">Product Type is required.</p>
+			       </div>
+				      
+				       <button confirm="Are you sure want to add product to stock?" ng-click="save(productForm.$valid)" type="submit" class="btn btn-primary">Add</button>
 				</form>
-			</table>
+				<!-- end of add product type form -->
+			<!-- start of edit product form -->
+			<form class="table  table-striped bs-events-table" name="productForm" novalidate ng-show="edit">
+			
+			       <h3 class="modal-title">Edit Product Type</h3>
+			       <div class="form-group" ng-class="{ 'has-error' : productForm.name.$invalid && !productForm.name.$pristine || (submitted && productForm.name.$invalid)}">
+			           <label>Name</label>
+			           <input type="text" placeholder="Name" class="form-control" ng-model="stockProduct.name" name="name"  required/>
+			           <p ng-show="productForm.name.$invalid && !productForm.name.$pristine|| (submitted && productForm.name.$invalid)" class="help-block"> Name is required.</p>
+			       </div>
+			       <div class="form-group" ng-class="{ 'has-error' : productForm.lotSize.$invalid && !productForm.lotSize.$pristine || (submitted && productForm.lotSize.$invalid)}">
+			           <label>Lot Size</label>
+			           <input type="number" placeholder="Lot Size(g.m)" class="form-control" ng-model="stockProduct.lot_size" name="lotSize" readonly required/>
+			           <p ng-show="productForm.lotSize.$invalid && !productForm.lotSize.$pristine|| (submitted && productForm.lotSize.$invalid)" class="help-block"> Lot Size is required.</p>
+			          
+			       </div>
+			       <div class="form-group" ng-class="{ 'has-error' : productForm.commision.$invalid && !productForm.commision.$pristine || (submitted && productForm.commision.$invalid)}">
+			           <label>Commision</label>
+			           <input type="number" placeholder="Commision" class="form-control" ng-model="stockProduct.commision" name="commision"  readonly required/>
+			           <p ng-show="productForm.commision.$invalid && !productForm.commision.$pristine|| (submitted && productForm.commision.$invalid)" class="help-block"> Commision is required.</p>
+			          
+			       </div>
+			       <div class="form-group" ng-class="{ 'has-error' : productForm.margin.$invalid && !productForm.margin.$pristine || (submitted && productForm.margin.$invalid)}">
+			           <label>Margin</label>
+			           <input type="number" placeholder="Margin" class="form-control" ng-model="stockProduct.margin" name="margin" readonly required/>
+			           <p ng-show="productForm.margin.$invalid && !productForm.margin.$pristine|| (submitted && productForm.margin.$invalid)" class="help-block"> Margin is required.</p>
+			          
+			       </div>
+			       <div class="form-group" ng-class="{ 'has-error' : productForm.holding_cost.$invalid && !productForm.holding_cost.$pristine || (submitted && productForm.holding_cost.$invalid)}">
+			           <label>Holding Cost</label>
+			           <input type="number" placeholder="Holding Cost" class="form-control" ng-model="stockProduct.holding_cost" name="holding_cost" readonly required/>
+			           <p ng-show="productForm.holding_cost.$invalid && !productForm.holding_cost.$pristine|| (submitted && productForm.holding_cost.$invalid)" class="help-block"> Holding Cost is required.</p>
+			          
+			       </div>
+			       <div class="form-group" ng-class="{ 'has-error' : productForm.productType.$invalid && !productForm.productType.$pristine || (submitted && productForm.productType.$invalid)}">
+			           <label>Product Type*</label>
+			           <select class="form-control has-error" name="productType" ng-model="stockProduct.type" readonly required>
+			           		<option value="">Select</option>
+							<option value="0">Wholesale</option>
+							<option value="1">Retail</option> 
+						</select>
+			           <p ng-show="productForm.productType.$invalid && !productForm.productType.$pristine|| (submitted && productForm.productType.$invalid)" class="help-block">Product Type is required.</p>
+			       </div>
+				      
+				       <button confirm="Are you sure want to add product to stock?" ng-click="update(productForm.$valid)" type="submit" class="btn btn-primary">Update</button>
+				</form>
+			<!-- End of edit product form -->
 		    <table class="table table-bordered table-striped bs-events-table" >
 		      <thead>
 		        <tr >
@@ -51,7 +110,10 @@
 		      <tbody>
 		        <tr ng-repeat="product in products">
 		          <td>{{product.name}}</td>
-		          <td><button class="btn btn-warning" >Edit</button> <button class="btn btn-danger">Delete</button></td>
+		          <td>
+		          	<button class="btn btn-warning" ng-click="showEdit(product)" >Edit</button> 
+		          	<!-- <button class="btn btn-danger">Delete</button> -->
+		          </td>
 		        </tr>
 		        
 		      </tbody>

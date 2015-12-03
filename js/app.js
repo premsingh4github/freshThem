@@ -194,7 +194,19 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
             lot_size: data.lotSize,
             commision: data.commision,
             margin: data.margin,
-            holding_cost : data.holding_cost
+            holding_cost : data.holding_cost,
+            producType : data.productType
+        });
+   };
+   self.editProduct = function(data){
+        return $http.post(API + 'API/editProduct',{
+            productId : data.id,
+            name:data.name,
+            lot_size: data.lot_size,
+            commision: data.commision,
+            margin: data.margin,
+            holding_cost : data.holding_cost,
+            producType : data.type
         });
    };
    self.getProducts = function(){

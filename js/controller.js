@@ -678,8 +678,9 @@ MetronicApp.controller('StockController',['$scope','$modalInstance','user','$roo
   }
 }]);
 MetronicApp.controller('ProductController',['$scope','$modalInstance','user','$rootScope','pubsubService',function($scope,$modalInstance,user,$rootScope,pubsubService){
-  
+  $scope.submitted = false;
   $scope.add = false;
+  $scope.edit = false;
    $scope.isDone = false;
    $scope.branch = null;
   $scope.cancel = function(){
@@ -694,20 +695,49 @@ MetronicApp.controller('ProductController',['$scope','$modalInstance','user','$r
       $scope.products = pubsubService.getProducts() ;
       });
   });
-  $scope.save = function(){
+  $scope.save = function($valid){
     debugger;
-    if($scope.userForm.$valid){
-        user.addProduct($scope).then(function(es){
+    if($valid){
+        user.addProduct($scope.stockProduct).then(function(es){
           if(es.data.code == 200){
             pubsubService.publishProduct(es.data.product);
             pubsubService.addProduct(es.data.product);
             $scope.branch = es.data.product.name;
+            $scope.message ="Now " + es.data.product.name + "is added to Product Type!";
+            
             $scope.isDone = true;
             $scope.name = null;
           }
       });
     }
     else{
+      $scope.submitted = true;
+      console.log("invalid form");
+    }
+      
+  }
+  $scope.showEdit =function(product){
+    $scope.stockProduct = product;
+    $scope.edit = true;
+  }
+  $scope.update = function($valid){
+    
+    if($valid){
+        user.editProduct($scope.stockProduct).then(function(es){
+          if(es.data.code == 200){
+            // pubsubService.publishProduct(es.data.product);
+            // pubsubService.addProduct(es.data.product);
+            // $scope.branch = es.data.product.name;
+            $scope.message = "Product Type is edited!";
+            $scope.edit = false;
+            $scope.isDone = true;
+
+            $scope.name = null;
+          }
+      });
+    }
+    else{
+      $scope.submitted = true;
       console.log("invalid form");
     }
       
