@@ -225,11 +225,12 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
    self.getMembers = function(){
         return $http.post(API + 'API/getMembers');
    }
-    self.addAccount = function(account){
+    self.addAccount = function(data){
+      debugger;
         return $http.post(API + 'API/addAccount',{
-            memberId: account.memberId,
-            type: account.type,
-            amount: account.amount
+            memberId: data.memberId,
+            type: data.account.type,
+            amount: data.account.amount
         })
     }
     self.addClientStock = function(data){

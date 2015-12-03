@@ -24,6 +24,7 @@ MetronicApp.controller('loginController', ['$scope','user','auth','$state','$roo
      
    };
    function handleRequest(res) {
+    alert(1);
     if(res.data.code == 200){
       var token = res.data ? res.data.token : null;
      if(token) { 
@@ -814,7 +815,7 @@ MetronicApp.controller('AccountController',['$scope','$modalInstance','user','$r
   $scope.add = false;
    $scope.isDone = false;
    $scope.branch = null;
-
+   $scope.submitted = false;
   $scope.cancel = function(){
     $modalInstance.dismiss('cancel');
   }
@@ -829,17 +830,23 @@ MetronicApp.controller('AccountController',['$scope','$modalInstance','user','$r
   console.log($scope.members);
   $scope.user = pubsubService.getUser();
   
-  $scope.save = function(){
+  $scope.save = function(valid){
+    if(valid){
       user.addAccount($scope).then(function(es){
         if(es.data.code == 200){
-
-          //delete $scope.account;
+          delete $scope.account;
           pubsubService.updateAccount(es.data.account);
           $scope.branch = $scope.client;
           $scope.isDone = true;
           $scope.name = null;
+          $scope.add = false;
         }
       });
+    }
+    else{
+      $scope.submitted = true;
+    }
+      
   }
 }]);
 MetronicApp.controller('ClientStockController',['$scope','$modalInstance','user','$rootScope','pubsubService',function($scope,$modalInstance,user,$rootScope,pubsubService){
