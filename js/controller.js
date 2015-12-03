@@ -562,7 +562,8 @@ MetronicApp.controller('BranchController',['$scope','$modalInstance','user','$ro
   
   $scope.add = false;
    $scope.isDone = false;
-   $scope.branch = null;
+   $scope.submitted = false;
+   $scope.edit = false;
   $scope.cancel = function(){
     $modalInstance.dismiss('cancel');
   }
@@ -575,15 +576,40 @@ MetronicApp.controller('BranchController',['$scope','$modalInstance','user','$ro
         $scope.branches = pubsubService.getBranches();
       });
   });
-  $scope.save = function(){
-      user.addBranch($scope.branchName,$scope.location ,$scope.delivery_charge).then(function(es){
+  $scope.save = function(valid){
+    if(valid){
+      user.addBranch($scope.branch).then(function(es){
         if(es.data.code == 200){
           pubsubService.publishBranch(es.data.branch);
           pubsubService.addBranch(es.data.branch);
-          $scope.branch = es.data.branch.name;
+          $scope.message = es.data.branch.name + "is added to branch.";
+          $scope.add = false;
+          delete $scope.branch;
           $scope.isDone = true;
         }
       });
+    }
+    else{
+      $scope.submitted = true;
+    }
+      
+  }
+  $scope.showEdit = function(branch){
+    $scope.branch = branch;
+    $scope.edit = true;
+  }
+  $scope.update = function(valid){
+    if(valid){
+      user.editBranch($scope.branch).then(function(res){
+        debugger
+        if(res.data.code == 200){
+          $scope.message = res.data.branch.name + " edited!.";
+          $scope.edit = false;
+          $scope.isDone = true;
+          delete $scope.branch
+        }
+      },function(res){});
+    }
   }
 }]);
 MetronicApp.controller('StockController',['$scope','$modalInstance','user','$rootScope','pubsubService',function($scope,$modalInstance,user,$rootScope,pubsubService){
@@ -696,7 +722,6 @@ MetronicApp.controller('ProductController',['$scope','$modalInstance','user','$r
       });
   });
   $scope.save = function($valid){
-    debugger;
     if($valid){
         user.addProduct($scope.stockProduct).then(function(es){
           if(es.data.code == 200){

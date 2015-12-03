@@ -4,33 +4,63 @@
 		            <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="cancel()"><span >×</span></button>
 		            <h3 class="modal-title">Branch</h3>
 		            <div id="message" class="note note-success note-bordered" ng-show="isDone" >
-		            		<h3>Now {{branch}} is added to brach! <span class="close" ng-click="cancel()"></span></h3>
+		            		<h3>{{message}} <span class="close" ng-click="cancel()"></span></h3>
 		            		
 		            </div>
 		 </div>
 		 
 		<div class="panel-body">
 		<div class="table-responsive">
-			<table class="table table-bordered table-striped bs-events-table" ng-show="add">
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th><input ng-model="branchName" type="text"></th>
-					</tr>
-					<tr>
-						<th>Location</th>
-						<th><input ng-model="location" type="text"> </th>
-					</tr>
-					<tr>
-						<th>Delivery Charge</th>
-						<th><input ng-model="delivery_charge" type="text"> </th>
-					</tr>
-					<tr>
-						<th></th>
-						<th> <span ng-click="save()"><button class="btn btn-success"> Save</button></span></th>
-					</tr>
-				</thead>
-			</table>
+			<!-- start of add branch form -->
+			<form class="table  table-striped bs-events-table" name="branchForm" novalidate ng-show="add">
+			
+			       <h3 class="modal-title">Add Branch</h3>
+			       <div class="form-group" ng-class="{ 'has-error' : branchForm.name.$invalid && !branchForm.name.$pristine || (submitted && branchForm.name.$invalid)}">
+			           <label>Name</label>
+			           <input type="text" placeholder="Name" class="form-control" ng-model="branch.name" name="name" required/>
+			           <p ng-show="branchForm.name.$invalid && !branchForm.name.$pristine|| (submitted && branchForm.name.$invalid)" class="help-block"> Name is required.</p>
+			       </div>
+			      
+			       <div class="form-group" ng-class="{ 'has-error' : branchForm.location.$invalid && !branchForm.location.$pristine || (submitted && branchForm.name.$invalid)}">
+			           <label>Location</label>
+			           <input type="text" placeholder="Location" class="form-control" ng-model="branch.location" name="location" required/>
+			           <p ng-show="branchForm.location.$invalid && !branchForm.location.$pristine|| (submitted && branchForm.location.$invalid)" class="help-block">Location is required.</p>
+			       </div>
+			       <div class="form-group" ng-class="{ 'has-error' : branchForm.delivery_charge.$invalid && !branchForm.delivery_charge.$pristine || (submitted && branchForm.delivery_charge.$invalid)}">
+			           <label>Delivery Charge</label>
+			           <input type="number" placeholder="Delivery Charge" class="form-control" ng-model="branch.delivery_charge" name="delivery_charge" required/>
+			           <p ng-show="branchForm.delivery_charge.$invalid && !branchForm.delivery_charge.$pristine|| (submitted && branchForm.delivery_charge.$invalid)" class="help-block">Delivery Charge is required.</p>
+			       </div>
+			       
+				      
+				       <button confirm="Are you sure want to add product to stock?" ng-click="save(branchForm.$valid)" type="submit" class="btn btn-primary">Add</button>
+				</form>
+				<!-- end of add branch form -->
+				<!-- start of edit branch -->
+				<form class="table  table-striped bs-events-table" name="branchForm" novalidate ng-show="edit">
+			
+			       <h3 class="modal-title">Edit Branch</h3>
+			       <div class="form-group" ng-class="{ 'has-error' : branchForm.name.$invalid && !branchForm.name.$pristine || (submitted && branchForm.name.$invalid)}">
+			           <label>Name</label>
+			           <input type="text" placeholder="Name" class="form-control" ng-model="branch.name" name="name" required/>
+			           <p ng-show="branchForm.name.$invalid && !branchForm.name.$pristine|| (submitted && branchForm.name.$invalid)" class="help-block"> Name is required.</p>
+			       </div>
+			      
+			       <div class="form-group" ng-class="{ 'has-error' : branchForm.location.$invalid && !branchForm.location.$pristine || (submitted && branchForm.name.$invalid)}">
+			           <label>Location</label>
+			           <input type="text" placeholder="Location" class="form-control" ng-model="branch.location" name="location" required/>
+			           <p ng-show="branchForm.location.$invalid && !branchForm.location.$pristine|| (submitted && branchForm.location.$invalid)" class="help-block">Location is required.</p>
+			       </div>
+			       <div class="form-group" ng-class="{ 'has-error' : branchForm.delivery_charge.$invalid && !branchForm.delivery_charge.$pristine || (submitted && branchForm.delivery_charge.$invalid)}">
+			           <label>Delivery Charge</label>
+			           <input type="number" placeholder="Delivery Charge" class="form-control" ng-model="branch.delivery_charge" name="delivery_charge" required/>
+			           <p ng-show="branchForm.delivery_charge.$invalid && !branchForm.delivery_charge.$pristine|| (submitted && branchForm.delivery_charge.$invalid)" class="help-block">Delivery Charge is required.</p>
+			       </div>
+			       
+				      
+				       <button confirm="Are you sure want to add product to stock?" ng-click="update(branchForm.$valid)" type="submit" class="btn btn-primary">Update</button>
+				</form>
+			
 		    <table class="table table-bordered table-striped bs-events-table" >
 		      <thead>
 		        <tr >
@@ -42,7 +72,7 @@
 		        <tr ng-repeat="branch in branches">
 		          <td>{{branch.name}}</td>
 		          <td>
-		          	<span ><button class="btn btn-warning">Edit</button></span> 
+		          	<span ><button ng-click="showEdit(branch)" class="btn btn-warning">Edit</button></span> 
 		          	<!-- <span><button class="btn btn-danger">Delete</button></span> -->
 		          </td>
 		        </tr>

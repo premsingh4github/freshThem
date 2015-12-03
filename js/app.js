@@ -166,13 +166,20 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
    self.logout = function(){
         return $http.post(API + 'API/logout');
    }
-   self.addBranch = function(branchName,location,delivery_charge){
-
+   self.addBranch = function(branch){
         return $http.post(API + 'API/createBranch',{
-            branchName : branchName,
-            branchLocation : location,
-            delivery_charge : delivery_charge
+            branchName : branch.name,
+            branchLocation : branch.location,
+            delivery_charge : branch.delivery_charge
         });
+   }
+   self.editBranch = function(branch){
+      return $http.post(API + 'API/editBranch',{
+            branchId : branch.id,
+            branchName : branch.name,
+            branchLocation : branch.location,
+            delivery_charge : branch.delivery_charge
+      });
    }
    self.getBranch = function(){
     return $http.post(API + 'getBranch');
