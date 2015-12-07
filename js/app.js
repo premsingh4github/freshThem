@@ -254,9 +254,42 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
         cNumber:$data.contactNo,
         mNumber:$data.mobileNo,
         mtype:$data.mtype,
-        branchId : $data.branch
+        agent : $data.agent
       });
         
+    }
+    self.editMember = function($data){
+       return $http.post(API + 'API/editMember',{
+        memberId : $data.id,
+        fname:$data.fname,
+        mname:$data.mname,
+        lname:$data.lname,
+        address:$data.address,
+        identity:$data.identity,
+        nationality:$data.nationality,
+        dob:$data.dob,
+        ban:$data.ban,
+        email:$data.email,
+        cNumber:$data.cNumber,
+        mNumber:$data.mNumber,
+        mtype:$data.mtype,
+        agent : $data.agent
+      });
+    }
+    self.suspendMember = function(memberId){
+      return $http.post(API + 'API/suspendMember',{
+        memberId : memberId
+      });
+    }
+    self.releaseMember = function(memberId){
+      return $http.post(API + 'API/releaseMember',{
+        memberId : memberId
+      });
+    }
+    self.deleteMember = function(memberId){
+      return $http.post(API + 'API/deleteMember',{
+        memberId : memberId
+      });
     }
    self.approveRequest = function(requestId,status){
       return $http.post(API +"API/approveRequest",{
@@ -341,6 +374,12 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         })
 
 }]);
+MetronicApp.filter('startFrom', function() {
+    return function(input, start) {
+        start = +start; //parse to int
+        return input.slice(start);
+    }
+});
 
 /* Init global settings and run the app */
 MetronicApp.run(["$rootScope", "settings", "$state","user" ,function($rootScope, settings, $state,user) {

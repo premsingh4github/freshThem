@@ -24,7 +24,7 @@ MetronicApp.controller('loginController', ['$scope','user','auth','$state','$roo
      
    };
    function handleRequest(res) {
-    alert(1);
+   // alert(1);
     if(res.data.code == 200){
       var token = res.data ? res.data.token : null;
      if(token) { 
@@ -145,10 +145,19 @@ MetronicApp.controller('HomeController',['$state','$rootScope','user','pubsubSer
 
 //$state.go('dashboard');
 }]);
-MetronicApp.controller('dashboardController',['$scope','$state','user','$rootScope','pubsubService','HOME',"$interval",function($scope,$state,user,$rootScope,pubsubService,HOME,$interval){
+MetronicApp.controller('dashboardController',['$scope','$state','user','$rootScope','pubsubService','HOME',"$interval","$modal",function($scope,$state,user,$rootScope,pubsubService,HOME,$interval,$modal){
+  user.getStocks().then(function(res){
+    $scope.stocks = res.data.stocks;
+    if(pubsubService.getStocks().length == 0){
+      $scope.stocks.forEach(function(ls,i){
+        pubsubService.addStock(ls);
+      });
+    }
+    
+  });
   $scope.unverifiedMembers = pubsubService.getUnverifiedMembers();
   $scope.user = pubsubService.getUser();
-  $scope.stocks = pubsubService.getStocks();
+  //$scope.stocks = pubsubService.getStocks();
   $scope.add = false;
    $scope.isDone = false;
    $scope.branch = null;
@@ -235,7 +244,6 @@ MetronicApp.controller('dashboardController',['$scope','$state','user','$rootSco
   }
   $scope.approve = function(requestId){
     user.approveRequest(requestId,1).then(function(rs){
-      debugger;
       pubsubService.updateStock(rs.data.clientStock);
     });
   }
@@ -246,11 +254,12 @@ MetronicApp.controller('dashboardController',['$scope','$state','user','$rootSco
   }
   $scope.offlineClass =  [ 'btn'];
   $scope.onlineClass = [ 'btn', 'btn-success'];
+  $scope.marketDepth =  [ 'btn'];
+  $scope.marketWatch = [ 'btn', 'btn-success'];
   $scope.request = 1;
   $scope.changeRequest = function(request){
     if(request == '1'){
       $scope.request = 1;
-      //$scope.onlineClass = [ 'caption-subject', 'font-green-haze', 'bold', 'uppercase'];
       $scope.onlineClass = [ 'btn', 'btn-success'];
       $scope.offlineClass = [ 'btn']; 
     }
@@ -258,6 +267,19 @@ MetronicApp.controller('dashboardController',['$scope','$state','user','$rootSco
       $scope.request = 0;
       $scope.offlineClass = [ 'btn', 'btn-success'];
       $scope.onlineClass = [ 'btn'];
+    }  
+  };
+  $scope.market = 0;
+  $scope.changeMarket = function(request){
+    if(request == '1'){
+      $scope.market = 1;
+      $scope.marketDepth = [ 'btn', 'btn-success'];
+      $scope.marketWatch = [ 'btn']; 
+    }
+    else{
+      $scope.market = 0;
+      $scope.marketWatch = [ 'btn', 'btn-success'];
+      $scope.marketDepth = [ 'btn'];
     }  
   };
   $scope.delivery_charge = 0;
@@ -284,6 +306,45 @@ MetronicApp.controller('dashboardController',['$scope','$state','user','$rootSco
      $scope.commision = $scope.margin = $scope.lot_size = 0;
     }
  }
+ $scope.order = {};
+ $scope.order.price = 4800;
+ $scope.addMerketOrder = function(){
+    $modal.open({
+         templateUrl: 'views/addMerketOrder.html',
+         controller: 'addMerketOrderController',
+         resolve: {
+           order: function () { return $scope.order }
+         }
+       });
+ }
+
+// for pagination of product
+$scope.currentPage = 0;
+    $scope.pageSize = 5;
+   
+    $scope.numberOfPages=function(){
+        return Math.ceil($scope.stocks.length/$scope.pageSize);                
+    }
+    
+
+}]);
+MetronicApp.controller('addMerketOrderController',['$scope','$modalInstance', 'order','pubsubService',function($scope,$modalInstance,order,pubsubService){
+  $scope.order = order;
+  $scope.branch = pubsubService.getBranchById(order.branch);
+  $scope.product = pubsubService.getProductById(order.symbol);
+  $scope.commission = order.lot * $scope.product.commision;
+  $scope.margin = order.lot * $scope.product.margin;
+  $scope.delivery_charge = ((order.lot * $scope.product.lot_size)/10) * $scope.branch.delivery_charge;
+  $scope.remaining_cost =  (((order.lot * $scope.product.lot_size)/10) * order.price) - $scope.margin;
+  $scope.holding_cost = $scope.product.holding_cost * order.lot;
+  var d = new Date();
+d.setDate(d.getDate()+7);
+
+//d.format("yyyy/mm/dd");
+$scope.delivery_date =    d.getMonth() + "-" +d.getDate()+ "-" + d.getFullYear();
+
+  debugger;
+  //$scope.
 }]);
 MetronicApp.controller('HeaderController', ['$scope','user','$modal','$rootScope','$state','pubsubService','HOME', function($scope,user,$modal,$rootScope,$state,pubsubService,HOME) {
     $scope.$on('$includeContentLoaded', function() {
@@ -375,14 +436,14 @@ MetronicApp.controller('VerifyMemberController',['$scope','$modalInstance','memb
       if($scope.success){
           $scope.cancel();
       }
-      debugger;
         if(isValid){
                 if($scope.passwordConform === $scope.password){                   
                     $scope.error = "";
                     $scope.warning = "";
                     user.verifyMember($scope.member.id,$scope.username,$scope.password,$scope.mtype).then(function(res){
                      if(res.data.code = 200){
-                      pubsubService.addMember(res.data.member);
+                      debugger;
+                     // pubsubService.addMember(res.data.member);
                       pubsubService.removeUnverifiedMember(res.data.member);
                         $scope.success = true;
                       }
@@ -491,7 +552,6 @@ MetronicApp.controller('SidebarController', ['$scope','$modal','$rootScope','pub
              });
            };
            $scope.member = function () {
-              // $scope.member = $scope.unverifiedMembers[position];
              var modalInstance = $modal.open({
                templateUrl: 'views/member.html',
                controller:'MemberController'
@@ -677,6 +737,8 @@ MetronicApp.controller('StockController',['$scope','$modalInstance','user','$roo
   $scope.save = function(isValid){
     if(isValid){
       user.addStock($scope.stockProduct).then(function(es){
+        delete $scope.stockProduct;
+        $scope.addBranch();
         if(es.data.code == 200){
           if(es.data.status == 'created'){
             
@@ -772,10 +834,12 @@ MetronicApp.controller('ProductController',['$scope','$modalInstance','user','$r
 MetronicApp.controller('MemberController',['$scope','$modalInstance','user','$rootScope','pubsubService',function($scope,$modalInstance,user,$rootScope,pubsubService){
   
   $scope.add = false;
+  $scope.edit = false;
    $scope.isDone = false;
    $scope.branch = null;
    $scope.submitted = false;
    $scope.branches = pubsubService.getBranches();
+   $scope.member = {};
   $scope.cancel = function(){
     $modalInstance.dismiss('cancel');
   }
@@ -785,6 +849,7 @@ MetronicApp.controller('MemberController',['$scope','$modalInstance','user','$ro
   $scope.products = pubsubService.getProducts() ;
   $scope.memberTypes = pubsubService.getMemberTypes();
   $scope.members = pubsubService.getMembers();
+  debugger;
   $scope.unverifiedMembers = pubsubService.getUnverifiedMembers();
   
   $scope.save = function(valid){
@@ -797,6 +862,7 @@ MetronicApp.controller('MemberController',['$scope','$modalInstance','user','$ro
           pubsubService.publishUnverifiedMember(es.data.member);
           pubsubService.addUnverifiedMember(es.data.member);
           $scope.branch = es.data.member.fname;
+          $scope.message = "Now" + $scope.branch + " is added to Unverified member list!";
           $scope.isDone = true;
           $scope.name = null;
           $scope.submitted = false;
@@ -807,6 +873,73 @@ MetronicApp.controller('MemberController',['$scope','$modalInstance','user','$ro
       $scope.submitted = true;
     }
       
+  }
+  $scope.update = function(valid){
+    if(valid){
+      user.editMember($scope.member).then(function(es){
+        if(es.data.code == 200){
+          delete $scope.member;
+          $scope.edit = false;
+          // pubsubService.publishUnverifiedMember(es.data.member);
+          // pubsubService.addUnverifiedMember(es.data.member);
+          $scope.branch = es.data.member.fname;
+          $scope.message = "Now " + $scope.branch + " is updated!";
+          $scope.isDone = true;
+          $scope.name = null;
+          $scope.submitted = false;
+        }
+      });
+    }
+    else{
+      $scope.submitted = true;
+    }
+      
+  }
+  $scope.suspend = function(memberId){
+    user.suspendMember(memberId).then(function(res){
+      $scope.message = "Now " + res.data.member.fname +" "+ res.data.member.mname + " " + res.data.member.lname +" is suspended!";
+      $scope.members.forEach(function(ls,i){
+        if(ls.id == memberId){
+          $scope.members[i].status = res.data.member.status;
+        }
+      });
+      $scope.isDone = true;
+    });
+  }
+  $scope.release = function(memberId){
+    user.releaseMember(memberId).then(function(res){
+      $scope.message = "Now " + res.data.member.fname +" "+ res.data.member.mname + " " + res.data.member.lname +" is realesed!";
+      $scope.members.forEach(function(ls,i){
+        if(ls.id == memberId){
+          $scope.members[i].status = res.data.member.status;
+        }
+      });
+      $scope.isDone = true;
+    });
+  }
+  $scope.delete = function(memberId){
+    user.deleteMember(memberId).then(function(res){
+      $scope.message = "Now " + res.data.member.fname +" "+ res.data.member.mname + " " + res.data.member.lname +" is deleted!";
+      $scope.members.forEach(function(ls,i){
+        if(ls.id == memberId){
+          $scope.members.splice(i,1);
+        }
+      });
+      $scope.isDone = true;
+    });
+  }
+  
+  $scope.showEdit = function(editMember){
+    $scope.member = editMember;
+    $scope.member.identity = parseInt($scope.member.identity);
+    $scope.member.cNumber = parseInt($scope.member.cNumber);
+    $scope.member.mNumber = parseInt($scope.member.mNumber);
+    $scope.edit = true;
+  }
+  $scope.back = function(){
+    $scope.edit = false;
+    delete $scope.member;
+
   }
 
 }]);

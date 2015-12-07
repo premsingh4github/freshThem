@@ -27,15 +27,15 @@
 							<div class="portlet-title ">
 								<div class=" caption">
 								<!-- caption-subject font-green-haze bold uppercase /caption-subject font-purple-intense bold uppercase -->
-									<button ng-class="offlineClass" ng-click="changeRequest('0')">Market Watch</button>
+									<button ng-class="onlineClass" ng-click="changeRequest('1')">Market Watch</button>
 								</div>
 								<div class="caption right">
-									<button ng-class="onlineClass"  ng-click="changeRequest('1')">Order Matching Engine</button>
+									<button ng-class=" offlineClass"  ng-click="changeRequest('0')">Order Matching Engine</button>
 								</div>
 
 							</div>
 							<div class="portlet-body">
-								<div ng-hide="request" class="row">
+								<div ng-show="request" class="row">
 									<div class="table-scrollable table-scrollable-borderless">
 										<table class="table table-hover table-light">
 											<thead>
@@ -66,7 +66,7 @@
 										</table>
 									</div>
 								</div>
-								<div ng-show="request" class="row">
+								<div ng-hide="request" class="row">
 									<div class="table-scrollable table-scrollable-borderless">
 										<table class="table table-hover table-light">
 											<thead>
@@ -158,7 +158,7 @@
 							<div class="portlet-title">
 								<div class="caption">
 									<i class="icon-cursor font-purple-intense hide"></i>
-									<span class="caption-subject font-purple-intense bold uppercase">Trade Board</span>
+									<span class="caption-subject font-purple-intense bold uppercase">Order Board</span>
 								</div>
 							</div>
 							<div class="portlet-body">
@@ -167,6 +167,7 @@
 										<table class="table table-hover table-light" >
 											<thead>
 												<tr class="uppercase">
+											          <th>Client Code</th>
 											          <th>Lot</th>
 											          <th>Price</th>
 											          <th colspan="2">Action</th>
@@ -174,6 +175,7 @@
 											</thead>
 											<tbody>
 												<tr>
+													<td>12345678</td>
 													<td>3</td>
 													<td>300</td>
 													<td>A</td>
@@ -224,48 +226,137 @@
 						</div>
 					</div>
 					<!-- end of admin content -->
-
+					
 					<!--  -->
 					<div class="col-sm-8 col-md-8 " ng-show="user.mtype == 6">
-						<div class="alert alert-success" role="alert">
-				      		<strong>Available Margin:</strong>1000.00 <strong>Pending:</strong>1000.00
-				    	</div>
+						
 				    	<div ng-show="user.mtype == 6">
-						<div class="portlet light ">
-							
-							<div class="portlet-body">
-								<div class="row">
-									<div class="table-scrollable table-scrollable-borderless">
-										<table class="table table-hover table-light">
-											<thead>
-												<tr class="uppercase">
-													<th>Product</th>
-											          <th>Price</th>
-											          <th>Branch</th>
-											          <th>Quantity</th>
-											          <th>High</th>
-											          <th>Low</th>
-											          <th>LTP</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr ng-repeat="stock in stocks">
-													<td>{{product(stock.productTypeId).name}}</td>
-													<td><span class="bold font-green-haze">48000</span></td>
-												  <td><span ng-click="addBranch(stock,branchName(stock.branchId),branchLocation(stock.branchId),product(stock.productTypeId))" >{{branchName(stock.branchId).name}}</span></td>
-												  <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
-												  <td>620</td>
-												  <td>600</td>
-												  <td><span >605</span></td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
+				    		<div class="portlet light ">
+				    			<div class="portlet-title ">
+				    				<div class=" caption">
+				    				<!-- caption-subject font-green-haze bold uppercase /caption-subject font-purple-intense bold uppercase -->
+				    					<button ng-class="marketWatch" ng-click="changeMarket('0')">Market Watch</button>
+				    				</div>
+				    				<div class="caption right">
+				    					<button ng-class="marketDepth"  ng-click="changeMarket('1')">Market Depth</button>
+				    				</div>
+
+				    			</div>
+				    			<div class="portlet-body">
+				    				<div ng-hide="market" class="row">
+				    					<div class="table-scrollable table-scrollable-borderless">
+				    						<table class="table table-hover table-light">
+				    							<thead>
+				    								<tr class="uppercase">
+				    									<th>Symbol</th>
+				    									<th>Quantity</th>
+				    							          <th>A Price</th>
+				    							          <th>Open</th>
+				    							          <th>High</th>
+				    							          <th>Low</th>
+				    							          <th>LTP</th>
+				    								</tr>
+				    							</thead>
+				    							<tbody>
+				    								<tr ng-repeat="stock in stocks | startFrom:currentPage*pageSize | limitTo:pageSize">
+				    								  <td>{{product(stock.productTypeId).name}}</td>
+				    								  <td>{{stock.quantity/product(stock.productTypeId).lot_size}}(lot)</td>
+				    								  <td><span class="bold font-green-haze">48000</span></td>
+				    								  <td>48000</td>
+				    								  <td>625</td>
+				    								  <td>620</td>
+				    								  <td>605</td>
+				    								</tr>
+				    							</tbody>
+				    							<tfoot>
+				    								<tr>
+				    									<td colspan="6" class="center">
+				    										<button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+				    										      << Previous
+				    										   </button>
+				    										   {{currentPage+1}}/{{numberOfPages()}}
+				    										   
+				    										   <button ng-disabled="currentPage >= stocks.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+				    										           Next >>
+				    										       </button>
+				    									</td>
+				    								</tr>
+				    								
+				    							</tfoot>
+				    						</table>
+				    					</div>
+				    				</div>
+				    				<div ng-show="market" class="row">
+				    					<div class="table-scrollable table-scrollable-borderless">
+				    						<table class="table table-hover table-light">
+				    							<thead>
+				    								<tr>
+				    									<th >Ask</th>
+				    									<th >Bid</th>
+				    								</tr>
+
+				    								<!-- <tr class="uppercase">
+				    									<th>Branch</th>
+				    							          <th>Location</th>
+				    							          <th>Product</th>
+				    							          <th>Price</th>
+				    							          <th>Quantity</th>
+				    							          <th>Type</th>
+				    							          <th>Status</th>
+				    								</tr> -->
+				    							</thead>
+
+				    							<tbody>
+				    								<tr>
+				    									<td>
+				    										<table class="table table-hover table-light" >
+				    											<thead>
+				    												<tr class="uppercase">
+				    											          <th>Lot</th>
+				    											          <th>Price</th>
+				    											          <th>Action</th>
+				    												</tr>
+				    											</thead>
+				    											<tbody>
+				    												<tr>
+				    													<td>3</td>
+				    													<td>300</td>
+				    													<td>Buy</td>
+
+				    												</tr>
+				    											</tbody>
+				    										</table>
+				    									</td>
+				    									<td>
+				    										<table class="table table-hover table-light">
+				    											<thead>
+				    												<tr class="uppercase">
+				    											          <th>Lot</th>
+				    											          <th>Price</th>
+				    											          <th>Action</th>
+				    												</tr>
+				    											</thead>
+				    											<tbody>
+				    												<tr>
+				    													<td>3</td>
+				    													<td>500</td>
+				    													<td>Sell</td>
+
+				    												</tr>
+				    											</tbody>
+				    										</table>
+				    									</td>
+				    								</tr>
+				    								
+				    							</tbody>
+				    						</table>
+				    					</div>
+				    				</div>
+				    			</div>
+				    		</div>
+						
 					</div>
-					<div ng-show="(user.mtype == 6) || (user.mtype == 1)">
+					<div ng-if="(user.mtype == 6) || (user.mtype == 1)">
 						<div class="portlet light ">
 							
 							<div class="portlet-body">
@@ -280,6 +371,41 @@
 
 						</div>
 					</div>
+					<div ng-if="user.mtype == 6">
+						<div class="portlet light ">
+							<div class="portlet-title">
+								<div class="caption">
+									<i class="icon-cursor font-purple-intense hide"></i>
+									<span class="caption-subject font-purple-intense bold uppercase">Open Position</span>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div class="row">
+									<div class="table-scrollable table-scrollable-borderless">
+										<table class="table table-hover table-light">
+											<thead>
+												<tr class="uppercase">
+													<th>Tic</th>
+											          <th>Tim</th>
+											          <th>Sym</th>
+											          <th>Typ</th>
+											          <th>Lot</th>
+											          <th>Pri</th>
+											          <th>Com</th>
+											          <th>Del</th>
+											          <th>Hol</th>
+											          <th>Status</th>
+												</tr>
+											</thead>
+											<tbody>
+												
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 
 					</div>
 
@@ -288,10 +414,10 @@
 							<div class="portlet-title ">
 								<div class=" caption">
 								<!-- caption-subject font-green-haze bold uppercase /caption-subject font-purple-intense bold uppercase -->
-									<span ng-class="offlineClass" ng-click="changeRequest('0')">Offline Request</span>
+									<span ng-class="onlineClass" ng-click="changeRequest('1')">Market Order</span>
 								</div>
 								<div class="caption right">
-									<span ng-class="onlineClass"  ng-click="changeRequest('1')">Online Request</span>
+									<span ng-class="offlineClass"  ng-click="changeRequest('0')">Limit Order</span>
 								</div>
 
 							</div>
@@ -370,297 +496,115 @@
 								</div>
 								<div ng-show="request" class="row">
 									<div class="table-scrollable table-scrollable-borderless">
-										<table class="table table-hover ">
-											<tbody>
-											<tr>
-												<th><a class="primary-link bold font-green-haze">Delivery Date</a></th>
-												<th>
-													<!-- <input type="text" ng-model="delivery"  class="angular-datepicker-input"  />lot -->
-													<div class="datepicker"
-													      date-format="y-d-MM"
-													      button-prev='<i class="fa fa-arrow-circle-left"></i>'
-													      button-next='<i class="fa fa-arrow-circle-right"></i>'>
-													      <input ng-model="delivery_date" type="text" class="angular-datepicker-input"/>
-													    </div>
-												</th>
-											</tr>
-												<tr>
-													<td>
-														<a class="primary-link bold font-green-haze">Location</a>
-													</td>
-													<td>
+										<form class="table  table-striped bs-events-table" name="marketOrder" novalidate >
+										       <div class="form-group" ng-class="{ 'has-error' : marketOrder.symbol.$invalid && !marketOrder.symbol.$pristine || (submitted && marketOrder.symbol.$invalid)}">
+										           <label class="primary-link bold font-green-haze">Symbol</label>
+										           <select class="form-control has-error" name="symbol" ng-model="order.symbol" required>
+					           			           		<option value="">Select</option>
+					           							<option ng-repeat="product in products" value="{{product.id}}">{{product.name}}</option>
+					           						</select>
+										           <p ng-show="marketOrder.symbol.$invalid && !marketOrder.symbol.$pristine|| (submitted && marketOrder.symbol.$invalid)" class="help-block"> Symbol is required.</p>
+										       </div>
+										       <div class="form-group" >
+										           <label>Price</label>
+										           <input type="number" ng-model='order.price' class="form-control" readonly/>
+										       </div>
+										       <div class="form-group" ng-class="{ 'has-error' : marketOrder.lot.$invalid && !marketOrder.lot.$pristine || (submitted && marketOrder.lot.$invalid)}">
+										           <label>Lot</label>
+										           <input type="number" placeholder="Lot" class="form-control" ng-model="order.lot" name="lot" required/>
+										           <p ng-show="marketOrder.lot.$invalid && !marketOrder.lot.$pristine|| (submitted && marketOrder.lot.$invalid)" class="help-block"> Lot is required.</p>
+										          
+										       </div>
+										       
+								              <div class="form-group" ng-class="{ 'has-error' : marketOrder.branch.$invalid && !marketOrder.branch.$pristine || (submitted && marketOrder.branch.$invalid)}">
+								                  <label>Branch*</label>
+								                  <select class="form-control has-error" name="branch" ng-model="order.branch" required>
+								                  	<option value="">Select</option>
+								       				<option ng-repeat="branch in branches" value="{{branch.id}}">{{branch.name}}</option>
+								       			</select>
+								                  <p ng-show="marketOrder.branch.$invalid && !marketOrder.branch.$pristine|| (submitted && marketOrder.branch.$invalid)" class="help-block">Branch is required.</p>
+								              </div>
+										       
+											      
+											       <button  ng-click="addMerketOrder(marketOrder.$valid)" type="submit" class="btn btn-success">Buy</button>
+											</form>
+										</div>
+								</div>
+							</div>
+						</div>
+						<div ng-if="user.mtype == 6">
+							<div class="portlet light ">
+								<div class="portlet-title">
+									<div class="caption">
+										<i class="icon-cursor font-purple-intense hide"></i>
+										<span class="caption-subject font-purple-intense bold uppercase">Account Summary</span>
+									</div>
+								</div>
+								<div class="portlet-body">
+									<div class="row">
+										<div class="table-scrollable table-scrollable-borderless">
+											<table class="table table-hover table-light">
+												<thead>
+													<tr class="uppercase">
+														<th >
+															Description
+														</th>
+														<th>
+															Amount(Rs)
+														</th>
+													</tr>
 													
-														<select ng-model="clientRequestStock" ng-change="changeClientBranch()">
-															<option value="">Select</option>
-															<option ng-repeat="stock in stocks" value="{{stock.id}}">{{branchName(stock.branchId).location}}</option>
-															
-														</select>
-													</td>
-												</tr>
-												
-												<tr>
-													<td>
-														<a class="primary-link bold font-green-haze">Product</a>
-													</td>
-													<td>
-														<select name="" ng-model="clientProduct" ng-change="changeClientProduct()" >
-															<option value="">select</option>
-															<option ng-repeat="product in products" value="{{product.id}}">{{product.name}}</option>
-														</select>
-													</td>
-												</tr>
-												
-												<tr>
-													<th><a class="primary-link bold font-green-haze">Delivery Charge</a></th>
-													<th>
-														<input type="text" ng-model="delivery_charge" value="{{delivery_charge}}" />
-													</th>
-												</tr>
-												<tr>
-													<th><a class="primary-link bold font-green-haze">Commision</a></th>
-													<th>
-														<input type="text" value="{{commision}}/lot" />
-													</th>
-												</tr>
-												<tr>
-													<th><a class="primary-link bold font-green-haze">Margin</a></th>
-													<th>
-														<input type="text" value="{{margin}}/lot" />
-													</th>
-												</tr>
-												<tr>
-													<td>
-														<a class="primary-link bold font-green-haze">Quantity</a>
-													</td>
-													<td>
-														<input type="number" name='amount' ng-model="amount">(lot)
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<a class="primary-link bold font-green-haze">Cost</a>
-													</td>
-													<th>
-														<input type="text" value="{{amount*(margin + commision)+(delivery_charge * (amount * lot_size)/10)}}"     />
-													</th>
-												</tr>
-												<tr>
-													<th><a class="primary-link bold font-green-haze">Remaning Cost</a></th>
-													<th>
-														<input type="text" value="{{ ((lot_size * amount)/10 *  30000) - (amount* margin) }}" readonly    />
-													</th>
-												</tr>
-
-												<tr>
-													<td>
-														
-													</td>
-													<td>
-														<input type="submit" value="Request" confirm=" Are you sure want to request ?">
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-					<div class="col-md-8 col-sm-8" ng-show="user.mtype == 6">
-						<div class="portlet light ">
-							<div class="portlet-title">
-								<div class="caption">
-									<i class="icon-cursor font-purple-intense hide"></i>
-									<span class="caption-subject font-purple-intense bold uppercase">Order History</span>
-								</div>
-							</div>
-							<div class="portlet-body">
-								<div class="row">
-									<div class="table-scrollable table-scrollable-borderless">
-										<table class="table table-hover table-light">
-											<thead>
-												<tr class="uppercase">
-													<th>Branch</th>
-											          <th>Location</th>
-											          <th>Product</th>
-											          <th>Price</th>
-											          <th>Quantity</th>
-											          <th>Type</th>
-											          <th>Status</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr ng-repeat="stock in stocks">
-												  <td><span ng-click="addBranch(stock,branchName(stock.branchId),branchLocation(stock.branchId),product(stock.productTypeId))" >{{branchName(stock.branchId).name}}</span></td>
-												  <td>{{branchLocation(stock.branchId)}}</td>
-												  <td>{{product(stock.productTypeId).name}}</td>
-												  <td><span class="bold font-green-haze">48000</span></td>
-												  <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
-												  <td>Buy</td>
-												  <td><span ng-click="addBranch(stock,branchName(stock.branchId),product(stock.productTypeId))" >Pending</span></td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4 col-sm-4" ng-show="user.mtype == 6">
-						<div class="portlet light ">
-							<div class="portlet-title">
-								<div class="caption">
-									<i class="icon-cursor font-purple-intense hide"></i>
-									<span class="caption-subject font-purple-intense bold uppercase">Account Summary</span>
-								</div>
-							</div>
-							<div class="portlet-body">
-								<div class="row">
-									<div class="table-scrollable table-scrollable-borderless">
-										<table class="table table-hover table-light">
-											<thead>
-												<tr class="uppercase">
-													<th >
-														Description
-													</th>
-													<th>
-														Amount(Rs)
-													</th>
-												</tr>
-												
-											</thead>
-											<tbody>
-												<tr>
-													<td>
-														<a class="primary-link">Deposite</a>
-													</td>
-													<td>
-														<span class="bold font-green-haze">500000</span>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<a class="primary-link">Credit</a>
-													</td>
-													<td>
-														<span class="bold font-green-haze">10000</span>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<a class="primary-link">Order</a>
-													</td>
-													<td>
-														<span class="bold font-green-haze">100000</span>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<a class="primary-link">Pending Order</a>
-													</td>
-													<td>
-														<span class="bold font-green-haze">200000</span>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<a class="primary-link">Balance</a>
-													</td>
-													<td>
-														<span class="bold font-green-haze">200000</span>
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-8 col-sm-8" ng-show="user.mtype == 6">
-						<div class="portlet light ">
-							<div class="portlet-title">
-								<div class="caption">
-									<i class="icon-cursor font-purple-intense hide"></i>
-									<span class="caption-subject font-purple-intense bold uppercase">Order Matching Engine</span>
-								</div>
-							</div>
-							<div class="portlet-body">
-								<div class="row">
-									<div class="table-scrollable table-scrollable-borderless">
-										<table class="table table-hover table-light">
-											<thead>
-												<tr>
-													<th >Ask</th>
-													<th >Bid</th>
-												</tr>
-
-												<!-- <tr class="uppercase">
-													<th>Branch</th>
-											          <th>Location</th>
-											          <th>Product</th>
-											          <th>Price</th>
-											          <th>Quantity</th>
-											          <th>Type</th>
-											          <th>Status</th>
-												</tr> -->
-											</thead>
-
-											<tbody>
-												<tr>
-													<td>
-														<table class="table table-hover table-light" >
-															<thead>
-																<tr class="uppercase">
-															          <th>Lot</th>
-															          <th>Price</th>
-															          <th>Action</th>
-																</tr>
-															</thead>
-															<tbody>
-																<tr>
-																	<td>3</td>
-																	<td>300</td>
-																	<td>Buy</td>
-
-																</tr>
-															</tbody>
-														</table>
-													</td>
-													<td>
-														<table class="table table-hover table-light">
-															<thead>
-																<tr class="uppercase">
-															          <th>Lot</th>
-															          <th>Price</th>
-															          <th>Action</th>
-																</tr>
-															</thead>
-															<tbody>
-																<tr>
-																	<td>3</td>
-																	<td>500</td>
-																	<td>Sell</td>
-
-																</tr>
-															</tbody>
-														</table>
-													</td>
-												</tr>
-												
-											</tbody>
-										</table>
+												</thead>
+												<tbody>
+													<tr>
+														<td>
+															<a class="primary-link">Deposite</a>
+														</td>
+														<td>
+															<span class="bold font-green-haze">500000</span>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<a class="primary-link">Credit</a>
+														</td>
+														<td>
+															<span class="bold font-green-haze">10000</span>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<a class="primary-link">Order</a>
+														</td>
+														<td>
+															<span class="bold font-green-haze">100000</span>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<a class="primary-link">Pending Order</a>
+														</td>
+														<td>
+															<span class="bold font-green-haze">200000</span>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<a class="primary-link">Balance</a>
+														</td>
+														<td>
+															<span class="bold font-green-haze">200000</span>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 					
-				</div>
-
 				</div>
 			</div>	
 		</div>

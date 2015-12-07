@@ -82,6 +82,15 @@
     			//console.log(el);
     		});
     	}
+        function getBranchById(id){
+            var branch ;
+            branches.forEach(function(ls,i){
+                if(id == ls.id){
+                    branch = ls;
+                }
+            });
+            return branch;
+        }
         function publishBranch(branch){
             var msg = {
                 type : 'addBranch',
@@ -107,6 +116,15 @@
     		    products: products
     		});
     	}
+         function getProductById(id){
+            var product ;
+            products.forEach(function(ls,i){
+                if(id == ls.id){
+                    product = ls;
+                }
+            });
+            return product;
+        }
         function publishProduct(productType){
             var msg = {
             type: "addProductType",
@@ -282,10 +300,14 @@
 		    addBranch : addBranch,
 		    removeBranch: removeBranch,
             publishBranch : publishBranch,
+            getBranchById : getBranchById,
+
+
 		    getStocks :getStocks,
 		    addStock : addStock,
 		    getProducts: getProducts,
 		    addProduct : addProduct,
+            getProductById : getProductById,
             publishProduct : publishProduct,
             getMemberTypes : getMemberTypes,
             addMemberType: addMemberType,
