@@ -10,7 +10,7 @@
 		<div >
 			 
 			<!-- start of add product type form -->
-			<form class="table  table-striped bs-events-table" name="productForm" novalidate ng-show="add">
+			<form class="table  table-striped bs-events-table" name="productForm" novalidate ng-if="add">
 			
 			       <h3 class="modal-title">Add Product Type</h3>
 			       <div class="form-group" ng-class="{ 'has-error' : productForm.name.$invalid && !productForm.name.$pristine || (submitted && productForm.name.$invalid)}">
@@ -42,20 +42,20 @@
 			          
 			       </div>
 			       <div class="form-group" ng-class="{ 'has-error' : productForm.productType.$invalid && !productForm.productType.$pristine || (submitted && productForm.productType.$invalid)}">
-			           <label>Product Type*</label>
+			           <label>Store Type*</label>
 			           <select class="form-control has-error" name="productType" ng-model="stockProduct.productType"  required>
 			           		<option value="">Select</option>
 							<option value="0">Wholesale</option>
 							<option value="1">Retail</option> 
 						</select>
-			           <p ng-show="productForm.productType.$invalid && !productForm.productType.$pristine|| (submitted && productForm.productType.$invalid)" class="help-block">Product Type is required.</p>
+			           <p ng-show="productForm.productType.$invalid && !productForm.productType.$pristine|| (submitted && productForm.productType.$invalid)" class="help-block">Store Type is required.</p>
 			       </div>
 				      
-				       <button confirm="Are you sure want to add product to stock?" ng-click="save(productForm.$valid)" type="submit" class="btn btn-primary">Add</button>
+				       <button confirm="Are you sure want to add product type" ng-click="save(productForm.$valid)" type="submit" class="btn btn-primary">Add</button>
 				</form>
 				<!-- end of add product type form -->
 			<!-- start of edit product form -->
-			<form class="table  table-striped bs-events-table" name="productForm" novalidate ng-show="edit">
+			<form class="table  table-striped bs-events-table" name="productForm" novalidate ng-if="edit">
 			
 			       <h3 class="modal-title">Edit Product Type</h3>
 			       <div class="form-group" ng-class="{ 'has-error' : productForm.name.$invalid && !productForm.name.$pristine || (submitted && productForm.name.$invalid)}">
@@ -88,16 +88,16 @@
 			          
 			       </div>
 			       <div class="form-group" ng-class="{ 'has-error' : productForm.productType.$invalid && !productForm.productType.$pristine || (submitted && productForm.productType.$invalid)}">
-			           <label>Product Type*</label>
+			           <label>Store Type*</label>
 			           <select class="form-control has-error" name="productType" ng-model="stockProduct.type" readonly required>
 			           		<option value="">Select</option>
 							<option value="0">Wholesale</option>
 							<option value="1">Retail</option> 
 						</select>
-			           <p ng-show="productForm.productType.$invalid && !productForm.productType.$pristine|| (submitted && productForm.productType.$invalid)" class="help-block">Product Type is required.</p>
+			           <p ng-show="productForm.productType.$invalid && !productForm.productType.$pristine|| (submitted && productForm.productType.$invalid)" class="help-block">Store Type is required.</p>
 			       </div>
 				      
-				       <button confirm="Are you sure want to add product to stock?" ng-click="update(productForm.$valid)" type="submit" class="btn btn-primary">Update</button>
+				       <button confirm="Are you sure want to edit  product type?" ng-click="update(productForm.$valid)" type="submit" class="btn btn-primary">Update</button>
 				</form>
 			<!-- End of edit product form -->
 		    <table class="table table-bordered table-striped bs-events-table" >

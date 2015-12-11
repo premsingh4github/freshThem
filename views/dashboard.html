@@ -50,7 +50,7 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr ng-repeat="stock in stocks">
+												<tr ng-repeat="stock in stocks | filter: { stockTypeId: 3 }">
 												  <td>{{product(stock.productTypeId).name}}</td>
 												  <td><span class="bold font-green-haze">48000</span></td>
 												  <td>{{stock.onlineQuantity/product(stock.productTypeId).lot_size}}(lot)</td>
@@ -74,16 +74,6 @@
 													<th >Ask</th>
 													<th >Bid</th>
 												</tr>
-
-												<!-- <tr class="uppercase">
-													<th>Branch</th>
-											          <th>Location</th>
-											          <th>Product</th>
-											          <th>Price</th>
-											          <th>Quantity</th>
-											          <th>Type</th>
-											          <th>Status</th>
-												</tr> -->
 											</thead>
 
 											<tbody>
@@ -98,12 +88,16 @@
 																</tr>
 															</thead>
 															<tbody>
-																<tr>
-																	<td>3</td>
-																	<td>300</td>
-																	<td>Buy</td>
+																
+			    												<tr ng-repeat="limitOrder in limitOrders | filter: { type: 0 }">
+			    													<td>{{limitOrder.amount/10}}</td>
+			    													<td>{{limitOrder.priceMin}}</td>
+			    													<td>
+			    														<button   type="submit" class="btn btn-success">Buy</button>
+			    													</td>
 
-																</tr>
+			    												</tr>
+				    											
 															</tbody>
 														</table>
 													</td>
@@ -117,12 +111,14 @@
 																</tr>
 															</thead>
 															<tbody>
-																<tr>
-																	<td>3</td>
-																	<td>500</td>
-																	<td>Sell</td>
+																<tr ng-repeat="limitOrder in limitOrders | filter: { type: 1 }">
+				    													<td>{{limitOrder.amount/10}}</td>
+				    													<td>{{limitOrder.priceMax}}</td>
+				    													<td>
+				    														<button   type="submit" class="btn btn-success">Sell</button>
+				    													</td>
 
-																</tr>
+				    												</tr>
 															</tbody>
 														</table>
 													</td>
@@ -158,7 +154,7 @@
 							<div class="portlet-title">
 								<div class="caption">
 									<i class="icon-cursor font-purple-intense hide"></i>
-									<span class="caption-subject font-purple-intense bold uppercase">Order Board</span>
+									<button class=" btn btn-success uppercase">Order Board</button>
 								</div>
 							</div>
 							<div class="portlet-body">
@@ -167,19 +163,19 @@
 										<table class="table table-hover table-light" >
 											<thead>
 												<tr class="uppercase">
-											          <th>Client Code</th>
+											          <th>Ticket</th>
 											          <th>Lot</th>
 											          <th>Price</th>
 											          <th colspan="2">Action</th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr>
-													<td>12345678</td>
-													<td>3</td>
-													<td>300</td>
-													<td>A</td>
-													<td>R</td>
+												<tr ng-repeat="clientStock in clientStocks">
+													<td>{{clientStock.ticket}}</td>
+													<td>{{clientStock.amount/10}}</td>
+													<td>{{10*(clientStock.cost/clientStock.amount)}}</td>
+													<td><button class="btn btn-success">A</button></td>
+													<td><button class="btn btn-danger">R</button></td>
 
 												</tr>
 											</tbody>
@@ -274,7 +270,7 @@
 				    										<button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
 				    										      << Previous
 				    										   </button>
-				    										   {{currentPage+1}}/{{numberOfPages()}}
+				    										   {{currentPage+1}}/{{numberOfPages}}
 				    										   
 				    										   <button ng-disabled="currentPage >= stocks.length/pageSize - 1" ng-click="currentPage=currentPage+1">
 				    										           Next >>
@@ -294,16 +290,6 @@
 				    									<th >Ask</th>
 				    									<th >Bid</th>
 				    								</tr>
-
-				    								<!-- <tr class="uppercase">
-				    									<th>Branch</th>
-				    							          <th>Location</th>
-				    							          <th>Product</th>
-				    							          <th>Price</th>
-				    							          <th>Quantity</th>
-				    							          <th>Type</th>
-				    							          <th>Status</th>
-				    								</tr> -->
 				    							</thead>
 
 				    							<tbody>
@@ -318,10 +304,12 @@
 				    												</tr>
 				    											</thead>
 				    											<tbody>
-				    												<tr>
-				    													<td>3</td>
-				    													<td>300</td>
-				    													<td>Buy</td>
+				    												<tr ng-repeat="limitOrder in limitOrders | filter: { type: 0 }">
+				    													<td>{{limitOrder.amount/10}}</td>
+				    													<td>{{limitOrder.priceMin}}</td>
+				    													<td>
+				    														<button   type="submit" class="btn btn-success">Buy</button>
+				    													</td>
 
 				    												</tr>
 				    											</tbody>
@@ -337,10 +325,12 @@
 				    												</tr>
 				    											</thead>
 				    											<tbody>
-				    												<tr>
-				    													<td>3</td>
-				    													<td>500</td>
-				    													<td>Sell</td>
+				    												<tr ng-repeat="limitOrder in limitOrders | filter: { type: 1 }">
+				    													<td>{{limitOrder.amount/10}}</td>
+				    													<td>{{limitOrder.priceMax}}</td>
+				    													<td>
+				    														<button   type="submit" class="btn btn-success">Sell</button>
+				    													</td>
 
 				    												</tr>
 				    											</tbody>
@@ -414,84 +404,59 @@
 							<div class="portlet-title ">
 								<div class=" caption">
 								<!-- caption-subject font-green-haze bold uppercase /caption-subject font-purple-intense bold uppercase -->
-									<span ng-class="onlineClass" ng-click="changeRequest('1')">Market Order</span>
+									<button ng-class="onlineClass" ng-click="changeRequest('1')">Market Order</button>
 								</div>
 								<div class="caption right">
-									<span ng-class="offlineClass"  ng-click="changeRequest('0')">Limit Order</span>
+									<button ng-class="offlineClass"  ng-click="changeRequest('0')">Limit Order</button>
 								</div>
 
 							</div>
 							<div class="portlet-body">
 								<div ng-hide="request" class="row">
 									<div class="table-scrollable table-scrollable-borderless">
-										<table class="table table-hover ">
-											<tbody>
-												<tr>
-													<td>
-														<a class="primary-link bold font-green-haze">Type</a>
-													</td>
-													<td>
-														<select name="">
-															<option value="1">Sell</option>
-															<option value="1">Buy</option>
-														</select>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<a class="primary-link bold font-green-haze">Branch</a>
-													</td>
-													<td>
-														<select name="">
-															<option ng-repeat="branch in branches" value="branch.id">{{branch.name}}</option>
-														</select>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<a class="primary-link bold font-green-haze">Product</a>
-													</td>
-													<td>
-														<select name="">
-															<option ng-repeat="product in products" value="product.id">{{product.name}}</option>
-														</select>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<a class="primary-link bold font-green-haze">Starting Price</a>
-													</td>
-													<td>
-														<input type="number" name='startPrice'>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<a class="primary-link bold font-green-haze">Last Price</a>
-													</td>
-													<td>
-														<input type="number" name='lastPrice'>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<a class="primary-link bold font-green-haze">Quantity</a>
-													</td>
-													<td>
-														<input type="number" name='quantity'>(lot)
-													</td>
-												</tr>
-												
-												<tr>
-													<td>
-														
-													</td>
-													<td>
-														<input type="submit" value="Request" confirm=" Are you sure want to request ?">
-													</td>
-												</tr>
-											</tbody>
-										</table>
+										<form class="table  table-striped bs-events-table" name="limitOrder" novalidate >
+											<div class="form-group" ng-class="{ 'has-error' : limitOrder.symbol.$invalid && !limitOrder.symbol.$pristine || (submitted && limitOrder.symbol.$invalid)}">
+										           <label class="primary-link bold font-green-haze">Symbol</label>
+										           <select class="form-control has-error" name="symbol" ng-model="limit.symbol" ng-change="limitBranch()" required>
+					           			           		<option value="">Select</option>
+					           							<option ng-repeat="product in products" value="{{product.id}}">{{product.name}}</option>
+					           						</select>
+										           <p ng-show="limitOrder.symbol.$invalid && !limitOrder.symbol.$pristine|| (submitted && limitOrder.symbol.$invalid)" class="help-block"> Symbol is required.</p>
+										       </div>
+										       <div class="form-group" ng-class="{ 'has-error' : limitOrder.lot.$invalid && !limitOrder.lot.$pristine || (submitted && limitOrder.lot.$invalid)}">
+										           <label>Lot</label>
+										           <input type="number" placeholder="Lot" class="form-control" ng-model="limit.lot" name="lot" required/>
+										           <p ng-show="limitOrder.lot.$invalid && !limitOrder.lot.$pristine|| (submitted && limitOrder.lot.$invalid)" class="help-block"> Lot is required.</p>
+										          
+										       </div>
+										       <div class="form-group" ng-class="{ 'has-error' : limitOrder.priceMin.$invalid && !limitOrder.priceMin.$pristine || (submitted && limitOrder.priceMin.$invalid)}">
+										           <label>Price Range Min.</label>
+										           <input type="number" placeholder="Min Price" class="form-control" ng-model="limit.priceMin" name="priceMin" required/>
+										           <p ng-show="limitOrder.priceMin.$invalid && !limitOrder.priceMin.$pristine|| (submitted && limitOrder.priceMin.$invalid)" class="help-block"> Price Range Min. is required.</p>
+										          
+										       </div>
+										       <div class="form-group" ng-class="{ 'has-error' : limitOrder.priceMax.$invalid && !limitOrder.priceMax.$pristine || (submitted && limitOrder.priceMax.$invalid)}">
+										           <label>Price Range Max.</label>
+										           <input type="number" placeholder="Max. Price" class="form-control" ng-model="limit.priceMax" name="priceMax" required/>
+										           <p ng-show="limitOrder.priceMax.$invalid && !limitOrder.priceMax.$pristine|| (submitted && limitOrder.priceMax.$invalid)" class="help-block"> Price Range Max. is required.</p>
+										          
+										       </div>
+										       <div class="form-group" ng-class="{ 'has-error' : limitOrder.branch.$invalid && !limitOrder.branch.$pristine || (submitted && limitOrder.branch.$invalid)}">
+								                  <label>Branch*</label>
+								                  <select class="form-control has-error" name="branch" ng-model="limit.branch" required>
+								                  	<option value="">Select</option>
+								       				<option ng-repeat="branchId in limitBranchesId" value="{{branchId}}">{{getBranchById(branchId).name}}</option>
+								       			</select>
+								                  <p ng-show="limitOrder.branch.$invalid && !limitOrder.branch.$pristine|| (submitted && limitOrder.branch.$invalid)" class="help-block">Branch is required.</p>
+								              </div>
+										       <span class="pull-left" ng-click="limitBuy(limitOrder.$valid)" >
+										       	<button class="btn btn-success">Buy</button>
+										       </span>
+										       <span class="pull-right" ng-click="limitSell(limitOrder.$valid)" >
+										       	<button class="btn btn-danger">Sell</button>
+										       </span>
+											</form>
+										
 									</div>
 								</div>
 								<div ng-show="request" class="row">
@@ -499,7 +464,7 @@
 										<form class="table  table-striped bs-events-table" name="marketOrder" novalidate >
 										       <div class="form-group" ng-class="{ 'has-error' : marketOrder.symbol.$invalid && !marketOrder.symbol.$pristine || (submitted && marketOrder.symbol.$invalid)}">
 										           <label class="primary-link bold font-green-haze">Symbol</label>
-										           <select class="form-control has-error" name="symbol" ng-model="order.symbol" required>
+										           <select class="form-control has-error" name="symbol" ng-model="order.symbol" ng-change="loadBranch()" required>
 					           			           		<option value="">Select</option>
 					           							<option ng-repeat="product in products" value="{{product.id}}">{{product.name}}</option>
 					           						</select>
@@ -520,7 +485,7 @@
 								                  <label>Branch*</label>
 								                  <select class="form-control has-error" name="branch" ng-model="order.branch" required>
 								                  	<option value="">Select</option>
-								       				<option ng-repeat="branch in branches" value="{{branch.id}}">{{branch.name}}</option>
+								       				<option ng-repeat="branchId in branchesId" value="{{branchId}}">{{getBranchById(branchId).name}}</option>
 								       			</select>
 								                  <p ng-show="marketOrder.branch.$invalid && !marketOrder.branch.$pristine|| (submitted && marketOrder.branch.$invalid)" class="help-block">Branch is required.</p>
 								              </div>

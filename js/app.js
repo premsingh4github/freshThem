@@ -316,22 +316,43 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
    self.getNotices = function(){
         return $http.post(API + 'API/getNotices');
    }
-   self.switch = function($status){
-    debugger;
-       $http.post(API + 'API/systemSwitch',{
+   self.changeServerStatus = function($status){
+      return  $http.post(API + 'API/changeServerStatus',{
         status : $status
-      }).then(function(res){
-        debugger;
-      },function(res){
-        debugger;
       });
    }
+   self.addMarketOrder = function(order){
+      return $http.post(API + 'API/addMarketOrder',{
+        branchId : order.branch,
+        productTypeId: order.symbol,
+        lot: order.lot
+      });
+   }
+   self.addLimitBuyOrder = function(order){
+    return $http.post(API + 'API/addLimitBuyOrder',{
+        branchId : order.branch,
+        productTypeId: order.symbol,
+        lot: order.lot,
+        priceMax : order.priceMax,
+        priceMin : order.priceMin
+    });
+   }
+   self.addLimitSellOrder = function(order){
+    return $http.post(API + 'API/addLimitSellOrder',{
+        branchId : order.branch,
+        productTypeId: order.symbol,
+        lot: order.lot,
+        priceMax : order.priceMax,
+        priceMin : order.priceMin
+    });
+   } 
  }
  MetronicApp.factory('authInterceptor', authInterceptor);
  MetronicApp.service('user', userService);
  MetronicApp.service('auth', authService);
  //MetronicApp.constant('API', 'http://fwwmc.com.my/API/public/');
- MetronicApp.constant('API', 'http://localhost/dealerAPI/public/');
+ //MetronicApp.constant('API', 'http://api.omnitextsolution.com/public/');
+ MetronicApp.constant('API', 'http://localhost/edealer/public/');
  MetronicApp.constant('HOME','http://localhost/freshThem');
  MetronicApp.config(function($httpProvider) {
    $httpProvider.interceptors.push('authInterceptor');

@@ -87,12 +87,15 @@ MetronicApp.controller('HomeController',['$state','$rootScope','user','pubsubSer
        // member type loaded
        user.getMembers().then(function(es){
          if(es.data.code == 200){
+            var status =  (es.data.server_status == 0)? false : true;
+            pubsubService.addServerStatus(status);
            es.data.members.forEach(function(ls,i){
              pubsubService.addMember(ls);
            });
            pubsubService.addUser(es.data.user);
           // member and user are loaded
             user.getUnverifiedMember().then(function(res){
+
              if(res.data.members.length > 0){
               res.data.members.forEach(function(ls,i){
                 pubsubService.addUnverifiedMember(ls);
@@ -146,14 +149,24 @@ MetronicApp.controller('HomeController',['$state','$rootScope','user','pubsubSer
 //$state.go('dashboard');
 }]);
 MetronicApp.controller('dashboardController',['$scope','$state','user','$rootScope','pubsubService','HOME',"$interval","$modal",function($scope,$state,user,$rootScope,pubsubService,HOME,$interval,$modal){
+$scope.currentPage = 0;
+$scope.pageSize = 5;
+ 
   user.getStocks().then(function(res){
-    $scope.stocks = res.data.stocks;
+    $scope.numberOfPages = Math.ceil($scope.stocks.length/$scope.pageSize); 
+    $scope.clientStocks = res.data.clientStocks;
     if(pubsubService.getStocks().length == 0){
-      $scope.stocks.forEach(function(ls,i){
+      res.data.stocks.forEach(function(ls,i){
         pubsubService.addStock(ls);
       });
     }
-    
+    $scope.stocks = pubsubService.getStocks();
+    if(pubsubService.getLimitOrders().length == 0){
+      res.data.limitOrders.forEach(function(ls,i){
+        pubsubService.addLimitOrder(ls);
+      });
+    }
+    $scope.limitOrders = pubsubService.getLimitOrders();
   });
   $scope.unverifiedMembers = pubsubService.getUnverifiedMembers();
   $scope.user = pubsubService.getUser();
@@ -308,7 +321,8 @@ MetronicApp.controller('dashboardController',['$scope','$state','user','$rootSco
  }
  $scope.order = {};
  $scope.order.price = 4800;
- $scope.addMerketOrder = function(){
+ $scope.addMerketOrder = function(valid){
+  if(valid){
     $modal.open({
          templateUrl: 'views/addMerketOrder.html',
          controller: 'addMerketOrderController',
@@ -316,19 +330,65 @@ MetronicApp.controller('dashboardController',['$scope','$state','user','$rootSco
            order: function () { return $scope.order }
          }
        });
+  }
+    
  }
-
-// for pagination of product
-$scope.currentPage = 0;
-    $scope.pageSize = 5;
-   
-    $scope.numberOfPages=function(){
-        return Math.ceil($scope.stocks.length/$scope.pageSize);                
+ $scope.limitBuy = function(valid){
+  if(valid){
+    $modal.open({
+         templateUrl: 'views/limitBuyOrder.html',
+         controller: 'addLimitBuyController',
+         resolve: {
+           order: function () { return $scope.limit }
+         }
+       });
+  }
+    
+ }
+ $scope.limitSell = function(valid){
+  if(valid){
+    $modal.open({
+         templateUrl: 'views/limitSellOrder.html',
+         controller: 'addLimitSellController',
+         resolve: {
+           order: function () { return $scope.limit }
+         }
+       });
+  }
+    
+ }
+$scope.loadBranch = function(){
+  $scope.branchesId = [];
+  $scope.stocks.forEach(function(ls,i){
+    if(ls.productTypeId == $scope.order.symbol){
+      if($scope.branchesId.indexOf(ls.branchId) < 1){
+       $scope.branchesId.push(ls.branchId);
+      }
     }
+  });
+}
+$scope.limitBranch = function(){
+  $scope.limitBranchesId = [];
+  $scope.stocks.forEach(function(ls,i){
+    if(ls.productTypeId == $scope.limit.symbol){
+      if($scope.limitBranchesId.indexOf(ls.branchId) < 1){
+       $scope.limitBranchesId.push(ls.branchId);
+      }
+    }
+  });
+}
+$scope.getBranchById = function(id){
+  return pubsubService.getBranchById(id);
+}
+// for pagination of product
+ 
+    // $scope.numberOfPages = function(){
+    //     return Math.ceil($scope.stocks.length/$scope.pageSize);                
+    // }
     
 
 }]);
-MetronicApp.controller('addMerketOrderController',['$scope','$modalInstance', 'order','pubsubService',function($scope,$modalInstance,order,pubsubService){
+MetronicApp.controller('addMerketOrderController',['$scope','$modalInstance', 'order','pubsubService','user',function($scope,$modalInstance,order,pubsubService,user){
   $scope.order = order;
   $scope.branch = pubsubService.getBranchById(order.branch);
   $scope.product = pubsubService.getProductById(order.symbol);
@@ -339,12 +399,101 @@ MetronicApp.controller('addMerketOrderController',['$scope','$modalInstance', 'o
   $scope.holding_cost = $scope.product.holding_cost * order.lot;
   var d = new Date();
 d.setDate(d.getDate()+7);
-
-//d.format("yyyy/mm/dd");
 $scope.delivery_date =    d.getMonth() + "-" +d.getDate()+ "-" + d.getFullYear();
-
-  debugger;
-  //$scope.
+$scope.errorMessage = false;
+$scope.successMessage = false;
+  if(pubsubService.getUser().amount < (((order.lot * $scope.product.lot_size)/10) * order.price) ){
+    $scope.message = "Sorry you don't have sufficient balance!.";
+    $scope.errorMessage = true;
+  }
+$scope.submit = function(){
+  user.addMarketOrder(order).then(function(res){
+    $scope.message = "Your request is waiting for approvel."
+    if(res.data.code == 422){
+      $scope.message = res.data.message;
+      $scope.errorMessage = true;
+    }
+    if(res.data.code == 200){
+      pubsubService.getUser().amount -= res.data.clientStock.cost;
+      pubsubService.getUser().pending += res.data.clientStock.cost;
+    $scope.successMessage = true;
+      //pubsubService.user
+    }
+    
+  },function(res){});
+}
+}]);
+MetronicApp.controller('addLimitBuyController',['$scope','$modalInstance', 'order','pubsubService','user',function($scope,$modalInstance,order,pubsubService,user){
+  $scope.order = order;
+  $scope.branch = pubsubService.getBranchById(order.branch);
+  $scope.product = pubsubService.getProductById(order.symbol);
+  $scope.commission = order.lot * $scope.product.commision;
+  $scope.margin = order.lot * $scope.product.margin;
+  $scope.delivery_charge = ((order.lot * $scope.product.lot_size)/10) * $scope.branch.delivery_charge;
+  $scope.remaining_cost =  (((order.lot * $scope.product.lot_size)/10) * order.priceMax) - $scope.margin;
+  $scope.holding_cost = $scope.product.holding_cost * order.lot;
+  var d = new Date();
+d.setDate(d.getDate()+7);
+$scope.delivery_date =    d.getMonth() + "-" +d.getDate()+ "-" + d.getFullYear();
+$scope.errorMessage = false;
+$scope.successMessage = false;
+  if(pubsubService.getUser().amount < (((order.lot * $scope.product.lot_size)/10) * order.price) ){
+    $scope.message = "Sorry you don't have sufficient balance!.";
+    $scope.errorMessage = true;
+  }
+$scope.submit = function(){
+  user.addLimitBuyOrder(order).then(function(res){
+    $scope.message = "Your Buy Limit Order is published."
+    if(res.data.code == 422){
+      $scope.message = res.data.message;
+      $scope.errorMessage = true;
+    }
+    if(res.data.code == 200){
+      pubsubService.addLimitOrder(res.data.limitOrder);
+      // pubsubService.getUser().amount -= res.data.clientStock.cost;
+      // pubsubService.getUser().pending += res.data.clientStock.cost;
+    $scope.successMessage = true;
+    debugger;
+      //pubsubService.user
+    }
+    
+  },function(res){});
+}
+}]);
+MetronicApp.controller('addLimitSellController',['$scope','$modalInstance', 'order','pubsubService','user',function($scope,$modalInstance,order,pubsubService,user){
+  $scope.order = order;
+  $scope.branch = pubsubService.getBranchById(order.branch);
+  $scope.product = pubsubService.getProductById(order.symbol);
+  $scope.commission = order.lot * $scope.product.commision;
+  $scope.margin = order.lot * $scope.product.margin;
+  $scope.delivery_charge = ((order.lot * $scope.product.lot_size)/10) * $scope.branch.delivery_charge;
+  $scope.remaining_cost =  (((order.lot * $scope.product.lot_size)/10) * order.price) - $scope.margin;
+  $scope.holding_cost = $scope.product.holding_cost * order.lot;
+  var d = new Date();
+d.setDate(d.getDate()+7);
+$scope.delivery_date =    d.getMonth() + "-" +d.getDate()+ "-" + d.getFullYear();
+$scope.errorMessage = false;
+$scope.successMessage = false;
+  if(pubsubService.getUser().amount < (((order.lot * $scope.product.lot_size)/10) * order.price) ){
+    $scope.message = "Sorry you don't have sufficient balance!.";
+    $scope.errorMessage = true;
+  }
+$scope.submit = function(){
+  user.addLimitSellOrder(order).then(function(res){
+    $scope.message = "Your Sell Limit Order is published."
+    if(res.data.code == 422){
+      $scope.message = res.data.message;
+      $scope.errorMessage = true;
+    }
+    if(res.data.code == 200){
+      pubsubService.addLimitOrder(res.data.limitOrder);
+      // pubsubService.getUser().amount -= res.data.clientStock.cost;
+      // pubsubService.getUser().pending += res.data.clientStock.cost;
+    $scope.successMessage = true;
+    }
+    
+  },function(res){});
+}
 }]);
 MetronicApp.controller('HeaderController', ['$scope','user','$modal','$rootScope','$state','pubsubService','HOME', function($scope,user,$modal,$rootScope,$state,pubsubService,HOME) {
     $scope.$on('$includeContentLoaded', function() {
@@ -358,8 +507,17 @@ MetronicApp.controller('HeaderController', ['$scope','user','$modal','$rootScope
                 }
             });
           }
-    $scope.switchStatus = true;
-    
+    $scope.switchStatus = pubsubService.getServerStatus();
+    $scope.changeSwitch = function(){
+      $scope.switchStatus =  ($scope.switchStatus)? false : true;
+      user.changeServerStatus($scope.switchStatus).then(function(res){
+        
+        var status = (res.data.server_status == 1)? true : false;
+        pubsubService.addServerStatus(status);
+      },function(res){
+        debugger;
+      });
+    }
     $scope.unverifiedMembers = pubsubService.getUnverifiedMembers();    
     $rootScope.$on('addUnverifiedMember', function (event, data) {
       $scope.$apply(function(){
@@ -396,6 +554,7 @@ MetronicApp.controller('HeaderController', ['$scope','user','$modal','$rootScope
                 console.log('Modal dismissed at: ' + new Date());
               });
             };
+
             $scope.openNotice = function (position) {
                   $scope.member = $scope.notices[position];
                 var modalInstance = $modal.open({
@@ -772,6 +931,7 @@ MetronicApp.controller('ProductController',['$scope','$modalInstance','user','$r
   $scope.edit = false;
    $scope.isDone = false;
    $scope.branch = null;
+   $scope.stockProduct = {};
   $scope.cancel = function(){
     $modalInstance.dismiss('cancel');
   }
@@ -791,7 +951,7 @@ MetronicApp.controller('ProductController',['$scope','$modalInstance','user','$r
             pubsubService.publishProduct(es.data.product);
             pubsubService.addProduct(es.data.product);
             $scope.branch = es.data.product.name;
-            $scope.message ="Now " + es.data.product.name + "is added to Product Type!";
+            $scope.message ="Now " + es.data.product.name + " is added to Product Type!";
             
             $scope.isDone = true;
             $scope.name = null;

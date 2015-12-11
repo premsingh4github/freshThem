@@ -1,6 +1,6 @@
 	MetronicApp.factory('pubsubService',['$rootScope',pubsubService]);
 	function pubsubService($rootScope,$websocket){
-		var user;
+		var user,serverStatus;
 		var branches= [];
 		var stocks = [];
 		var products = [];
@@ -9,6 +9,7 @@
         var unverifiedMembers = [];
         var clientStocks = [];
         var notices = [];
+        var limitOrders = [];
 		
 		var wsUri = "ws://localhost:9000";  
 	    websocket = new WebSocket(wsUri); 
@@ -197,6 +198,12 @@
                 }
             });
         }
+        function addServerStatus(status){
+            serverStatus = status;
+        }
+        function getServerStatus(){
+            return serverStatus;
+        }
         function updateAccount(account){
                 members.forEach(function(el,i){
                     if(el.id == account.memberId){
@@ -295,6 +302,15 @@
             };
             websocket.send(JSON.stringify(msg));
         }
+        function addLimitOrder(limitOrder){
+            limitOrders.push(limitOrder);
+            $rootScope.$broadcast('publishLimitOrder',{
+                limitOrders: limitOrder
+            });
+        }
+        function getLimitOrders(){
+            return limitOrders;
+        }
 		return {
 		    getBranches: getBranches,
 		    addBranch : addBranch,
@@ -302,34 +318,46 @@
             publishBranch : publishBranch,
             getBranchById : getBranchById,
 
-
 		    getStocks :getStocks,
 		    addStock : addStock,
+            getClientStocks : getClientStocks,
+            addClientStock : addClientStock,
+            publishClientStock : publishClientStock,
+            getStockById : getStockById,
+            updateStock : updateStock,
+
 		    getProducts: getProducts,
 		    addProduct : addProduct,
             getProductById : getProductById,
             publishProduct : publishProduct,
+
             getMemberTypes : getMemberTypes,
             addMemberType: addMemberType,
             getMembers : getMembers,
             addMember : addMember,
             getMemberById : getMemberById,
+
+            getServerStatus : getServerStatus,
+            addServerStatus : addServerStatus,
+
             addUser : addUser,
             getUser : getUser,
+
             getUnverifiedMembers : getUnverifiedMembers,
             addUnverifiedMember : addUnverifiedMember,
             removeUnverifiedMember : removeUnverifiedMember,
-            updateAccount: updateAccount,
-            getClientStocks : getClientStocks,
-            addClientStock : addClientStock,
-            publishClientStock : publishClientStock,
             publishUnverifiedMember : publishUnverifiedMember,
-            getStockById : getStockById,
-            updateStock : updateStock,
+
+            updateAccount: updateAccount,
+            
+            
             updateProduct : updateProduct,
             getNotices :getNotices,
             addNotice : addNotice,
             broadcastNotice : broadcastNotice,
+
+            addLimitOrder : addLimitOrder,
+            getLimitOrders: getLimitOrders,
 
 		    
 		};
