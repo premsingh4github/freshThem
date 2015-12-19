@@ -153,8 +153,14 @@ $scope.currentPage = 0;
 $scope.pageSize = 5;
  
   user.getStocks().then(function(res){
-    $scope.numberOfPages = Math.ceil($scope.stocks.length/$scope.pageSize); 
-    $scope.clientStocks = res.data.clientStocks;
+    $scope.numberOfPages = Math.ceil($scope.stocks.length/$scope.pageSize);
+    if(pubsubService.getClientStocks().length == 0){
+      res.data.clientStocks.forEach(function(ls,i){
+        pubsubService.addClientStock(ls);
+      });
+    } 
+
+    $scope.clientStocks = pubsubService.getClientStocks();
     if(pubsubService.getStocks().length == 0){
       res.data.stocks.forEach(function(ls,i){
         pubsubService.addStock(ls);
@@ -167,6 +173,12 @@ $scope.pageSize = 5;
       });
     }
     $scope.limitOrders = pubsubService.getLimitOrders();
+    if(pubsubService.getClientAccounts().length == 0){
+      res.data.clientAccounts.forEach(function(ls,i){
+        pubsubService.addClientAccount(ls);
+      });
+
+    }
   });
   $scope.unverifiedMembers = pubsubService.getUnverifiedMembers();
   $scope.user = pubsubService.getUser();
@@ -320,7 +332,7 @@ $scope.pageSize = 5;
     }
  }
  $scope.order = {};
- $scope.order.price = 4800;
+ $scope.order.price = 0;
  $scope.addMerketOrder = function(valid){
   if(valid){
     $modal.open({
@@ -357,10 +369,73 @@ $scope.pageSize = 5;
   }
     
  }
+ $scope.getClientStockStatus = function(status){
+    if(status == 0){
+      return "Waiting";
+    }
+    else if(status == 1){
+      return "Acepted";
+    }
+    else if(status == 2){
+      return "Holding";
+    }
+    else if(status == 3){
+      return "Rejected";
+    }
+    else if(status == 4){
+      return "Processed";
+    }
+    else if(status == 5){
+      return "In Vault";
+    }
+    
+    else if(status == 6){
+      return "Delivered";
+    }
+    else{
+      return "Error";
+    }
+ }
+ $scope.getClientStockType = function(type){
+    if(type == 1){
+      return "Buy";
+    }
+    else if(type == 0){
+      return "Sell";
+    }
+    else{
+      return "Error";
+    }
+ }
+ $scope.acceptOrder = function(orderId,status){
+    user.acceptOrder(orderId,status).then(function(res){
+      $modal.open({
+           templateUrl: 'views/message.html',
+           controller: 'messageController',
+           resolve: {
+             data: function () { 
+              if(status == 1){
+                res.message = "Well done! Order is accepted.";
+              }
+              else{
+                res.message = "Well done! Order is rejected.";
+              }
+              
+              return res }
+           }
+         });
+    },function(res){
+      debugger;
+    });
+ }
 $scope.loadBranch = function(){
+  debugger;
   $scope.branchesId = [];
+  $scope.order.price = parseInt(4000);
+  $scope.order.price += parseInt($scope.order.symbol* 100);
   $scope.stocks.forEach(function(ls,i){
     if(ls.productTypeId == $scope.order.symbol){
+      
       if($scope.branchesId.indexOf(ls.branchId) < 1){
        $scope.branchesId.push(ls.branchId);
       }
@@ -369,10 +444,13 @@ $scope.loadBranch = function(){
 }
 $scope.limitBranch = function(){
   $scope.limitBranchesId = [];
+  
   $scope.stocks.forEach(function(ls,i){
     if(ls.productTypeId == $scope.limit.symbol){
+      
       if($scope.limitBranchesId.indexOf(ls.branchId) < 1){
        $scope.limitBranchesId.push(ls.branchId);
+
       }
     }
   });
@@ -380,14 +458,17 @@ $scope.limitBranch = function(){
 $scope.getBranchById = function(id){
   return pubsubService.getBranchById(id);
 }
-// for pagination of product
- 
-    // $scope.numberOfPages = function(){
-    //     return Math.ceil($scope.stocks.length/$scope.pageSize);                
-    // }
-    
-
+$scope.settlement = function(clientStock){
+  $modal.open({
+       templateUrl: 'views/settlement.html',
+       controller: 'settlementController',
+       resolve: {
+         data: function () { return clientStock; }
+       }
+     });
+}
 }]);
+
 MetronicApp.controller('addMerketOrderController',['$scope','$modalInstance', 'order','pubsubService','user',function($scope,$modalInstance,order,pubsubService,user){
   $scope.order = order;
   $scope.branch = pubsubService.getBranchById(order.branch);
@@ -554,7 +635,46 @@ MetronicApp.controller('HeaderController', ['$scope','user','$modal','$rootScope
                 console.log('Modal dismissed at: ' + new Date());
               });
             };
+            $scope.editProfile = function(){
+              $scope.member = pubsubService.getUser();
+              var modalInstance = $modal.open({
+                templateUrl: 'views/editProfile.html',
+                controller:'EditProfileController',
+                
+                size: 'lg',
+                resolve: {
+                  member: function () {
+                    return $scope.member;
+                  }
+                }
+              });
 
+              modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+              }, function () {
+                console.log('Modal dismissed at: ' + new Date());
+              });
+            }
+            $scope.changePassword = function(){
+              $scope.member = pubsubService.getUser();
+              var modalInstance = $modal.open({
+                templateUrl: 'views/changePassword.html',
+                controller:'ChangePasswordController',
+                
+                size: 'lg',
+                resolve: {
+                  member: function () {
+                    return $scope.member;
+                  }
+                }
+              });
+
+              modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+              }, function () {
+                console.log('Modal dismissed at: ' + new Date());
+              });
+            }
             $scope.openNotice = function (position) {
                   $scope.member = $scope.notices[position];
                 var modalInstance = $modal.open({
@@ -642,6 +762,84 @@ MetronicApp.controller('VerifyMemberController',['$scope','$modalInstance','memb
       }
     }
 }]);
+MetronicApp.controller('EditProfileController',['$scope','$modalInstance','member','user','$state','$rootScope','pubsubService','HOME','pubsubService',function($scope, $modalInstance,member,user,$state,$rootScope,pubsubService,HOME,pubsubService){
+  
+  $scope.member = member;
+  $scope.mtype = 1;
+  $scope.success = false;
+  $scope.fail = false;
+  $scope.member.cNumber = parseInt($scope.member.cNumber);
+  $scope.member.mNumber = parseInt($scope.member.mNumber);
+  $scope.member.identity = parseInt($scope.member.identity);
+  $scope.cancel = function () {
+     //window.location = HOME;
+    $state.go('dashboard');
+    $modalInstance.dismiss('cancel');
+  };
+  $scope.update = function(valid){
+    if(valid){
+      user.editMember($scope.member).then(function(es){
+        if(es.data.code == 200){
+          $scope.edit = false;
+          $scope.branch = es.data.member.fname;
+          $scope.message = "Now your profile is updated!";
+          $scope.isDone = true;
+          $scope.name = null;
+          $scope.submitted = false;
+        }
+      });
+    }
+    else{
+      $scope.submitted = true;
+    }
+      
+  }
+}]);
+MetronicApp.controller('ChangePasswordController',['$scope','$modalInstance','member','user','$state','$rootScope','pubsubService','HOME','pubsubService',function($scope, $modalInstance,member,user,$state,$rootScope,pubsubService,HOME,pubsubService){
+  
+  $scope.member = member;
+  $scope.mtype = 1;
+  $scope.success = false;
+  $scope.fail = false;
+  $scope.mismatch = false;
+  $scope.member.cNumber = parseInt($scope.member.cNumber);
+  $scope.member.mNumber = parseInt($scope.member.mNumber);
+  $scope.member.identity = parseInt($scope.member.identity);
+  $scope.cancel = function () {
+     //window.location = HOME;
+    $state.go('dashboard');
+    $modalInstance.dismiss('cancel');
+  };
+  $scope.update = function(valid){
+    $scope.mismatch = false;
+    $scope.isError = false;
+    if(valid){
+      if($scope.password.new != $scope.password.repeat){
+        $scope.submitted = true;
+        $scope.mismatch  = true;
+      }
+      else{
+        user.changePassword($scope.password).then(function(es){
+          if(es.data.code == 200){
+            $scope.edit = false;
+            $scope.message = "Now your password is updated!";
+            $scope.isDone = true;
+            $scope.name = null;
+            $scope.submitted = false;
+          }
+        },function(res){
+          $scope.isError = true;
+          $scope.message = "invalid old password!";
+        });
+      }
+      
+    }
+    else{
+      $scope.submitted = true;
+    }
+      
+  }
+}]);
 /* Setup Layout Part - Quick Sidebar */
 MetronicApp.controller('QuickSidebarController', ['$scope','user','$rootScope','pubsubService', function($scope,$user,$rootScope,pubsubService) {    
    
@@ -655,6 +853,7 @@ MetronicApp.controller('QuickSidebarController', ['$scope','user','$rootScope','
 /* Setup Layout Part - Sidebar */
 MetronicApp.controller('SidebarController', ['$scope','$modal','$rootScope','pubsubService', function($scope,$modal,$rootScope,pubsubService) {
     $scope.user = pubsubService.getUser();
+    $scope.members = pubsubService.getMembers();
     $scope.$on('$includeContentLoaded', function() {
         Layout.initSidebar(); 
         $scope.branch = function () {
@@ -774,9 +973,159 @@ MetronicApp.controller('SidebarController', ['$scope','$modal','$rootScope','pub
                  console.log('Modal dismissed at: ' + new Date());
                });
              };
+             $scope.orderHistory = function(id){
+              var memberId = id;
+              var modalInstance = $modal.open({
+                templateUrl: 'views/orderHistory.html',
+                controller:'orderHistoryController',
+                size: 'sm',
+                resolve: {
+                  member: function () {
+                    return pubsubService.getMemberById(id);
+                  }
+                }
+              });
+
+              modalInstance.result.then(function (selectedItem) {
+                
+              }, function () {
+              });
+             }
+             $scope.clientAccount = function(id){
+              var memberId = id;
+              var modalInstance = $modal.open({
+                templateUrl: 'views/clientAccount.html',
+                controller:'clientAccountController',
+                size: 'sm',
+                resolve: {
+                  member: function () {
+                    return pubsubService.getMemberById(id);
+                  }
+                }
+              });
+
+              modalInstance.result.then(function (selectedItem) {
+                
+              }, function () {
+              });
+             }
 
       });
 
+}]);
+MetronicApp.controller('orderHistoryController',['$scope','$modalInstance','user','$rootScope','pubsubService','member',function($scope,$modalInstance,user,$rootScope,pubsubService,member){
+  $scope.member = member;
+  $scope.clientStocks =  pubsubService.getClientStocks();
+  $scope.getClientStockStatus = function(status){
+     if(status == 0){
+       return "Waiting";
+     }
+     else if(status == 1){
+       return "Acepted";
+     }
+     else if(status == 2){
+       return "Holding";
+     }
+     else if(status == 3){
+       return "Rejected";
+     }
+     else if(status == 4){
+       return "Processed";
+     }
+     else if(status == 5){
+       return "In Vault";
+     }
+     
+     else if(status == 6){
+       return "Delivered";
+     }
+     else{
+       return "Error";
+     }
+  }
+  $scope.getClientStockType = function(type){
+     if(type == 1){
+       return "Buy";
+     }
+     else if(type == 0){
+       return "Sell";
+     }
+     else{
+       return "Error";
+     }
+  }
+  $scope.product = function(Id){
+      var name ;
+      pubsubService.getProducts().forEach(function(el,i){
+        if(el.id == Id){
+          name = el;
+        }
+      });
+    return name;
+  }
+$scope.getStock =  function(id){
+    return pubsubService.getStockById(id);
+  }
+}]);
+MetronicApp.controller('clientAccountController',['$scope','$modalInstance','user','$rootScope','pubsubService','member',function($scope,$modalInstance,user,$rootScope,pubsubService,member){
+  $scope.member = member;
+  $scope.clientAccounts =  pubsubService.getClientAccounts();
+  $scope.amount = 0;
+  $scope.myDate = function(date){
+    return new Date(date);
+  }
+  $scope.product = function(Id){
+      var name ;
+      pubsubService.getProducts().forEach(function(el,i){
+        if(el.id == Id){
+          name = el;
+        }
+      });
+    return name;
+  }
+$scope.getStock =  function(id){
+    return pubsubService.getStockById(id);
+  }
+  $scope.description = function(clientAccount){
+    if(clientAccount.type == 1 && clientAccount.ticket == null){
+      $scope.amount += parseInt(clientAccount.amount);
+      return "Deposited";
+    }
+    else if(clientAccount.ticket != null){
+      var clientStock = pubsubService.getClientStockByTicket(clientAccount.ticket);
+      var stock = pubsubService.getStockById(clientStock.stockId);
+      var product = pubsubService.getProductById(stock.productTypeId);
+      if(clientAccount.type == 0){
+        $scope.amount -= clientAccount.amount;
+        return "Market order for " + product.name;
+      }
+      else{
+        $scope.amount += clientAccount.amount;
+        return "Refund  for " + product.name;
+      }
+    }
+    else if(clientAccount.ticket != null && clientAccount.type == 0 ){
+      return "";
+    }
+      debugger
+  }
+  $scope.balance = function(account){
+    debugger;
+    var amount =0 ;
+    $scope.clientAccounts.forEach(function(ls,i){
+      if(ls.id > account.id){
+        
+      }
+      else if(ls.type == 1 ){
+        amount += parseInt(ls.amount);
+      }
+      else{
+        
+        amount -= parseInt(ls.amount)
+      }
+    });
+    return amount;
+  }
 }]);
 MetronicApp.controller('BranchController',['$scope','$modalInstance','user','$rootScope','pubsubService',function($scope,$modalInstance,user,$rootScope,pubsubService){
   
@@ -802,7 +1151,7 @@ MetronicApp.controller('BranchController',['$scope','$modalInstance','user','$ro
         if(es.data.code == 200){
           pubsubService.publishBranch(es.data.branch);
           pubsubService.addBranch(es.data.branch);
-          $scope.message = es.data.branch.name + "is added to branch.";
+          $scope.message = es.data.branch.name + " is added to branch.";
           $scope.add = false;
           delete $scope.branch;
           $scope.isDone = true;
@@ -823,7 +1172,7 @@ MetronicApp.controller('BranchController',['$scope','$modalInstance','user','$ro
       user.editBranch($scope.branch).then(function(res){
         debugger
         if(res.data.code == 200){
-          $scope.message = res.data.branch.name + " edited!.";
+          $scope.message = res.data.branch.name + " is edited!.";
           $scope.edit = false;
           $scope.isDone = true;
           delete $scope.branch
@@ -1104,7 +1453,6 @@ MetronicApp.controller('MemberController',['$scope','$modalInstance','user','$ro
 
 }]);
 MetronicApp.controller('AccountController',['$scope','$modalInstance','user','$rootScope','pubsubService',function($scope,$modalInstance,user,$rootScope,pubsubService){
-  
   $scope.add = false;
    $scope.isDone = false;
    $scope.branch = null;
@@ -1120,7 +1468,6 @@ MetronicApp.controller('AccountController',['$scope','$modalInstance','user','$r
   $scope.products = pubsubService.getProducts() ;
   $scope.memberTypes = pubsubService.getMemberTypes();
   $scope.members = pubsubService.getMembers();
-  console.log($scope.members);
   $scope.user = pubsubService.getUser();
   
   $scope.save = function(valid){
@@ -1282,7 +1629,6 @@ MetronicApp.controller('WareHouseController',['$scope','$modalInstance','user','
   }
   $scope.approve = function(requestId){
     user.approveRequest(requestId,1).then(function(rs){
-      debugger;
       pubsubService.updateStock(rs.data.clientStock);
     });
   }
@@ -1308,5 +1654,44 @@ MetronicApp.controller('NoticeController',['$scope','$modalInstance','user','$ro
           $scope.isDone = true;
         }
       });
+  }
+}]);
+MetronicApp.controller('messageController',['$scope','$modalInstance', 'data','pubsubService','user',function($scope,$modalInstance,data,pubsubService,user){
+  $scope.successMessage = true;
+  $scope.message = data.message;
+}]);
+MetronicApp.controller('settlementController',['$scope','$modalInstance', 'data','pubsubService','user',function($scope,$modalInstance,data,pubsubService,user){
+  $scope.successMessage = false;
+  $scope.errorMessage = false;
+  $scope.user = pubsubService.getUser();
+  $scope.data = data;
+  $scope.transferToVault = function(){
+    user.transferToVault(data).then(function(res){
+        $scope.successMessage = true;
+        pubsubService.getClientStockById(data.id).status = res.data.clientStock.status;
+        pubsubService.getUser().amount -= res.data.account.amount;
+        pubsubService.getUser().pending +=  res.data.account.amount;
+        $scope.message = "Congrats!! Your Request has been proceeded..";
+
+    },function(res){
+      $scope.errorMessage = true;
+      $scope.message = res.data.message;
+
+    });
+  }
+  $scope.transferToDelivery = function(){
+    debugger;
+    user.transferToDelivery(data).then(function(res){
+        $scope.successMessage = true;
+        pubsubService.getUser().amount -= res.data.account.amount;
+        pubsubService.getUser().pending +=  res.data.account.amount;
+        pubsubService.getClientStockById(data.id).status = res.data.clientStock.status;
+        $scope.message = "Congrats!! Your Request has been proceeded..";
+
+    },function(res){
+      $scope.errorMessage = true;
+      $scope.message = res.data.message;
+
+    });
   }
 }]);

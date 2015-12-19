@@ -32,7 +32,6 @@
 								<div class="caption right">
 									<button ng-class=" offlineClass"  ng-click="changeRequest('0')">Order Matching Engine</button>
 								</div>
-
 							</div>
 							<div class="portlet-body">
 								<div ng-show="request" class="row">
@@ -82,19 +81,20 @@
 														<table class="table table-hover table-light" >
 															<thead>
 																<tr class="uppercase">
+															          <th>Symbol</th>
 															          <th>Lot</th>
-															          <th>Price</th>
-															          <th>Action</th>
+															          <th>Max Price</th>
+															          <th>Min Price</th>
 																</tr>
 															</thead>
 															<tbody>
 																
 			    												<tr ng-repeat="limitOrder in limitOrders | filter: { type: 0 }">
+			    													<td>{{product(getStock(limitOrder.stockId).productTypeId).name}}</td>
 			    													<td>{{limitOrder.amount/10}}</td>
-			    													<td>{{limitOrder.priceMin}}</td>
-			    													<td>
-			    														<button   type="submit" class="btn btn-success">Buy</button>
-			    													</td>
+			    													<td>{{limitOrder.priceMax}}</td>
+				    													<td>{{limitOrder.priceMin}}</td>
+			    													
 
 			    												</tr>
 				    											
@@ -105,18 +105,19 @@
 														<table class="table table-hover table-light">
 															<thead>
 																<tr class="uppercase">
+															          <th>Symbol</th>
 															          <th>Lot</th>
-															          <th>Price</th>
-															          <th>Action</th>
+															          <th>Max Price</th>
+															          <th>Min Price</th>
 																</tr>
 															</thead>
 															<tbody>
 																<tr ng-repeat="limitOrder in limitOrders | filter: { type: 1 }">
+				    													<td>{{product(getStock(limitOrder.stockId).productTypeId).name}}</td>
 				    													<td>{{limitOrder.amount/10}}</td>
 				    													<td>{{limitOrder.priceMax}}</td>
-				    													<td>
-				    														<button   type="submit" class="btn btn-success">Sell</button>
-				    													</td>
+				    													<td>{{limitOrder.priceMin}}</td>
+				    													
 
 				    												</tr>
 															</tbody>
@@ -163,19 +164,21 @@
 										<table class="table table-hover table-light" >
 											<thead>
 												<tr class="uppercase">
-											          <th>Ticket</th>
+											          <!-- <th>Ticket</th> -->
+											          <th>Symbol</th>
 											          <th>Lot</th>
 											          <th>Price</th>
 											          <th colspan="2">Action</th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr ng-repeat="clientStock in clientStocks">
-													<td>{{clientStock.ticket}}</td>
+												<tr ng-repeat="clientStock in clientStocks | filter: { status: 0 }">
+													<!-- <td>{{clientStock.ticket}}</td> -->
+													<td>{{product(getStock(clientStock.stockId).productTypeId).name}}</td>
 													<td>{{clientStock.amount/10}}</td>
 													<td>{{10*(clientStock.cost/clientStock.amount)}}</td>
-													<td><button class="btn btn-success">A</button></td>
-													<td><button class="btn btn-danger">R</button></td>
+													<td ><button  confirm="Are you sure want to accept this order?" ng-click="acceptOrder(clientStock.id,1)" class="btn btn-success">A</button></td>
+													<td><button confirm="Are you sure want to reject this order?" ng-click="acceptOrder(clientStock.id,0)" class="btn btn-danger">R</button></td>
 
 												</tr>
 											</tbody>
@@ -213,7 +216,22 @@
 												</tr>
 											</thead>
 											<tbody>
-												
+												<tr ng-repeat="clientStock in clientStocks" ng-if="clientStock.status > 0">
+													<td>{{clientStock.ticket}}</td>
+													<td>{{clientStock.created_at}}</td>
+													<td>{{product(getStock(clientStock.stockId).productTypeId).name}}</td>
+													<td>{{getClientStockType(clientStock.type)}}</td>
+													<td>{{clientStock.price}}</td>
+													<td>{{clientStock.amount/product(getStock(clientStock.stockId).productTypeId).lot_size}}</td>
+													
+													<td >{{clientStock.margin}}</td>
+													<td>{{clientStock.commission}}</td>
+													<td>{{clientStock.holding_cost}}</td>
+													<td >
+														{{getClientStockStatus(clientStock.status)}}
+														</td>
+
+												</tr>
 											</tbody>
 										</table>
 									</div>
@@ -265,7 +283,7 @@
 				    								</tr>
 				    							</tbody>
 				    							<tfoot>
-				    								<tr>
+				    								<tr ng-show="numberOfPages > 1">
 				    									<td colspan="6" class="center">
 				    										<button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
 				    										      << Previous
@@ -347,7 +365,7 @@
 						
 					</div>
 					<div ng-if="(user.mtype == 6) || (user.mtype == 1)">
-						<div class="portlet light ">
+						<!-- <div class="portlet light ">
 							
 							<div class="portlet-body">
 								<div class="row">
@@ -359,7 +377,7 @@
 								</iframe>
 							</div>
 
-						</div>
+						</div> -->
 					</div>
 					<div ng-if="user.mtype == 6">
 						<div class="portlet light ">
@@ -388,7 +406,23 @@
 												</tr>
 											</thead>
 											<tbody>
-												
+												<tr ng-repeat="clientStock in clientStocks" ng-if="clientStock.status > 0">
+													<td>{{clientStock.ticket}}</td>
+													<td>{{clientStock.created_at}}</td>
+													<td>{{product(getStock(clientStock.stockId).productTypeId).name}}</td>
+													<td>{{getClientStockType(clientStock.type)}}</td>
+													<td>{{clientStock.amount/product(getStock(clientStock.stockId).productTypeId).lot_size}}</td>
+													<td>{{clientStock.price}}</td>
+													<td >{{clientStock.commission}}</td>
+													<td>{{clientStock.delivery_date}}</td>
+													<td>{{clientStock.holding_cost}}</td>
+													<td  ng-if="clientStock.status < 3">
+														<button ng-click="settlement(clientStock)"   type="submit" class="btn btn-success">{{getClientStockStatus(clientStock.status)}}</button></td>
+													<td  ng-if="clientStock.status > 2">
+														{{getClientStockStatus(clientStock.status)}}
+														</td>
+
+												</tr>
 											</tbody>
 										</table>
 									</div>
@@ -487,7 +521,7 @@
 								                  	<option value="">Select</option>
 								       				<option ng-repeat="branchId in branchesId" value="{{branchId}}">{{getBranchById(branchId).name}}</option>
 								       			</select>
-								                  <p ng-show="marketOrder.branch.$invalid && !marketOrder.branch.$pristine|| (submitted && marketOrder.branch.$invalid)" class="help-block">Branch is required.</p>
+								                  <p ng-show="marketOrder.branch.$invalid && !marketOrder.branch.$pristine|| (submitted &&  Order.branch.$invalid)" class="help-block">Branch is required.</p>
 								              </div>
 										       
 											      
@@ -509,7 +543,7 @@
 									<div class="row">
 										<div class="table-scrollable table-scrollable-borderless">
 											<table class="table table-hover table-light">
-												<thead>
+												<!-- <thead>
 													<tr class="uppercase">
 														<th >
 															Description
@@ -519,48 +553,26 @@
 														</th>
 													</tr>
 													
-												</thead>
+												</thead> -->
 												<tbody>
 													<tr>
 														<td>
-															<a class="primary-link">Deposite</a>
+															<a class="primary-link">Deposited</a>
 														</td>
 														<td>
-															<span class="bold font-green-haze">500000</span>
+															<span class="bold font-green-haze">{{user.amount + user.pending}}</span>
 														</td>
 													</tr>
 													<tr>
 														<td>
-															<a class="primary-link">Credit</a>
+															<a class="primary-link">Pending</a>
 														</td>
 														<td>
-															<span class="bold font-green-haze">10000</span>
+															<span class="bold font-green-haze">{{user.pending}}</span>
 														</td>
 													</tr>
-													<tr>
-														<td>
-															<a class="primary-link">Order</a>
-														</td>
-														<td>
-															<span class="bold font-green-haze">100000</span>
-														</td>
-													</tr>
-													<tr>
-														<td>
-															<a class="primary-link">Pending Order</a>
-														</td>
-														<td>
-															<span class="bold font-green-haze">200000</span>
-														</td>
-													</tr>
-													<tr>
-														<td>
-															<a class="primary-link">Balance</a>
-														</td>
-														<td>
-															<span class="bold font-green-haze">200000</span>
-														</td>
-													</tr>
+													
+													
 												</tbody>
 											</table>
 										</div>

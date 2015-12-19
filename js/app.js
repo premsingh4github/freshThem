@@ -345,6 +345,29 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
         priceMax : order.priceMax,
         priceMin : order.priceMin
     });
+   }
+   self.acceptOrder =function(orderId,status){
+    return $http.post(API + 'API/acceptOrder',{
+      orderId: orderId,
+      status : status
+    });
+   }
+   
+   self.transferToDelivery = function(clientStock){
+      return $http.post(API +'API/transferToDelivery',{
+        clientStockId: clientStock.id
+      });
+   }
+   self.transferToVault = function(clientStock){
+      return $http.post(API +'API/transferToVault',{
+        clientStockId: clientStock.id
+      });
+   }
+   self.changePassword = function(key){
+      return $http.post(API +'API/changePassword',{
+        new : key.new,
+        old : key.old,
+      });
    } 
  }
  MetronicApp.factory('authInterceptor', authInterceptor);
@@ -354,6 +377,7 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
  //MetronicApp.constant('API', 'http://api.omnitextsolution.com/public/');
  MetronicApp.constant('API', 'http://localhost/edealer/public/');
  MetronicApp.constant('HOME','http://localhost/freshThem');
+ //MetronicApp.constant('HOME','http://api.omnitextsolution.com/public/');
  MetronicApp.config(function($httpProvider) {
    $httpProvider.interceptors.push('authInterceptor');
  });

@@ -10,6 +10,7 @@
         var clientStocks = [];
         var notices = [];
         var limitOrders = [];
+        var clientAccounts = [];
 		
 		var wsUri = "ws://localhost:9000";  
 	    websocket = new WebSocket(wsUri); 
@@ -244,6 +245,24 @@
                 }
                 websocket.send(JSON.stringify(msg));
         }
+        function getClientStockById(id){
+            var stock ;
+            clientStocks.forEach(function(ls,i){
+                if(id == ls.id){
+                    stock = ls;
+                }
+            });
+            return stock;
+        }
+        function getClientStockByTicket(ticket){
+            var stock ;
+            clientStocks.forEach(function(ls,i){
+                if(ticket == ls.ticket){
+                    stock = ls;
+                }
+            });
+            return stock;
+        }
         function publishUnverifiedMember(member){
             var msg = {
             type: "addUnverifiedMember",
@@ -311,6 +330,12 @@
         function getLimitOrders(){
             return limitOrders;
         }
+        function addClientAccount(account){
+            clientAccounts.push(account);
+        }
+        function getClientAccounts(){
+            return clientAccounts;
+        }
 		return {
 		    getBranches: getBranches,
 		    addBranch : addBranch,
@@ -320,11 +345,15 @@
 
 		    getStocks :getStocks,
 		    addStock : addStock,
+            getStockById : getStockById,
+            updateStock : updateStock,
+
+
             getClientStocks : getClientStocks,
             addClientStock : addClientStock,
             publishClientStock : publishClientStock,
-            getStockById : getStockById,
-            updateStock : updateStock,
+            getClientStockById : getClientStockById,
+            getClientStockByTicket : getClientStockByTicket,
 
 		    getProducts: getProducts,
 		    addProduct : addProduct,
@@ -359,6 +388,7 @@
             addLimitOrder : addLimitOrder,
             getLimitOrders: getLimitOrders,
 
-		    
+            getClientAccounts : getClientAccounts,
+            addClientAccount : addClientAccount,
 		};
 	}

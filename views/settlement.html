@@ -1,0 +1,68 @@
+<div class="panel panel-default">
+
+		<div class="modal-header">
+			
+		            <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="$close()"><span >×</span></button>
+		            <h2>Settlement</h2>
+		            
+		            
+
+		            
+		 </div>
+		 
+		<div class="panel-body">
+			<h3 class="modal-title  text-center alert alert-danger" ng-if="errorMessage">{{message}}</h3>
+			<h3 class="text-center alert alert-success" ng-if="successMessage">{{message}}</h3>
+		<div class="col-xs-10 col-xs-offset-1 ">
+	      
+	       <table class="table table-hover table-light">
+	       
+	       	<tbody>
+	       		<tr>
+	       			<td>
+	       				<a class="primary-link">Your Available Margin:</a>
+	       			</td>
+	       			<td>
+       				<span class="bold font-green-haze">{{user.amount}}</span>
+	       			</td>
+	       		</tr>
+	       		<tr>
+	       			<td>
+	       				<a class="primary-link">Remaining Cost:</a>
+	       			</td>
+	       			<td>
+       				<span class="bold font-green-haze">{{data.remaining_cost}}</span>
+	       			</td>
+	       		</tr>
+	       		<tr>
+	       			<td>
+	       				<a class="primary-link">Delivery Charge:</a>
+	       			</td>
+	       			<td>
+       				<span class="bold font-green-haze">{{data.delivery_charge}}</span>
+	       			</td>
+	       		</tr>
+	       		<tr>
+	       			<td>
+	       				<a class="primary-link">Total:</a>
+	       			</td>
+	       			<td>
+       				<span class="bold font-green-haze">{{data.delivery_charge + data.remaining_cost}}</span>
+	       			</td>
+	       		</tr>
+	       		
+	       	</tbody>
+	       </table>
+	       <div ng-if=" user.amount >= data.remaining_cost" >
+		  	<span confirm="Would you like to clear your due and proceed to delivery?" class="pull-left" ng-click="transferToDelivery()" ><button class="btn btn-success">Pay and Transfer to Delivery Point</button></span>
+		  	<span confirm="Would you like to clear your due and transfer to Bullion Vault?" class="pull-right" ng-click="transferToVault()" ><button class="btn btn-primary">Pay and Transfer to Bullion Vault</button></span>
+		  </div>
+		  </div>
+		  
+		</div>
+</div>
+
+			
+
+			
+
