@@ -467,6 +467,11 @@ $scope.settlement = function(clientStock){
        }
      });
 }
+$scope.chart = function(){
+  $modal.open({
+       templateUrl: 'views/chart.html'
+     });
+}
 }]);
 
 MetronicApp.controller('addMerketOrderController',['$scope','$modalInstance', 'order','pubsubService','user',function($scope,$modalInstance,order,pubsubService,user){
