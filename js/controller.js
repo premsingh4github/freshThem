@@ -1363,7 +1363,6 @@ MetronicApp.controller('MemberController',['$scope','$modalInstance','user','$ro
   $scope.products = pubsubService.getProducts() ;
   $scope.memberTypes = pubsubService.getMemberTypes();
   $scope.members = pubsubService.getMembers();
-  debugger;
   $scope.unverifiedMembers = pubsubService.getUnverifiedMembers();
   
   $scope.save = function(valid){

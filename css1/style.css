@@ -28,6 +28,13 @@ z-index: -1;
     
     padding: 0;
 }
+.portlet.light {
+   // padding: 0px 12px 15px 15px;
+    background-color: #fff;
+}
+.chart{
+      background-color: darkgray;
+}
 @media (min-width: 768px){
 	.modal-dialog {
     width: 700px;

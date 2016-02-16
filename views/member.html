@@ -14,6 +14,7 @@
 			<!-- Start of add member form -->
 			<form class="table  table-striped bs-events-table" name="userForm" ng-submit="submitForm(userForm.$valid)" novalidate ng-if="add">
 
+
 			       <h3 class="modal-title">Add Member</h3>
 			       <div class="form-group" ng-class="{ 'has-error' : userForm.memberType.$invalid && !userForm.memberType.$pristine || (submitted && userForm.memberType.$invalid)}">
 			           <label>Member Type*</label>
@@ -186,9 +187,10 @@
 			   <!-- end of edit member form -->
 			
 		    <table class="table table-bordered table-striped bs-events-table" >
+		    	Search :<input  placeholder="client code" type="text" ng-model="code">
 		      <thead>
 		        <tr >
-		          <th>Client Code</th>
+		          <th>Client Codes</th>
 		          <th>Client Profile</th>
 		          <th>Order History</th>
 		          <th>Balance</th>
@@ -196,7 +198,7 @@
 		        </tr>
 		      </thead>
 		      <tbody>
-		        <tr ng-repeat="member in members">
+		        <tr ng-repeat="member in members | filter : code">
 		        	<td>{{member.username}}</td>
 		          <td>{{member.fname}} {{member.mname}} {{member.lname}}</td>
 		          <td>Click Here</td>

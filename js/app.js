@@ -377,7 +377,7 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
  //MetronicApp.constant('API', 'http://api.omnitextsolution.com/public/');
  MetronicApp.constant('API', 'http://localhost/edealer/public/');
  MetronicApp.constant('HOME','http://localhost/freshThem');
- //MetronicApp.constant('HOME','http://api.omnitextsolution.com/public/');
+ //MetronicApp.constant('HOME','http://edealer.omnitextsolution.com');
  MetronicApp.config(function($httpProvider) {
    $httpProvider.interceptors.push('authInterceptor');
  });
