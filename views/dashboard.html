@@ -151,7 +151,7 @@
 											          <!-- <th>Ticket</th> -->
 											          <th>Symbol</th>
 											          <th>Lot</th>
-											          <th>Price</th>
+											          <th>Prices</th>
 											          <th colspan="2">Action</th>
 												</tr>
 											</thead>
@@ -160,7 +160,8 @@
 													<!-- <td>{{clientStock.ticket}}</td> -->
 													<td>{{product(getStock(clientStock.stockId).productTypeId).name}}</td>
 													<td>{{clientStock.amount/10}}</td>
-													<td>{{10*(clientStock.cost/clientStock.amount)}}</td>
+													<td>{{prices.gold | number:4}}</td>
+													<!--<td>{{10*(clientStock.cost/clientStock.amount)}}</td>-->
 													<td ><button  confirm="Are you sure want to accept this order?" ng-click="acceptOrder(clientStock.id,1)" class="btn btn-success">A</button></td>
 													<td><button confirm="Are you sure want to reject this order?" ng-click="acceptOrder(clientStock.id,0)" class="btn btn-danger">R</button></td>
 

@@ -78,7 +78,15 @@ function register($state,$scope,user,pubsubService){
     }
   }
 };
-MetronicApp.controller('HomeController',['$state','$rootScope','user','pubsubService',function($state,$rootScope,user,pubsubService){
+MetronicApp.controller('HomeController',['$state','$rootScope','user','pubsubService','$interval',function($state,$rootScope,user,pubsubService,$interval){
+
+    $interval(function(){
+       user.getPrices().then(function(res){
+               pubsubService.updatePrices(res.data);
+       },function(res){
+           console.log(res);
+       });
+    },10000);
      user.getMemberTypes().then(function(es){
      if(es.data.code == 200){
        es.data.memberTypes.forEach(function(ls,i){
@@ -151,6 +159,10 @@ MetronicApp.controller('HomeController',['$state','$rootScope','user','pubsubSer
 MetronicApp.controller('dashboardController',['$scope','$state','user','$rootScope','pubsubService','HOME',"$interval","$modal",function($scope,$state,user,$rootScope,pubsubService,HOME,$interval,$modal){
 $scope.currentPage = 0;
 $scope.pageSize = 5;
+    $scope.prices = {"silver":0,"gold":0};
+    $rootScope.$on('publishPrices',function(event,data){
+       $scope.prices = data.prices;
+    });
  
   user.getStocks().then(function(res){
     $scope.numberOfPages = Math.ceil($scope.stocks.length/$scope.pageSize);

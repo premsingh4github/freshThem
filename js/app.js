@@ -368,7 +368,10 @@ MetronicApp.controller('FooterController', ['$scope', function($scope) {
         new : key.new,
         old : key.old,
       });
-   } 
+   }
+     self.getPrices = function(){
+         return $http.get(API + 'API/getPrices');
+     }
  }
  MetronicApp.factory('authInterceptor', authInterceptor);
  MetronicApp.service('user', userService);

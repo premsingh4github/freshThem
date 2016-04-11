@@ -1,6 +1,6 @@
 	MetronicApp.factory('pubsubService',['$rootScope',pubsubService]);
 	function pubsubService($rootScope,$websocket){
-		var user,serverStatus;
+		var user,serverStatus,prices;
 		var branches= [];
 		var stocks = [];
 		var products = [];
@@ -336,6 +336,16 @@
         function getClientAccounts(){
             return clientAccounts;
         }
+        function updatePrices(prices){
+            prices = prices;
+            $rootScope.$broadcast('publishPrices',{
+                prices : prices
+            });
+
+        }
+        function getPrices(){
+            return prices;
+        }
 		return {
 		    getBranches: getBranches,
 		    addBranch : addBranch,
@@ -390,5 +400,8 @@
 
             getClientAccounts : getClientAccounts,
             addClientAccount : addClientAccount,
+
+            updatePrices : updatePrices,
+            getPrices: getPrices,
 		};
 	}
